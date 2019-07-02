@@ -106,16 +106,16 @@ def create_args(level3Name, level3Num, lvl3FileNum, level4Name, level4Num, lvl4F
 
 if __name__ == '__main__':
     #if=/dev/randhigh of=/vsnap/vpool1/vz6/testfile1.txt bs=16k count=2
-    root = "/vsnap/vpool1/vz7"
+    root = "/vsnap/vpool1/vz8"
     level3Name = "Level3-"
-    level3Num = 64
-    lvl3FileNum = 1953125
+    level3Num = 1
+    lvl3FileNum = 312500
     level4Name = "Level4-"
-    level4Num = 128
-    lvl4FileNum = 2197266
+    level4Num = 2
+    lvl4FileNum = 312500
     level5Name = "Level5-"
-    level5Num = 256
-    lvl5FileNum = 1464844
+    level5Num = 1
+    lvl5FileNum = 312500
 
     #generate_big_random_bin_file("testfile.txt", 1024*1024)
     parallel_file_gen(level3Name, level3Num, lvl3FileNum, level4Name, level4Num, lvl4FileNum, level5Name, level5Num, lvl5FileNum, root)
