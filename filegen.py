@@ -27,7 +27,8 @@ def generate_file_ldeedee(level3Name, lvl3FileNum, level4Name, level4Num, lvl4Fi
         p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         while p.poll() is None:
             time.sleep(0.5)
-        print(p.returncode)
+        if p.returncode != 0
+            print(p.stdout.read())
 
     for num in range(1, level4Num + 1):
         level4Path = os.path.join(level3Path, level4Name + str(num))
@@ -40,7 +41,8 @@ def generate_file_ldeedee(level3Name, lvl3FileNum, level4Name, level4Num, lvl4Fi
             p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
             while p.poll() is None:
                 time.sleep(0.5)
-            print(p.returncode)
+            if p.returncode != 0
+                print(p.stdout.read())
 
         for num in range(1, level5Num + 1):
             level5Path = os.path.join(level4Path, level5Name + str(num))
@@ -54,7 +56,8 @@ def generate_file_ldeedee(level3Name, lvl3FileNum, level4Name, level4Num, lvl4Fi
                 p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
                 while p.poll() is None:
                     time.sleep(0.5)
-                print(p.returncode)
+                if p.returncode != 0
+                    print(p.stdout.read())
 
 def parallel_file_gen(level3Name, level3Num, lvl3FileNum, level4Name, level4Num, lvl4FileNum, level5Name, level5Num, lvl5FileNum, root):
     print("Parallel file creation")
