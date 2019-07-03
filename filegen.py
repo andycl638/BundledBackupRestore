@@ -8,7 +8,7 @@ def generate_big_random_bin_file(filename):
     generate big binary file with the specified size in bytes
     :param filename: the filename
     """
-    size = 1024*1024*1024
+    size = 1024*1024
     with open('%s'%filename, 'wb') as fout:
         fout.write(os.urandom(size)) #1
 
@@ -79,7 +79,7 @@ def test_parallel_file_gen(x):
     start = time.time()
     print("Time start: %s" %start)
     with Pool(5) as p:
-        print (p.map(generate_big_random_bin_file, ["testfile5.txt", "testfile6.txt", "testfile7.txt", "testfile8.txt", "testfile9.txt"]))
+        p.map(generate_big_random_bin_file, ["testfile0.txt", "testfile1.txt", "testfile2.txt", "testfile3.txt", "testfile4.txt", "testfile5.txt", "testfile6.txt", "testfile7.txt", "testfile8.txt", "testfile9.txt"])
         #print (p.map(multi_process_file_gen,[1,2,3]))
 
     end = time.time()
@@ -116,7 +116,41 @@ def create_args(level3Name, level3Num, lvl3FileNum, level4Name, level4Num, lvl4F
 
     return parallelArgs
 
-def generate_file_ldeedee_unique(fileNum, root):
+def create_args2():
+
+    parallelArgs = []
+
+    tupleBuild1 = ("/vz9/Level3-1", 312500)
+    tupleBuild2 = ("/vz9/Level3-1/Level4-1", 312500)
+    tupleBuild3 = ("/vz9/Level3-1/Level4-2", 312500)
+    tupleBuild4 = ("/vz9/Level3-1/Level4-1/Level5-1", 312500)
+    tupleBuild5 = ("/vz9/Level3-1/Level4-2/Level5-1", 312500)
+
+    parallelArgs.append(tupleBuild1)
+    parallelArgs.append(tupleBuild2)
+    parallelArgs.append(tupleBuild3)
+    parallelArgs.append(tupleBuild4)
+    parallelArgs.append(tupleBuild5)
+    print(parallelArgs)
+
+    return parallelArgs
+
+def parallel_file_gen2():
+    print("Parallel file creation")
+    start = time.time()
+    print("Time start: %s" %start)
+
+    parallelArgs = create_args2()
+
+    with Pool(8) as p:
+        p.starmap(generate_file_ldeedee_unique, parallelArgs)
+
+    end = time.time()
+    print("Time end: %s" %end)
+    elapsed = end - start
+    print("Time elapsed: %s" %elapsed)
+
+def generate_file_ldeedee_unique(root, fileNum):
 
     for num in range(1, fileNum +1):
         fileName = "testfile" + str(num) + ".txt"
@@ -127,10 +161,12 @@ def generate_file_ldeedee_unique(fileNum, root):
         while p.poll() is None:
             time.sleep(0.5)
 
+        if p.returncode != 0:
+            print(p.stdout.read())
 
 if __name__ == '__main__':
     #if=/dev/randhigh of=/vsnap/vpool1/vz6/testfile1.txt bs=16k count=2
-    root = "/vz9"
+    root = "/vsnap/vpool1/vz8"
     level3Name = "Level3-"
     level3Num = 1
     lvl3FileNum = 312500
@@ -142,8 +178,11 @@ if __name__ == '__main__':
     lvl5FileNum = 312500
 
     #generate_big_random_bin_file("testfile.txt", 1024*1024)
-    parallel_file_gen(level3Name, level3Num, lvl3FileNum, level4Name, level4Num, lvl4FileNum, level5Name, level5Num, lvl5FileNum, root)
+    #parallel_file_gen(level3Name, level3Num, lvl3FileNum, level4Name, level4Num, lvl4FileNum, level5Name, level5Num, lvl5FileNum, root)
     #generate_file_ldeedee_unique(/vz9/)
+    s = parallel_file_gen2()
+    print(s)
+    #test_parallel_file_gen("s")
 
 
 
