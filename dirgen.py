@@ -33,7 +33,7 @@ def generate_dir(level3Name, level3Num, level4Name, level4Num, level5Name, level
         print("copy %s" %level4Dir)
         s = os.path.join(level3Dir, level4Name + str(num))
         print("to %s" %s)
-        shutil.copytree(level4Dir, os.path.join(evel3Dir, level4Name + str(num)))
+        shutil.copytree(level4Dir, os.path.join(level3Dir, level4Name + str(num)))
 
     for num in range(2, level3Num + 2):
         print("copy level 3 dir tree")
