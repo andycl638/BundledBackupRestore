@@ -18,7 +18,7 @@ def generate_big_random_bin_file(filename):
 def generate_file_ldeedee(level3Name, lvl3FileNum, level4Name, level4Num, lvl4FileNum, level5Name, level5Num, lvl5FileNum, root):
 
     level3Path = os.path.join(root, level3Name)
-    print ("paths level 3: \"%s\"" %level3Path)
+    print ("paths level 3: %s " %level3Path)
     for num in range(1, lvl3FileNum +1):
         fileName = "testfile" + str(num) + ".txt"
         filePath = os.path.join(level3Path, fileName)
@@ -124,7 +124,7 @@ def generate_file_ldeedee_unique(fileNum, root):
 
 if __name__ == '__main__':
     #if=/dev/randhigh of=/vsnap/vpool1/vz6/testfile1.txt bs=16k count=2
-    root = "/vsnap/vpool1/vz8"
+    root = "/vz9"
     level3Name = "Level3-"
     level3Num = 1
     lvl3FileNum = 312500
@@ -136,8 +136,9 @@ if __name__ == '__main__':
     lvl5FileNum = 312500
 
     #generate_big_random_bin_file("testfile.txt", 1024*1024)
-    #parallel_file_gen(level3Name, level3Num, lvl3FileNum, level4Name, level4Num, lvl4FileNum, level5Name, level5Num, lvl5FileNum, root)
-    generate_file_ldeedee_unique(/vz9/)
+    parallel_file_gen(level3Name, level3Num, lvl3FileNum, level4Name, level4Num, lvl4FileNum, level5Name, level5Num, lvl5FileNum, root)
+    #generate_file_ldeedee_unique(/vz9/)
+
 
 
 """
