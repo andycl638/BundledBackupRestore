@@ -33,7 +33,7 @@ def generate_dir(level3Name, level3Num, level4Name, level4Num, level5Name, level
     for num in range(2, level3Num + 2):
         print("copy level 3 dir tree")
         print(os.path.join(level3Name + str(num)))
-        shutil.copytree(level3Name + str(1), level3Name + str(num))
+        shutil.copytree(initDir, level3Name + str(1), level3Name + str(num))
 
 def generate_dir_list(foldernum):
     file = open("directory list", "w")
