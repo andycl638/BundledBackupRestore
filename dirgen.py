@@ -47,7 +47,7 @@ def generate_dir_list(foldernum):
     file.close()
 
 if __name__ == '__main__':
-    root = "/vz8"
+    root = "/vz9"
     level3Name = "Level3-"
     level3Num = 1
     level4Name = "Level4-"
