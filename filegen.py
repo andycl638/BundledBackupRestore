@@ -25,6 +25,8 @@ def generate_file_ldeedee(level3Name, lvl3FileNum, level4Name, level4Num, lvl4Fi
         cmd = "/home/acheong/vsnapperf/ldeedee if=/dev/randhigh of=\"" + filePath + "\" bs=8k count=4"
         print(cmd)
         p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        while p.poll() is None:
+            time.sleep(0.5)
 
     for num in range(1, level4Num + 1):
         level4Path = os.path.join(level3Path, level4Name + str(num))
@@ -35,6 +37,8 @@ def generate_file_ldeedee(level3Name, lvl3FileNum, level4Name, level4Num, lvl4Fi
             cmd = "/home/acheong/vsnapperf/ldeedee if=/dev/randhigh of=\"" + filePath + "\" bs=8k count=4"
             print(cmd)
             p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+            while p.poll() is None:
+                time.sleep(0.5)
 
         for num in range(1, level5Num + 1):
             level5Path = os.path.join(level4Path, level5Name + str(num))
@@ -46,6 +50,8 @@ def generate_file_ldeedee(level3Name, lvl3FileNum, level4Name, level4Num, lvl4Fi
                 cmd = "/home/acheong/vsnapperf/ldeedee if=/dev/randhigh of=\"" + filePath + "\" bs=8k count=4"
                 print(cmd)
                 p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+                while p.poll() is None:
+                    time.sleep(0.5)
 
 def parallel_file_gen(level3Name, level3Num, lvl3FileNum, level4Name, level4Num, lvl4FileNum, level5Name, level5Num, lvl5FileNum, root):
     print("Parallel file creation")
@@ -104,6 +110,18 @@ def create_args(level3Name, level3Num, lvl3FileNum, level4Name, level4Num, lvl4F
 
     return parallelArgs
 
+def generate_file_ldeedee_unique(fileNum, root):
+
+    for num in range(1, fileNum +1):
+        fileName = "testfile" + str(num) + ".txt"
+        filePath = os.path.join(root, fileName)
+        cmd = "/home/acheong/vsnapperf/ldeedee if=/dev/randhigh of=\"" + filePath + "\" bs=8k count=4"
+        print(cmd)
+        p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        while p.poll() is None:
+            time.sleep(0.5)
+
+
 if __name__ == '__main__':
     #if=/dev/randhigh of=/vsnap/vpool1/vz6/testfile1.txt bs=16k count=2
     root = "/vsnap/vpool1/vz8"
@@ -118,7 +136,8 @@ if __name__ == '__main__':
     lvl5FileNum = 312500
 
     #generate_big_random_bin_file("testfile.txt", 1024*1024)
-    parallel_file_gen(level3Name, level3Num, lvl3FileNum, level4Name, level4Num, lvl4FileNum, level5Name, level5Num, lvl5FileNum, root)
+    #parallel_file_gen(level3Name, level3Num, lvl3FileNum, level4Name, level4Num, lvl4FileNum, level5Name, level5Num, lvl5FileNum, root)
+    generate_file_ldeedee_unique(/vz9/)
 
 
 """
