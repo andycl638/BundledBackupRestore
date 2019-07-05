@@ -5,7 +5,7 @@ from multiprocessing import Pool
 import subprocess
 
 def get_all_files(volumePath):
-    print("get a list of all the files that needs to be backed up")
+    print("\nget a list of all the files that needs to be backed up")
     print("path: %s" %volumePath)
     fileList = []
 
@@ -26,7 +26,7 @@ def get_all_files(volumePath):
     return fileList
 
 def get_file_set(fileList, setSize):
-    print("select the files that need to be backed up into sets of 10GB")
+    print("\nselect the files that need to be backed up into sets of 10GB")
     #setList = ()
     setList = []
     multiSet = []
@@ -60,25 +60,35 @@ def get_file_set(fileList, setSize):
     return multiSet
 
 def parallel_bundler(multiSet):
+    print("\nStarting parallel bundler")
     start = time.time()
-    print("Time start: %s" %start)
-    print("\n\nMULTISET")
-    print(multiSet)
+
+    #print("\n\nMULTISET")
+    #print(multiSet)
     with Pool(8) as p:
-        p.map(bundled_func, multiSet)
+        test = p.map(bundled_func, multiSet)
+
+    for message in test:
+        print(message)
 
     end = time.time()
-    print("Time end: %s" %end)
     elapsed = end - start
-    print("Time elapsed: %s" %elapsed)
+    print("Total Time elapsed: %s" %elapsed)
 
 def bundled_func(setList):
+    start = time.time()
     bundlePath = copy_file_set(setList, "/scale01/scratch")
     tarPath = bundle_file_set(bundlePath)
     send_to_scratch("/scale01/scratch/stars", tarPath)
     delete_bundle(bundlePath)
 
+    end = time.time()
+    elapsed = end - start
+    message = "\ntime elapsed per process: %s\n\n" %elapsed
+    return message
+
 def copy_file_set(setList, tarDir):
+    print("\nc=Copying file to set")
     staticTarName = "vzStar"
     uniqueName = staticTarName + str(time.time())
     bundlePath = os.path.join(tarDir, uniqueName)
@@ -87,48 +97,51 @@ def copy_file_set(setList, tarDir):
     for srcFile in setList:
         copy(srcFile, bundlePath)
 
-
     print ("bundlePath: %s" %bundlePath)
     return bundlePath
 
 def bundle_file_set(bundlePath):
-    print("bundle the file set into tar")
+    print("\nbundle the file set into tar")
     path, bundle = os.path.split(bundlePath)
 
     #tarName = bundle + ".tar.gz"
     tarName = bundle + ".star"
     print("tarname: %s" %tarName)
     tarPath = os.path.join(path, tarName)
-    tarCmd = "time star -c -f " + tarPath + ".star fs=32m bs=64K " + bundlePath
+    tarCmd = "time star -c -f " + tarPath + " fs=32m bs=64K " + bundlePath
     #tarCmd = "tar -zcvf " + tarPath + " " + bundlePath
     print(tarCmd)
 
-    print("running tar")
+    print("running star cmd")
     p = subprocess.Popen(tarCmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
     while p.poll() is None:
         time.sleep(0.5)
 
-    print(p.returncode)
+    if p.returncode != 0:
+        print(p.stdout.read())
+
     tarPath = os.path.join(path, tarName)
     return tarPath
 
 def send_to_scratch(scratchPath, tarPath):
+    print("\nMove tar file to scratch")
     sendCmd = "mv " + tarPath + " " + scratchPath
     print(sendCmd)
-    print("running send")
+
     p = subprocess.Popen(sendCmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
     while p.poll() is None:
         time.sleep(0.5)
 
-    print(p.returncode)
-    print(p.stdout.read())
+    if p.returncode != 0:
+        print(p.stdout.read())
 
 def delete_bundle(bundlePath):
+    print("\nDeleting bundle")
     deleteCmd = "rm -rf " + bundlePath
     print(deleteCmd)
-    print("running send")
+
     p = subprocess.Popen(deleteCmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
     while p.poll() is None:
@@ -141,7 +154,7 @@ def log_files():
     print("this function will track all files being backed up")
 
 if __name__ == '__main__':
-    print("starting script")
+    print("starting script\n")
     fileList = get_all_files("/vz9")
     setList = get_file_set(fileList, 1000000000)
     parallel_bundler(setList)
