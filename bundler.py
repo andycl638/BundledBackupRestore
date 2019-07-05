@@ -10,9 +10,6 @@ def get_all_files(volumePath):
     fileList = []
 
     for root, dirs, files in os.walk(volumePath):
-        print(root)
-        print(dirs)
-        print(files)
         for name in files:
             fileInfoList = []
             fullpath = os.path.join(root, name)
@@ -147,8 +144,8 @@ def delete_bundle(bundlePath):
     while p.poll() is None:
         time.sleep(0.5)
 
-    print(p.returncode)
-    print(p.stdout.read())
+    if p.returncode != 0:
+        print(p.stdout.read())
 
 def log_files():
     print("this function will track all files being backed up")
