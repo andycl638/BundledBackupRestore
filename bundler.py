@@ -7,6 +7,7 @@ import subprocess
 def get_all_files(volumePath):
     print("\nget a list of all the files that needs to be backed up")
     print("path: %s" %volumePath)
+    start = time.time()
     fileList = []
 
     for root, dirs, files in os.walk(volumePath):
@@ -20,28 +21,26 @@ def get_all_files(volumePath):
             fileList.append(fileInfoList)
     #print("\n\nFILESET")
     #print(fileList)
+    end = time.time()
+    elapsed = end - start
+    print("Time to gather all files: %s" %elapsed)
     return fileList
 
 def get_file_set(fileList, setSize):
     print("\nselect the files that need to be backed up into sets of 10GB")
-    #setList = ()
+    start = time.time()
     setList = []
     multiSet = []
     count = 0
-    #print(len(fileList))
 
     while len(fileList) > 0:
         for fileTuple in fileList:
-            #print(fileTuple)
-            #tupleBuild = (fileTuple[0],)
-            #tupleBuild += setList
-            #print(tupleBuild)
-            #setList = tupleBuild
             setList.append(fileTuple[0])
             count += fileTuple[1]
             fileList.remove(fileTuple)
             #print(len(fileList))
             if count > setSize:
+                print("COUNT: %s" %count)
                 count = 0
                 break;
 
@@ -54,6 +53,9 @@ def get_file_set(fileList, setSize):
     #print("\n\nMULTISET")
     #print(len(fileList))
     #print(multiSet)
+    end = time.time()
+    elapsed = end - start
+    print("Time to get file set: %s" %elapsed)
     return multiSet
 
 def parallel_bundler(multiSet):
@@ -74,14 +76,16 @@ def parallel_bundler(multiSet):
 
 def bundled_func(setList):
     start = time.time()
-    bundlePath = copy_file_set(setList, "/scale01/scratch")
+    bundlePath, setListNum = copy_file_set(setList, "/scale01/scratch")
     tarPath = bundle_file_set(bundlePath)
     send_to_scratch("/scale01/scratch/stars", tarPath)
     delete_bundle(bundlePath)
 
     end = time.time()
     elapsed = end - start
-    message = "\ntime elapsed per process: %s\n\n" %elapsed
+    setNumStr = "\nNumber of files in set: %s" %setListNum
+    elapsedStr = "\ntime elapsed per process: %s\n\n" %elapsed
+    message = setNumStr + elapsedStr
     return message
 
 def copy_file_set(setList, tarDir):
@@ -95,7 +99,8 @@ def copy_file_set(setList, tarDir):
         copy(srcFile, bundlePath)
 
     print ("bundlePath: %s" %bundlePath)
-    return bundlePath
+    print(len(setList))
+    return bundlePath, len(setList)
 
 def bundle_file_set(bundlePath):
     print("\nbundle the file set into tar")
