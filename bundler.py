@@ -73,13 +73,13 @@ def parallel_bundler(multiSet):
     print("Time elapsed: %s" %elapsed)
 
 def bundled_func(setList):
-    bundlePath = copy_file_set(setList, "/Users/andy/Documents/tester")
+    bundlePath = copy_file_set(setList, "/scale01/scratch")
     tarPath = bundle_file_set(bundlePath)
-    send_to_scratch("/Users/andy/Documents", tarPath)
+    send_to_scratch("/scale01/scratch/stars", tarPath)
     delete_bundle(bundlePath)
 
 def copy_file_set(setList, tarDir):
-    staticTarName = "vzTar"
+    staticTarName = "vzStar"
     uniqueName = staticTarName + str(time.time())
     bundlePath = os.path.join(tarDir, uniqueName)
     print("tarPath: %s" %bundlePath)
@@ -95,11 +95,12 @@ def bundle_file_set(bundlePath):
     print("bundle the file set into tar")
     path, bundle = os.path.split(bundlePath)
 
-    tarName = bundle + ".tar.gz"
+    #tarName = bundle + ".tar.gz"
+    tarName = bundle + ".star"
     print("tarname: %s" %tarName)
     tarPath = os.path.join(path, tarName)
-    #tarCmd = "time star -c -f " + uniqueName + ".star fs=32m bs=64K " + tarPath
-    tarCmd = "tar -zcvf " + tarPath + " " + bundlePath
+    tarCmd = "time star -c -f " + tarPath + ".star fs=32m bs=64K " + bundlePath
+    #tarCmd = "tar -zcvf " + tarPath + " " + bundlePath
     print(tarCmd)
 
     print("running tar")
@@ -141,6 +142,6 @@ def log_files():
 
 if __name__ == '__main__':
     print("starting script")
-    fileList = get_all_files("/Users/andy/Documents/tester")
-    setList = get_file_set(fileList, 1048576)
+    fileList = get_all_files("/vz9")
+    setList = get_file_set(fileList, 1000000000)
     parallel_bundler(setList)
