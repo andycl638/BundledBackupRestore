@@ -157,6 +157,6 @@ def log_files():
 
 if __name__ == '__main__':
     print("starting script\n")
-    fileList = get_all_files("/vz9")
-    setList = get_file_set(fileList, 1000000000)
+    fileList = get_all_files("/vz6")
+    setList = get_file_set(fileList, 10000000000)
     parallel_bundler(setList)
