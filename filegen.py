@@ -120,14 +120,14 @@ def create_args2(root, fileNum):
 
     parallelArgs = []
 
-    tupleBuild1 = ("/vz8/F1", fileNum)
-    tupleBuild2 = ("/vz8/F2", fileNum)
-    tupleBuild3 = ("/vz8/F3", fileNum)
-    tupleBuild4 = ("/vz8/F4", fileNum)
-    tupleBuild5 = ("/vz8/F5", fileNum)
-    tupleBuild6 = ("/vz8/F6", fileNum)
-    tupleBuild7 = ("/vz8/F7", fileNum)
-    tupleBuild8 = ("/vz8/F8", fileNum)
+    tupleBuild1 = ("/scale01/scratch/F1", fileNum)
+    tupleBuild2 = ("/scale01/scratch/F2", fileNum)
+    tupleBuild3 = ("/scale01/scratch/F3", fileNum)
+    tupleBuild4 = ("/scale01/scratch/F4", fileNum)
+    tupleBuild5 = ("/scale01/scratch/F5", fileNum)
+    tupleBuild6 = ("/scale01/scratch/F6", fileNum)
+    tupleBuild7 = ("/scale01/scratch/F7", fileNum)
+    tupleBuild8 = ("/scale01/scratch/F8", fileNum)
 
     parallelArgs.append(tupleBuild1)
     parallelArgs.append(tupleBuild2)
@@ -163,7 +163,7 @@ def generate_file_ldeedee_unique(root, fileNum):
     for num in range(1, fileNum +1):
         fileName = "testfile" + str(num) + ".txt"
         filePath = os.path.join(root, fileName)
-        cmd = "/home/acheong/vsnapperf/ldeedee if=/dev/randhigh of=\"" + filePath + "\" bs=1G count=10"
+        cmd = "/home/acheong/vsnapperf/ldeedee if=/dev/randhigh of=\"" + filePath + "\" bs=1G count=1"
         print(cmd)
         p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         while p.poll() is None:
@@ -199,7 +199,7 @@ if __name__ == '__main__':
     #generate_big_random_bin_file("testfile.txt", 1024*1024)
     #parallel_file_gen(level3Name, level3Num, lvl3FileNum, level4Name, level4Num, lvl4FileNum, level5Name, level5Num, lvl5FileNum, root)
     #generate_file_ldeedee_unique(/vz9/)
-    s = parallel_file_gen2("/vz8",  10)
+    s = parallel_file_gen2("/scale01/scratch",  10)
 
     #test_parallel_file_gen("s")
 
