@@ -31,14 +31,14 @@ def get_all_dirs(volumePath):
     print("path: %s" %volumePath)
     start = time.time()
     fileList = []
-
+    total_size = 0
     for root, dirs, files in os.walk(volumePath):
-        print (root + "consumes")
-        print (sum(getsize(join(root, name)) for name in files))
-        print ("bytes in" + str(len(files)) + "non-directory files")
-        if 'CVS' in dirs:
-            dirs.remove('CVS')  # don't visit CVS directories
-
+        for f in files:
+            fp = os.path.join(root, f)
+            # skip if it is symbolic link
+            if not os.path.islink(fp):
+                total_size += os.path.getsize(fp)
+    print(total_size)
     end = time.time()
     elapsed = end - start
     print("Time to gather all files: %s" %elapsed)
