@@ -34,7 +34,7 @@ def get_all_dirs(volumePath):
     for root, dirs, files in os.walk(volumePath):
         print (root + "consumes")
         print (sum(getsize(join(root, name)) for name in files))
-        print ("bytes in" + len(files) + "non-directory files")
+        print ("bytes in" + str(len(files)) + "non-directory files")
         if 'CVS' in dirs:
             dirs.remove('CVS')  # don't visit CVS directories
 
