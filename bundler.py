@@ -3,6 +3,7 @@ import time
 from shutil import copy
 from multiprocessing import Pool
 import subprocess
+from os.path import join, getsize
 
 def get_all_files(volumePath):
     print("\nget a list of all the files that needs to be backed up")
