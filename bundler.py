@@ -19,8 +19,20 @@ def get_all_files(volumePath):
             fileInfoList.append(fullpath)
             fileInfoList.append(fileSize)
             fileList.append(fileInfoList)
-    #print("\n\nFILESET")
-    #print(fileList)
+
+    end = time.time()
+    elapsed = end - start
+    print("Time to gather all files: %s" %elapsed)
+    return fileList
+
+def get_all_dirs(volumePath):
+    print("\nget a list of all the files that needs to be backed up")
+    print("path: %s" %volumePath)
+    start = time.time()
+    fileList = []
+
+    print(sum(os.path.getsize(volumePath) for volumePath in os.listdir('.') if os.path.isfile(volumePath)))
+
     end = time.time()
     elapsed = end - start
     print("Time to gather all files: %s" %elapsed)
@@ -157,6 +169,8 @@ def log_files():
 
 if __name__ == '__main__':
     print("starting script\n")
-    fileList = get_all_files("/vz6")
-    setList = get_file_set(fileList, 10000000000)
-    parallel_bundler(setList)
+    #fileList = get_all_files("/vz9")
+    #setList = get_file_set(fileList, 10000000000)
+    #parallel_bundler(setList)
+
+    get_all_dirs("/vz9")
