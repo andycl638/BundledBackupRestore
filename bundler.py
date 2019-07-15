@@ -57,7 +57,7 @@ def get_all_dirs(volumePath):
     elapsed = end - start
     print("Time to gather all files: %s" %elapsed)
     print("Got all dirs and size")
-    #print(dir_list)
+    print(dir_list)
     return dir_list
 
 def get_dir_size(dir_path):
@@ -124,19 +124,18 @@ def parallel_bundler(dir_list):
 def bundled_func(dir_list):
 
     start = time.time()
+    print("\n")
     print(dir_list[0])
     print(dir_list[1])
-    #bundlePath, setListNum = copy_file_set(setList, "/scale01/scratch")
-    tarPath = bundle_file_set(dir_list)
-    #send_to_scratch("/scale01/scratch/stars", tarPath)
 
+    tarPath = bundle_file_set(dir_list[0])
 
     end = time.time()
     elapsed = end - start
-    #setNumStr = "\nNumber of files in set: %s" %setListNum
-    elapsedStr = "\ntime elapsed per process: %s\n\n" %elapsed
-    #message = setNumStr + elapsedStr
-    #return message
+    sizeStr = "\nSize of directory in tar: %s" %dir_list[1]
+    elapsedStr = "\nTime elapsed per process: %s\n\n" %elapsed
+    message = sizeStr + elapsedStr
+    return message
 
 def copy_file_set(setList, tarDir):
     print("\nc=Copying file to set")
@@ -152,10 +151,8 @@ def copy_file_set(setList, tarDir):
     print(len(setList))
     return bundlePath, len(setList)
 
-def bundle_file_set(bundlePath):
-    print("\nbundle the file set into tar")
-    src_path = bundlePath[0]
-    size = bundlePath[1]
+def bundle_file_set(src_path):
+    print("bundle the file set into tar")
 
     dest_path = "/scale01/scratch"
 
@@ -170,16 +167,15 @@ def bundle_file_set(bundlePath):
     tarCmd = "time star -c -f \"" + tarPath + "\" fs=32m bs=64K pat=*.* \"" + src_path + "/*.*\""
     #tarCmd = "tar -zcvf " + tarPath + " " + bundlePath
 
-
     print("running star cmd")
     print(tarCmd)
-    #p = subprocess.Popen(tarCmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    p = subprocess.Popen(tarCmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
-    #while p.poll() is None:
-        #time.sleep(0.5)
+    while p.poll() is None:
+        time.sleep(0.5)
 
-    #if p.returncode != 0:
-        #print(p.stdout.read())
+    if p.returncode != 0:
+        print(p.stdout.read())
 
     #tarPath = os.path.join(path, tarName)
     #return tarPath
