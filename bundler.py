@@ -30,19 +30,50 @@ def get_all_dirs(volumePath):
     print("\nget a list of all the files that needs to be backed up")
     print("path: %s" %volumePath)
     start = time.time()
-    fileList = []
+    dir_list = []
+    set_list = []
+    multi_set = []
     total_size = 0
+
     for root, dirs, files in os.walk(volumePath):
-        for f in files:
-            fp = os.path.join(root, f)
-            # skip if it is symbolic link
-            if not os.path.islink(fp):
-                total_size += os.path.getsize(fp)
-    print(total_size)
+        for dir in dirs:
+            dir_path=os.path.join(root, dir)
+            #print(dir_path)
+
+            for file in os.listdir(dir_path):
+                file_path=os.path.join(dir_path, file)
+                if os.path.isfile(file_path):
+                    total_size += os.path.getsize(file_path)
+
+            set_list.append(dir_path)
+            set_list.append(total_size)
+            dir_list.append(set_list)
+            set_list = []
+
+            #print(total_size/1024/1024)
+            total_size = 0
+
     end = time.time()
     elapsed = end - start
     print("Time to gather all files: %s" %elapsed)
-    return fileList
+    print("Got all dirs and size")
+    #print(dir_list)
+    return dir_list
+
+def get_dir_size(dir_path):
+    set_list = []
+
+    total_size = 0
+
+    for file in os.listdir(dir_path):
+        file_path=os.path.join(dir_path, file)
+        if os.path.isfile(file_path):
+            total_size += os.path.getsize(file_path)
+        set_list.append(dir_path)
+        set_list.append(total_size)
+
+    print(set_list)
+    return set_list
 
 def get_file_set(fileList, setSize):
     print("\nselect the files that need to be backed up into sets of 10GB")
@@ -76,35 +107,36 @@ def get_file_set(fileList, setSize):
     print("Time to get file set: %s" %elapsed)
     return multiSet
 
-def parallel_bundler(multiSet):
+def parallel_bundler(dir_list):
     print("\nStarting parallel bundler")
     start = time.time()
 
-    #print("\n\nMULTISET")
-    #print(multiSet)
-    with Pool(8) as p:
-        test = p.map(bundled_func, multiSet)
+    with Pool(1) as p:
+        messages = p.map(bundled_func, dir_list)
 
-    for message in test:
+    for message in messages:
         print(message)
 
     end = time.time()
     elapsed = end - start
     print("Total Time elapsed: %s" %elapsed)
 
-def bundled_func(setList):
+def bundled_func(dir_list):
+
     start = time.time()
-    bundlePath, setListNum = copy_file_set(setList, "/scale01/scratch")
-    tarPath = bundle_file_set(bundlePath)
-    send_to_scratch("/scale01/scratch/stars", tarPath)
-    delete_bundle(bundlePath)
+    print(dir_list[0])
+    print(dir_list[1])
+    #bundlePath, setListNum = copy_file_set(setList, "/scale01/scratch")
+    tarPath = bundle_file_set(dir_list)
+    #send_to_scratch("/scale01/scratch/stars", tarPath)
+
 
     end = time.time()
     elapsed = end - start
-    setNumStr = "\nNumber of files in set: %s" %setListNum
+    #setNumStr = "\nNumber of files in set: %s" %setListNum
     elapsedStr = "\ntime elapsed per process: %s\n\n" %elapsed
-    message = setNumStr + elapsedStr
-    return message
+    #message = setNumStr + elapsedStr
+    #return message
 
 def copy_file_set(setList, tarDir):
     print("\nc=Copying file to set")
@@ -122,27 +154,35 @@ def copy_file_set(setList, tarDir):
 
 def bundle_file_set(bundlePath):
     print("\nbundle the file set into tar")
-    path, bundle = os.path.split(bundlePath)
+    src_path = bundlePath[0]
+    size = bundlePath[1]
+
+    dest_path = "/scale01/scratch"
+
+    staticTarName = "vzStar"
+    uniqueName = staticTarName + str(time.time()) + ".star"
+
 
     #tarName = bundle + ".tar.gz"
-    tarName = bundle + ".star"
-    print("tarname: %s" %tarName)
-    tarPath = os.path.join(path, tarName)
-    tarCmd = "time star -c -f " + tarPath + " fs=32m bs=64K " + bundlePath
+
+    print("tarname: %s" %uniqueName)
+    tarPath = os.path.join(dest_path, uniqueName)
+    tarCmd = "time star -c -f \"" + tarPath + "\" fs=32m bs=64K pat=*.* \"" + src_path + "/*.*\""
     #tarCmd = "tar -zcvf " + tarPath + " " + bundlePath
-    print(tarCmd)
+
 
     print("running star cmd")
-    p = subprocess.Popen(tarCmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    print(tarCmd)
+    #p = subprocess.Popen(tarCmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
-    while p.poll() is None:
-        time.sleep(0.5)
+    #while p.poll() is None:
+        #time.sleep(0.5)
 
-    if p.returncode != 0:
-        print(p.stdout.read())
+    #if p.returncode != 0:
+        #print(p.stdout.read())
 
-    tarPath = os.path.join(path, tarName)
-    return tarPath
+    #tarPath = os.path.join(path, tarName)
+    #return tarPath
 
 def send_to_scratch(scratchPath, tarPath):
     print("\nMove tar file to scratch")
@@ -179,4 +219,6 @@ if __name__ == '__main__':
     #setList = get_file_set(fileList, 10000000000)
     #parallel_bundler(setList)
 
-    get_all_dirs("/vz9")
+    dir_list = get_all_dirs("/vz9")
+    parallel_bundler(dir_list)
+    #get_dir_size(dir_list)
