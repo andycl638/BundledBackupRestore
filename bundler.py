@@ -164,7 +164,7 @@ def bundle_file_set(src_path):
 
     print("tarname: %s" %uniqueName)
     tarPath = os.path.join(dest_path, uniqueName)
-    tarCmd = "time star -c -f \"" + tarPath + "\" fs=32m bs=64K pat=*.* \"" + src_path + "/*.*\""
+    tarCmd = "time star -c -f \"" + tarPath + "\" fs=32m bs=64K pat=*.* " + src_path + "/*.*"
     #tarCmd = "tar -zcvf " + tarPath + " " + bundlePath
 
     print("running star cmd")
