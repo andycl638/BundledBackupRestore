@@ -111,7 +111,7 @@ def parallel_bundler(dir_list):
     print("\nStarting parallel bundler")
     start = time.time()
 
-    with Pool(1) as p:
+    with Pool(8) as p:
         messages = p.map(bundled_func, dir_list)
 
     for message in messages:
@@ -125,16 +125,15 @@ def bundled_func(dir_list):
 
     start = time.time()
     print("\n")
-    print(dir_list[0])
-    print(dir_list[1])
 
-    tarPath = bundle_file_set(dir_list[0])
+    message = bundle_file_set(dir_list[0])
 
     end = time.time()
     elapsed = end - start
-    sizeStr = "\nSize of directory in tar: %s" %dir_list[1]
+    result_str = "Results:\n"
+    sizeStr = "Size of directory in tar: %s" %dir_list[1]
     elapsedStr = "\nTime elapsed per process: %s\n\n" %elapsed
-    message = sizeStr + elapsedStr
+    message = result_str + message + sizeStr + elapsedStr
     return message
 
 def copy_file_set(setList, tarDir):
@@ -159,16 +158,15 @@ def bundle_file_set(src_path):
     staticTarName = "vzStar"
     uniqueName = staticTarName + str(time.time()) + ".star"
 
-
     #tarName = bundle + ".tar.gz"
 
-    print("tarname: %s" %uniqueName)
+    tar_name_str = "tarname: %s" %uniqueName
     tarPath = os.path.join(dest_path, uniqueName)
     tarCmd = "time star -c -f \"" + tarPath + "\" fs=32m bs=64K pat=*.* " + src_path + "/*.*"
     #tarCmd = "tar -zcvf " + tarPath + " " + bundlePath
 
-    print("running star cmd")
-    print(tarCmd)
+    #print("running star cmd")
+    #print(tarCmd)
     p = subprocess.Popen(tarCmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
     while p.poll() is None:
@@ -177,8 +175,8 @@ def bundle_file_set(src_path):
     if p.returncode != 0:
         print(p.stdout.read())
 
-    #tarPath = os.path.join(path, tarName)
-    #return tarPath
+    message = tar_name_str + "\n" + tarCmd + "\n"
+    return message
 
 def send_to_scratch(scratchPath, tarPath):
     print("\nMove tar file to scratch")
@@ -215,6 +213,10 @@ if __name__ == '__main__':
     #setList = get_file_set(fileList, 10000000000)
     #parallel_bundler(setList)
 
-    dir_list = get_all_dirs("/vz9")
+    #Local
+    #dir_list = get_all_dirs("/Users/andy/Documents/tester")
+    #parallel_bundler(dir_list)
+
+    dir_list = get_all_dirs("/vz6")
     parallel_bundler(dir_list)
     #get_dir_size(dir_list)
