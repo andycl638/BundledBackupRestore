@@ -1,20 +1,21 @@
 import os
+import sys
 import time
 from shutil import copy
 from multiprocessing import Pool
 import subprocess
 from os.path import join, getsize
 
-def get_all_dirs(volume_path):
+def get_all_dirs(src_path, dest_path):
     print("\nget a list of all the files that needs to be backed up")
-    print("path: %s" %volume_path)
+    print("path: %s" %src_path)
     start = time.time()
     dir_list = []
     set_list = []
     multi_set = []
     total_size = 0
 
-    for root, dirs, files in os.walk(volume_path):
+    for root, dirs, files in os.walk(src_path):
         for dir in dirs:
             dir_path=os.path.join(root, dir)
             #print(dir_path)
@@ -25,6 +26,7 @@ def get_all_dirs(volume_path):
                     total_size += os.path.getsize(file_path)
 
             set_list.append(dir_path)
+            set_list.append(dest_path)
             set_list.append(total_size)
             dir_list.append(set_list)
             set_list = []
@@ -73,34 +75,27 @@ def bundled_func(dir_list):
     start = time.time()
     print("\n")
 
-    message = bundle_file_set(dir_list[0])
+    message = bundle_file_set(dir_list[0], dir_list[1])
 
     end = time.time()
     elapsed = end - start
     result_str = "Results:\n"
-    size_str = "Size of directory in tar: %s" %dir_list[1]
+    size_str = "Size of directory in tar: %s" %dir_list[2]
     elapsed_str = "\nTime elapsed per process: %s\n\n" %elapsed
     message = result_str + message + size_str + elapsed_str
     return message
 
 
-def bundle_file_set(src_path):
+def bundle_file_set(src_path, dest_path):
     print("bundle the file set into tar")
-
-    dest_path = "/scale01/scratch"
 
     static_tar_name = "vzStar"
     unique_name = static_tar_name + str(time.time()) + ".star"
 
-    #tarName = bundle + ".tar.gz"
-
     tar_name_str = "tarname: %s" %unique_name
     tar_path = os.path.join(dest_path, unique_name)
     cmd = "time star -c -f \"" + tar_path + "\" fs=32m bs=64K pat=*.* " + src_path + "/*.*"
-    #tarCmd = "tar -zcvf " + tarPath + " " + bundlePath
 
-    #print("running star cmd")
-    #print(tarCmd)
     p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
     while p.poll() is None:
@@ -116,18 +111,45 @@ def bundle_file_set(src_path):
 def log_files():
     print("this function will track all files being backed up")
 
+def main(argv):
+    #src
+    #dest
+    if len(argv) < 2:
+        print("Not enough arguments. Need two arguments.")
+        print("Example: src dest")
+        sys.exit()
+    if len(argv) > 2:
+        print("Too many arguments. Need two arguments.")
+        print("Syntax: python3 bundler.py <src path> <dest path>")
+        sys.exit()
+
+    src_path = argv[0]
+    dest_path = argv[1]
+    if os.path.isdir(src_path):
+        print("Source Path: %s" %src_path)
+    else:
+        print("Source path is not valid: %s" %src_path)
+        sys.exit()
+    if os.path.isdir(dest_path):
+        print("Destination Path: %s" %dest_path)
+    else:
+        print("Destination path is not valid: %s" %dest_path)
+        sys.exit()
+
+    dir_list = get_all_dirs(src_path, dest_path)
+    parallel_bundler(dir_list)
+
 if __name__ == '__main__':
     print("starting script\n")
     #fileList = get_all_files("/vz9")
     #setList = get_file_set(fileList, 10000000000)
     #parallel_bundler(setList)
-
+    main(sys.argv[1:])
     #Local
     #dir_list = get_all_dirs("/Users/andy/Documents/tester")
     #parallel_bundler(dir_list)
 
-    dir_list = get_all_dirs("/vz8")
-    parallel_bundler(dir_list)
+
     #get_dir_size(dir_list)
 
 """

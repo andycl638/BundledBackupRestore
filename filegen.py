@@ -213,12 +213,12 @@ def generate_file_ldeedee_unique2(root):
         filePath = os.path.join(root, fileName)
         cmd = "/home/acheong/vsnapperf/ldeedee if=/dev/randhigh of=\"" + filePath + "\" bs=1G count=1"
         print(cmd)
-        #p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        #while p.poll() is None:
-            #time.sleep(0.5)
+        p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        while p.poll() is None:
+            time.sleep(0.5)
 
-        #if p.returncode != 0:
-            #print(p.stdout.read())
+        if p.returncode != 0:
+            print(p.stdout.read())
     end = time.time()
 
     elapsed = end - start
@@ -256,7 +256,7 @@ if __name__ == '__main__':
     level5Name = "Level5-"
     level5Num = 2
     lvl5FileNum = 10
-    generate_files_walk_dir("/vz8", 10)
+    generate_files_walk_dir("/vsnap/vpool1/vz8", 10)
     #generate_big_random_bin_file("testfile.txt", 1024*1024)
     #parallel_file_gen(level3Name, level3Num, lvl3FileNum, level4Name, level4Num, lvl4FileNum, level5Name, level5Num, lvl5FileNum, root)
     #generate_file_ldeedee_unique(/vz9/)
