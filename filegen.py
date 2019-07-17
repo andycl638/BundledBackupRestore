@@ -191,7 +191,7 @@ def get_all_dirs(root):
     print("\nGet all folders")
     print("path: %s" %root)
     start = time.time()
-    set_list = []
+    all_dirs = []
 
     for root, dirs, files in os.walk(root):
         for dir in dirs:
