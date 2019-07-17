@@ -5,37 +5,16 @@ from multiprocessing import Pool
 import subprocess
 from os.path import join, getsize
 
-def get_all_files(volumePath):
+def get_all_dirs(volume_path):
     print("\nget a list of all the files that needs to be backed up")
-    print("path: %s" %volumePath)
-    start = time.time()
-    fileList = []
-
-    for root, dirs, files in os.walk(volumePath):
-        for name in files:
-            fileInfoList = []
-            fullpath = os.path.join(root, name)
-
-            fileSize = os.path.getsize(fullpath)
-            fileInfoList.append(fullpath)
-            fileInfoList.append(fileSize)
-            fileList.append(fileInfoList)
-
-    end = time.time()
-    elapsed = end - start
-    print("Time to gather all files: %s" %elapsed)
-    return fileList
-
-def get_all_dirs(volumePath):
-    print("\nget a list of all the files that needs to be backed up")
-    print("path: %s" %volumePath)
+    print("path: %s" %volume_path)
     start = time.time()
     dir_list = []
     set_list = []
     multi_set = []
     total_size = 0
 
-    for root, dirs, files in os.walk(volumePath):
+    for root, dirs, files in os.walk(volume_path):
         for dir in dirs:
             dir_path=os.path.join(root, dir)
             #print(dir_path)
@@ -75,6 +54,144 @@ def get_dir_size(dir_path):
     print(set_list)
     return set_list
 
+def parallel_bundler(dir_list):
+    print("\nStarting parallel bundler")
+    start = time.time()
+
+    with Pool(8) as p:
+        messages = p.map(bundled_func, dir_list)
+
+    for message in messages:
+        print(message)
+
+    end = time.time()
+    elapsed = end - start
+    print("Total Time elapsed: %s" %elapsed)
+
+def bundled_func(dir_list):
+
+    start = time.time()
+    print("\n")
+
+    message = bundle_file_set(dir_list[0])
+
+    end = time.time()
+    elapsed = end - start
+    result_str = "Results:\n"
+    size_str = "Size of directory in tar: %s" %dir_list[1]
+    elapsed_str = "\nTime elapsed per process: %s\n\n" %elapsed
+    message = result_str + message + size_str + elapsed_str
+    return message
+
+
+def bundle_file_set(src_path):
+    print("bundle the file set into tar")
+
+    dest_path = "/scale01/scratch"
+
+    static_tar_name = "vzStar"
+    unique_name = static_tar_name + str(time.time()) + ".star"
+
+    #tarName = bundle + ".tar.gz"
+
+    tar_name_str = "tarname: %s" %unique_name
+    tar_path = os.path.join(dest_path, unique_name)
+    cmd = "time star -c -f \"" + tar_path + "\" fs=32m bs=64K pat=*.* " + src_path + "/*.*"
+    #tarCmd = "tar -zcvf " + tarPath + " " + bundlePath
+
+    #print("running star cmd")
+    #print(tarCmd)
+    p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+
+    while p.poll() is None:
+        time.sleep(0.5)
+
+    if p.returncode != 0:
+        print(p.stdout.read())
+
+    message = tar_name_str + "\n" + cmd + "\n"
+    return message
+
+
+def log_files():
+    print("this function will track all files being backed up")
+
+if __name__ == '__main__':
+    print("starting script\n")
+    #fileList = get_all_files("/vz9")
+    #setList = get_file_set(fileList, 10000000000)
+    #parallel_bundler(setList)
+
+    #Local
+    #dir_list = get_all_dirs("/Users/andy/Documents/tester")
+    #parallel_bundler(dir_list)
+
+    dir_list = get_all_dirs("/vz8")
+    parallel_bundler(dir_list)
+    #get_dir_size(dir_list)
+
+"""
+def send_to_scratch(scratchPath, tarPath):
+    print("\nMove tar file to scratch")
+    sendCmd = "mv " + tarPath + " " + scratchPath
+    print(sendCmd)
+
+    p = subprocess.Popen(sendCmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+
+    while p.poll() is None:
+        time.sleep(0.5)
+
+    if p.returncode != 0:
+        print(p.stdout.read())
+
+def delete_bundle(bundlePath):
+    print("\nDeleting bundle")
+    deleteCmd = "rm -rf " + bundlePath
+    print(deleteCmd)
+
+    p = subprocess.Popen(deleteCmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+
+    while p.poll() is None:
+        time.sleep(0.5)
+
+    if p.returncode != 0:
+        print(p.stdout.read())
+
+def get_all_files(volumePath):
+    print("\nget a list of all the files that needs to be backed up")
+    print("path: %s" %volumePath)
+    start = time.time()
+    fileList = []
+
+    for root, dirs, files in os.walk(volumePath):
+        for name in files:
+            fileInfoList = []
+            fullpath = os.path.join(root, name)
+
+            fileSize = os.path.getsize(fullpath)
+            fileInfoList.append(fullpath)
+            fileInfoList.append(fileSize)
+            fileList.append(fileInfoList)
+
+    end = time.time()
+    elapsed = end - start
+    print("Time to gather all files: %s" %elapsed)
+    return fileList
+
+def copy_file_set(setList, tarDir):
+    print("\nc=Copying file to set")
+    staticTarName = "vzStar"
+    uniqueName = staticTarName + str(time.time())
+    bundlePath = os.path.join(tarDir, uniqueName)
+    print("tarPath: %s" %bundlePath)
+    os.makedirs(bundlePath)
+    for srcFile in setList:
+        copy(srcFile, bundlePath)
+
+    print ("bundlePath: %s" %bundlePath)
+    print(len(setList))
+    return bundlePath, len(setList)
+
 def get_file_set(fileList, setSize):
     print("\nselect the files that need to be backed up into sets of 10GB")
     start = time.time()
@@ -107,116 +224,5 @@ def get_file_set(fileList, setSize):
     print("Time to get file set: %s" %elapsed)
     return multiSet
 
-def parallel_bundler(dir_list):
-    print("\nStarting parallel bundler")
-    start = time.time()
 
-    with Pool(8) as p:
-        messages = p.map(bundled_func, dir_list)
-
-    for message in messages:
-        print(message)
-
-    end = time.time()
-    elapsed = end - start
-    print("Total Time elapsed: %s" %elapsed)
-
-def bundled_func(dir_list):
-
-    start = time.time()
-    print("\n")
-
-    message = bundle_file_set(dir_list[0])
-
-    end = time.time()
-    elapsed = end - start
-    result_str = "Results:\n"
-    sizeStr = "Size of directory in tar: %s" %dir_list[1]
-    elapsedStr = "\nTime elapsed per process: %s\n\n" %elapsed
-    message = result_str + message + sizeStr + elapsedStr
-    return message
-
-def copy_file_set(setList, tarDir):
-    print("\nc=Copying file to set")
-    staticTarName = "vzStar"
-    uniqueName = staticTarName + str(time.time())
-    bundlePath = os.path.join(tarDir, uniqueName)
-    print("tarPath: %s" %bundlePath)
-    os.makedirs(bundlePath)
-    for srcFile in setList:
-        copy(srcFile, bundlePath)
-
-    print ("bundlePath: %s" %bundlePath)
-    print(len(setList))
-    return bundlePath, len(setList)
-
-def bundle_file_set(src_path):
-    print("bundle the file set into tar")
-
-    dest_path = "/scale01/scratch"
-
-    staticTarName = "vzStar"
-    uniqueName = staticTarName + str(time.time()) + ".star"
-
-    #tarName = bundle + ".tar.gz"
-
-    tar_name_str = "tarname: %s" %uniqueName
-    tarPath = os.path.join(dest_path, uniqueName)
-    tarCmd = "time star -c -f \"" + tarPath + "\" fs=32m bs=64K pat=*.* " + src_path + "/*.*"
-    #tarCmd = "tar -zcvf " + tarPath + " " + bundlePath
-
-    #print("running star cmd")
-    #print(tarCmd)
-    p = subprocess.Popen(tarCmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-
-    while p.poll() is None:
-        time.sleep(0.5)
-
-    if p.returncode != 0:
-        print(p.stdout.read())
-
-    message = tar_name_str + "\n" + tarCmd + "\n"
-    return message
-
-def send_to_scratch(scratchPath, tarPath):
-    print("\nMove tar file to scratch")
-    sendCmd = "mv " + tarPath + " " + scratchPath
-    print(sendCmd)
-
-    p = subprocess.Popen(sendCmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-
-    while p.poll() is None:
-        time.sleep(0.5)
-
-    if p.returncode != 0:
-        print(p.stdout.read())
-
-def delete_bundle(bundlePath):
-    print("\nDeleting bundle")
-    deleteCmd = "rm -rf " + bundlePath
-    print(deleteCmd)
-
-    p = subprocess.Popen(deleteCmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-
-    while p.poll() is None:
-        time.sleep(0.5)
-
-    if p.returncode != 0:
-        print(p.stdout.read())
-
-def log_files():
-    print("this function will track all files being backed up")
-
-if __name__ == '__main__':
-    print("starting script\n")
-    #fileList = get_all_files("/vz9")
-    #setList = get_file_set(fileList, 10000000000)
-    #parallel_bundler(setList)
-
-    #Local
-    #dir_list = get_all_dirs("/Users/andy/Documents/tester")
-    #parallel_bundler(dir_list)
-
-    dir_list = get_all_dirs("/vz6")
-    parallel_bundler(dir_list)
-    #get_dir_size(dir_list)
+"""
