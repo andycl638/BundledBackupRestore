@@ -236,7 +236,7 @@ def parallel_file_gen3(args):
     start = time.time()
 
     with Pool(8) as p:
-        test = p.starmap(generate_file_ldeedee_unique2, args)
+        test = p.map(generate_file_ldeedee_unique2, args)
 
     for message in test:
         print(message)
