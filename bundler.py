@@ -84,9 +84,9 @@ def bundled_func(dir_list):
 
     throughput = size_mib / elapsed_proc_time
     result_str = "\nResults:"
-    size_str = "\nSize of tar director in GiB: " + size_gib
+    size_str = "\nSize of tar director in GiB: " + str(size_gib)
     elapsed_str = "\nTime elapsed per process: %s" %elapsed
-    throughput_str = "\nThroughput (MiB/sec): " + throughput
+    throughput_str = "\nThroughput (MiB/sec): " + str(throughput)
     message = result_str + message + size_str + elapsed_str + throughput_str
     return message
 
