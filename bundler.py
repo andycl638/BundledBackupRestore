@@ -60,7 +60,7 @@ def parallel_bundler(dir_list):
     print("\nStarting parallel bundler")
     start = time.time()
 
-    with Pool(8) as p:
+    with Pool(16) as p:
         messages = p.map(bundled_func, dir_list)
 
     for message in messages:
@@ -73,16 +73,21 @@ def parallel_bundler(dir_list):
 def bundled_func(dir_list):
 
     start = time.time()
-    print("\n")
 
-    message = bundle_file_set(dir_list[0], dir_list[1])
+    message, elapsed_proc_time = bundle_file_set(dir_list[0], dir_list[1])
 
     end = time.time()
     elapsed = end - start
-    result_str = "Results:\n"
-    size_str = "Size of directory in tar: %s" %dir_list[2]
-    elapsed_str = "\nTime elapsed per process: %s\n\n" %elapsed
-    message = result_str + message + size_str + elapsed_str
+
+    size_mib = dir_list[2]/1024/1024
+    size_gib = size_mib/1024
+
+    throughput =
+    result_str = "\nResults:"
+    size_str = "\nSize of tar director in GiB: %s" %size_gib
+    elapsed_str = "\nTime elapsed per process: %s" %elapsed
+    throughput_str = "\nThroughput (MiB/sec): %s" %
+    message = result_str + message + size_str + elapsed_str + throughput_str
     return message
 
 
@@ -92,10 +97,10 @@ def bundle_file_set(src_path, dest_path):
     static_tar_name = "vzStar"
     unique_name = static_tar_name + str(time.time()) + ".star"
 
-    tar_name_str = "tarname: %s" %unique_name
+    tar_name_str = "\ntarname: %s" %unique_name
     tar_path = os.path.join(dest_path, unique_name)
     cmd = "time star -c -f \"" + tar_path + "\" fs=32m bs=64K pat=*.* " + src_path + "/*.*"
-
+    start = time.time()
     p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
     while p.poll() is None:
@@ -103,9 +108,10 @@ def bundle_file_set(src_path, dest_path):
 
     if p.returncode != 0:
         print(p.stdout.read())
-
-    message = tar_name_str + "\n" + cmd + "\n"
-    return message
+    end = time.time()
+    elapsed_proc_time = end - start
+    message = tar_name_str + "\n" + cmd
+    return message, elapsed_proc_time
 
 
 def log_files():
