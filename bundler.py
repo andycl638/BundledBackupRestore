@@ -60,7 +60,7 @@ def parallel_bundler(dir_list):
     print("\nStarting parallel bundler")
     start = time.time()
 
-    with Pool(16) as p:
+    with Pool(8) as p:
         messages = p.map(bundled_func, dir_list)
 
     for message in messages:
