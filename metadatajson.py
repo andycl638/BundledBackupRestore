@@ -1,19 +1,19 @@
 import json
+import os
+import time
 
 class MetadataJson:
     '''
         This class is used to record the data of the bundler object that gets backed up.
         This file is consumable to create automation, or display in gui.
     '''
-    #def __init__(self):
-    #    """ nothing"""
+    def write_to_file(self, data, path):
+        static_name = "backup"
+        unique_name = static_name + str(time.time()) + ".star"
+        file_path = os.path.join(path[1], unique_name)
+        print("json file: " + file_path)
 
-
-
-
-
-    def write_to_file(self, data):
-        with open("testfile.json", "w") as write_file:
+        with open(file_path, "w") as write_file:
             json.dump(data, write_file)
 
     def deserialize_json(self, file_name):

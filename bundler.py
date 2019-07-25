@@ -81,21 +81,21 @@ def parallel_bundler(dir_list, total_size, procs):
     print("Total Time elapsed: %s" %elapsed)
 
     print("Creating json metadata file")
-    metadatajson.write_to_file(data)
+    metadatajson.write_to_file(data, dir_list[0])
     print("Done.")
 
 def bundled_func(dir_list):
 
     start = time.time()
 
-    message, elapsed_proc_time, unique_name = bundle_file_set(dir_list[0], dir_list[1])
+    message, elapsed_proc_time, tar_path = bundle_file_set(dir_list[0], dir_list[1])
 
     end = time.time()
     elapsed = end - start
     star_file_data = {}
     volume_path_arr = []
 
-    star_file_data['name'] = unique_name
+    star_file_data['name'] = tar_path
     star_file_data['size'] =  dir_list[2]
     star_file_data['volume_paths'] = volume_path_arr
     volume_path_arr.append(dir_list[0])
