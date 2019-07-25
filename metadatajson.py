@@ -9,7 +9,7 @@ class MetadataJson:
     '''
     def write_to_file(self, data, path):
         static_name = "backup"
-        unique_name = static_name + str(time.time()) + ".star"
+        unique_name = static_name + str(time.time()) + ".json"
         file_path = os.path.join(path[1], unique_name)
         print("json file: " + file_path)
 
