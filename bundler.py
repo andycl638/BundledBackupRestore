@@ -5,6 +5,11 @@ from shutil import copy
 from multiprocessing import Pool
 import subprocess
 from os.path import join, getsize
+from metadatajson import MetadataJson
+from stats import Stats
+import json
+
+metadatajson = MetadataJson()
 
 def get_all_dirs(src_path, dest_path):
     print("\nget a list of all the files that needs to be backed up")
@@ -13,71 +18,87 @@ def get_all_dirs(src_path, dest_path):
     dir_list = []
     set_list = []
     multi_set = []
+    dir_size = 0
     total_size = 0
 
     for root, dirs, files in os.walk(src_path):
         for dir in dirs:
             dir_path=os.path.join(root, dir)
-            #print(dir_path)
 
             for file in os.listdir(dir_path):
                 file_path=os.path.join(dir_path, file)
                 if os.path.isfile(file_path):
-                    total_size += os.path.getsize(file_path)
+                    dir_size += os.path.getsize(file_path)
 
             set_list.append(dir_path)
             set_list.append(dest_path)
-            set_list.append(total_size)
+            set_list.append(dir_size)
             dir_list.append(set_list)
             set_list = []
-
-            #print(total_size/1024/1024)
-            total_size = 0
+            total_size += dir_size
+            dir_size = 0
 
     end = time.time()
     elapsed = end - start
     print("Time to gather all files: %s" %elapsed)
     print("Got all dirs and size")
-    print(dir_list)
-    return dir_list
+    return dir_list, total_size
 
 def get_dir_size(dir_path):
     set_list = []
 
-    total_size = 0
+    dir_size = 0
 
     for file in os.listdir(dir_path):
         file_path=os.path.join(dir_path, file)
         if os.path.isfile(file_path):
-            total_size += os.path.getsize(file_path)
+            dir_size += os.path.getsize(file_path)
         set_list.append(dir_path)
-        set_list.append(total_size)
+        set_list.append(dir_size)
 
     print(set_list)
     return set_list
 
-def parallel_bundler(dir_list):
+def parallel_bundler(dir_list, total_size, procs):
     print("\nStarting parallel bundler")
     start = time.time()
+    data = {}
+    star_file_arr = []
+    with Pool(procs) as p:
+        proc_obj = p.map(bundled_func, dir_list)
 
-    with Pool(8) as p:
-        messages = p.map(bundled_func, dir_list)
-
-    for message in messages:
+    for message, star_file_data in proc_obj:
         print(message)
+        star_file_arr.append(star_file_data)
 
     end = time.time()
     elapsed = end - start
+
+
+    data['total_size'] = total_size
+    data['star_files'] = star_file_arr
+
     print("Total Time elapsed: %s" %elapsed)
+
+    print("Creating json metadata file")
+    metadatajson.write_to_file(data)
+    print("Done.")
 
 def bundled_func(dir_list):
 
     start = time.time()
 
-    message, elapsed_proc_time = bundle_file_set(dir_list[0], dir_list[1])
+    message, elapsed_proc_time, unique_name = bundle_file_set(dir_list[0], dir_list[1])
 
     end = time.time()
     elapsed = end - start
+    star_file_data = {}
+    volume_path_arr = []
+
+    star_file_data['name'] = unique_name
+    star_file_data['size'] =  dir_list[2]
+    star_file_data['volume_paths'] = volume_path_arr
+    volume_path_arr.append(dir_list[0])
 
     size_mib = dir_list[2]/1024/1024
     size_gib = size_mib/1024
@@ -88,7 +109,7 @@ def bundled_func(dir_list):
     elapsed_str = "\nTime elapsed per process: %s" %elapsed
     throughput_str = "\nThroughput (MiB/sec): " + str(throughput)
     message = result_str + message + size_str + elapsed_str + throughput_str
-    return message
+    return message, star_file_data
 
 
 def bundle_file_set(src_path, dest_path):
@@ -109,9 +130,10 @@ def bundle_file_set(src_path, dest_path):
     if p.returncode != 0:
         print(p.stdout.read())
     end = time.time()
+
     elapsed_proc_time = end - start
     message = tar_name_str + "\n" + cmd
-    return message, elapsed_proc_time
+    return message, elapsed_proc_time, tar_path
 
 
 def log_files():
@@ -120,17 +142,31 @@ def log_files():
 def main(argv):
     #src
     #dest
+    #parallel process #
     if len(argv) < 2:
-        print("Not enough arguments. Need two arguments.")
-        print("Example: src dest")
-        sys.exit()
-    if len(argv) > 2:
-        print("Too many arguments. Need two arguments.")
+        print("Not enough arguments. Need at least two arguments.")
         print("Syntax: python3 bundler.py <src path> <dest path>")
+        sys.exit()
+    if len(argv) > 3:
+        print("Too many arguments. Need at least two arguments.")
+        print("Syntax: python3 bundler.py <src path> <dest path>")
+        sys.exit()
+    if len(argv) != 3:
+        print("Using default number of parallelism: 8")
+        print("Syntax: python3 bundler.py <src path> <dest path> <parallel process>")
+        procs = 8
+    else:
+        procs = argv[2]
+
+    try:
+        int(procs)
+    except ValueError:
+        print("Third value needs to be an integer")
         sys.exit()
 
     src_path = argv[0]
     dest_path = argv[1]
+
     if os.path.isdir(src_path):
         print("Source Path: %s" %src_path)
     else:
@@ -142,21 +178,16 @@ def main(argv):
         print("Destination path is not valid: %s" %dest_path)
         sys.exit()
 
-    dir_list = get_all_dirs(src_path, dest_path)
-    parallel_bundler(dir_list)
+    print("Using parallelism: " + str(procs))
+
+    dir_list, total_size = get_all_dirs(src_path, dest_path)
+    parallel_bundler(dir_list, total_size, int(procs))
 
 if __name__ == '__main__':
     print("starting script\n")
-    #fileList = get_all_files("/vz9")
-    #setList = get_file_set(fileList, 10000000000)
-    #parallel_bundler(setList)
+
     main(sys.argv[1:])
-    #Local
-    #dir_list = get_all_dirs("/Users/andy/Documents/tester")
-    #parallel_bundler(dir_list)
 
-
-    #get_dir_size(dir_list)
 
 """
 def send_to_scratch(scratchPath, tarPath):
