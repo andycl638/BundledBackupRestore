@@ -89,13 +89,13 @@ def unbundle(src, dest):
     start = time.time()
     p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, cwd=dest)
 
-    #while p.poll() is None:
-    #    time.sleep(0.5)
+    while p.poll() is None:
+        time.sleep(0.5)
 
-    #if p.returncode != 0:
-    #    print(p.stdout.read())
+    if p.returncode != 0:
+        print(p.stdout.read())
 
-    time.sleep(5)
+    #time.sleep(5)
     end = time.time()
     elapsed = end - start
 
@@ -105,8 +105,8 @@ def unbundle(src, dest):
     return cmd, bundle_size, elapsed
 
 def get_bundle_size(src):
-    #bundle_size = os.path.getsize(src)
-    bundle_size = 1000
+    bundle_size = os.path.getsize(src)
+    #bundle_size = 1000
     return bundle_size
 
 def get_restore_list(data):
