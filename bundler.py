@@ -70,7 +70,7 @@ def parallel_bundler(dir_list, total_size, procs):
 
     for star_file_data, stat in proc_obj:
         star_file_arr.append(star_file_data)
-        stat.display_stats()
+        stat.display_stats_bundle()
         total_data_transferred += stat.star_size
 
     end = time.time()

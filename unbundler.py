@@ -5,6 +5,7 @@ import time
 from os.path import getsize
 from multiprocessing import Pool
 from metadatajson import MetadataJson
+from stats import Stats
 
 metadatajson = MetadataJson()
 
@@ -24,25 +25,48 @@ def build_list(src_list, dest):
 def parallel_unbundle(unbundle_list, procs):
     print("\nStarting parallel unbundler")
     start = time.time()
+    total_data_transferred = 0
 
     with Pool(procs) as p:
-        messages = p.map(unbundle_func, unbundle_list)
+        unbundle_obj = p.map(unbundle_func, unbundle_list)
 
-    for message in messages:
-        print(message)
+    for message, stat in unbundle_obj:
+        #print(message)
+        stat.display_stats_unbundle()
+        total_data_transferred += stat.star_size
 
     end = time.time()
     elapsed = end - start
-    print("Total Time elapsed: %s" %elapsed)
+
+    total_data_transferred_mib = total_data_transferred/1024/1024
+    total_throughput = total_data_transferred_mib/elapsed
+    day_normalization = elapsed/86400
+    tb_normalization = total_data_transferred_mib/1000000
+    days = day_normalization*15
+
+    normalization_throughput = tb_normalization / days
+
+    goal_throughput = 25/15
+
+    print("\nTotal Time elapsed (sec): %s" %elapsed)
+    print("Total data transferred (MiB): " + str(total_data_transferred_mib))
+    print("Aggregate Throughput (MiB/sec): " + str(total_throughput))
+
+    print("Normalize day: " + str(day_normalization))
+    print("Normalize tb: " + str(tb_normalization))
+    print("Normalize throughput (TB/15days): " + str(normalization_throughput))
+    print("Goal: " + str(goal_throughput))
 
 def unbundle_func(unbundle_list):
+    stat = Stats()
     start = time.time()
 
-    cmd, bundle_size = unbundle(unbundle_list[0], unbundle_list[1])
+    cmd, bundle_size, elapsed_proc = unbundle(unbundle_list[0], unbundle_list[1])
     delete_message = delete_star(unbundle_list[0])
 
     end = time.time()
     elapsed = end - start
+    stat.capture_stats(elapsed_proc, bundle_size, 0, "", 0, cmd)
 
     bundle_size_mib = bundle_size/1024/1024
     bundle_size_gib = bundle_size_mib/1024
@@ -55,30 +79,34 @@ def unbundle_func(unbundle_list):
     elapsed_str = "\nTime elapsed per process: %s" %elapsed
 
     message = result_str + cmd_str + bundle_size_str + throughput_str + delete_message + elapsed_str
-    return message
+    return message, stat
 
 def unbundle(src, dest):
 
     bundle_size = get_bundle_size(src)
 
     cmd = "star -x -v -f " + src
-
+    start = time.time()
     p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, cwd=dest)
 
-    while p.poll() is None:
-        time.sleep(0.5)
+    #while p.poll() is None:
+    #    time.sleep(0.5)
 
-    if p.returncode != 0:
-        print(p.stdout.read())
+    #if p.returncode != 0:
+    #    print(p.stdout.read())
+
+    time.sleep(5)
+    end = time.time()
+    elapsed = end - start
 
     out, err = p.communicate()
 
     #print (out)
-    return cmd, bundle_size
+    return cmd, bundle_size, elapsed
 
 def get_bundle_size(src):
-    bundle_size = os.path.getsize(src)
-
+    #bundle_size = os.path.getsize(src)
+    bundle_size = 1000
     return bundle_size
 
 def get_restore_list(data):

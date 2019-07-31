@@ -33,10 +33,19 @@ class Stats:
         self.throughput = throughput
         self.cmd = cmd
 
-    def display_stats(self):
+    def display_stats_bundle(self):
         result_str = "\nResults:"
         size_str = "\nSize of tar director in GiB: " + str(self.star_size/1024/1024/1024)
         elapsed_str = "\nTime elapsed per process: %s" %self.elapsed_time
         throughput_str = "\nThroughput (MiB/sec): " + str(self.throughput)
         display_message = result_str + self.cmd + size_str + elapsed_str + throughput_str
+        print(display_message)
+
+    def display_stats_unbundle(self):
+        result_str = "\nResults:"
+        cmd_str = "\nUnbundle cmd: %s" %self.cmd
+        bundle_size_str = "\nSize of bundle: " + str(self.star_size/1024/1024/1024)
+        elapsed_str = "\nTime elapsed per process: %s" %self.elapsed_time
+        throughput_str = "\nThroughput (MiB/sec): " + str(self.throughput)
+        display_message = result_str + cmd_str + bundle_size_str + throughput_str  + elapsed_str
         print(display_message)
