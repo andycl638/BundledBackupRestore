@@ -21,13 +21,7 @@ class MetadataJson:
             data = json.load(read_file)
 
         return data
-"""
-    def create_file:
 
-    def serialize_json():
-
-    def deserialize_json():
-"""
 """
 {
   "total_size": 0,

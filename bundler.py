@@ -64,12 +64,14 @@ def parallel_bundler(dir_list, total_size, procs):
     start = time.time()
     data = {}
     star_file_arr = []
+    total_data_transferred = 0
     with Pool(procs) as p:
         proc_obj = p.map(bundled_func, dir_list)
 
-    for message, star_file_data in proc_obj:
-        print(message)
+    for star_file_data, stat in proc_obj:
         star_file_arr.append(star_file_data)
+        stat.display_stats()
+        total_data_transferred += stat.star_size
 
     end = time.time()
     elapsed = end - start
@@ -78,17 +80,32 @@ def parallel_bundler(dir_list, total_size, procs):
     data['total_size'] = total_size
     data['star_files'] = star_file_arr
 
-    print("Total Time elapsed: %s" %elapsed)
+    total_data_transferred_mib = total_data_transferred/1024/1024
+    total_throughput = total_data_transferred_mib/elapsed
+    day_normalization = elapsed/86400
+    tb_normalization = total_data_transferred_mib/1000000
+    days = day_normalization*15
 
-    print("Creating json metadata file")
+    normalization_throughput = tb_normalization / days
+
+    goal_throughput = 25/15
+    print("\nTotal Time elapsed (sec): %s" %elapsed)
+    print("Total data transferred (MiB): " + str(total_data_transferred_mib))
+    print("Aggregate Throughput (MiB/sec): " + str(total_throughput))
+
+    print("Normalize day: " + str(day_normalization))
+    print("Normalize tb: " + str(tb_normalization))
+    print("Normalize throughput (TB/15days): " + str(normalization_throughput))
+    print("Goal: " + str(goal_throughput))
+    print("\nCreating json metadata file")
     metadatajson.write_to_file(data, dir_list[0])
     print("Done.")
 
 def bundled_func(dir_list):
-
+    stat = Stats()
     start = time.time()
 
-    message, elapsed_proc_time, tar_path = bundle_file_set(dir_list[0], dir_list[1])
+    cmd, elapsed_proc_time, tar_path = bundle_file_set(dir_list[0], dir_list[1])
 
     end = time.time()
     elapsed = end - start
@@ -104,13 +121,10 @@ def bundled_func(dir_list):
     size_gib = size_mib/1024
 
     throughput = size_mib / elapsed_proc_time
-    result_str = "\nResults:"
-    size_str = "\nSize of tar director in GiB: " + str(size_gib)
-    elapsed_str = "\nTime elapsed per process: %s" %elapsed
-    throughput_str = "\nThroughput (MiB/sec): " + str(throughput)
-    message = result_str + message + size_str + elapsed_str + throughput_str
-    return message, star_file_data
 
+    stat.capture_stats(elapsed_proc_time, dir_list[2], 0, tar_path, 0, cmd)
+
+    return  star_file_data, stat
 
 def bundle_file_set(src_path, dest_path):
     print("bundle the file set into tar")
@@ -122,6 +136,7 @@ def bundle_file_set(src_path, dest_path):
     tar_path = os.path.join(dest_path, unique_name)
     cmd = "time star -c -f \"" + tar_path + "\" fs=32m bs=64K pat=*.* " + src_path + "/*.*"
     start = time.time()
+
     p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
     while p.poll() is None:
@@ -132,12 +147,12 @@ def bundle_file_set(src_path, dest_path):
     end = time.time()
 
     elapsed_proc_time = end - start
-    message = tar_name_str + "\n" + cmd
-    return message, elapsed_proc_time, tar_path
+    message_cmd = tar_name_str + "\n" + cmd
+    return message_cmd, elapsed_proc_time, tar_path
 
 
-def log_files():
-    print("this function will track all files being backed up")
+def log_progress():
+    print("calculate progress")
 
 def main(argv):
     #src
@@ -187,101 +202,3 @@ if __name__ == '__main__':
     print("starting script\n")
 
     main(sys.argv[1:])
-
-
-"""
-def send_to_scratch(scratchPath, tarPath):
-    print("\nMove tar file to scratch")
-    sendCmd = "mv " + tarPath + " " + scratchPath
-    print(sendCmd)
-
-    p = subprocess.Popen(sendCmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-
-    while p.poll() is None:
-        time.sleep(0.5)
-
-    if p.returncode != 0:
-        print(p.stdout.read())
-
-def delete_bundle(bundlePath):
-    print("\nDeleting bundle")
-    deleteCmd = "rm -rf " + bundlePath
-    print(deleteCmd)
-
-    p = subprocess.Popen(deleteCmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-
-    while p.poll() is None:
-        time.sleep(0.5)
-
-    if p.returncode != 0:
-        print(p.stdout.read())
-
-def get_all_files(volumePath):
-    print("\nget a list of all the files that needs to be backed up")
-    print("path: %s" %volumePath)
-    start = time.time()
-    fileList = []
-
-    for root, dirs, files in os.walk(volumePath):
-        for name in files:
-            fileInfoList = []
-            fullpath = os.path.join(root, name)
-
-            fileSize = os.path.getsize(fullpath)
-            fileInfoList.append(fullpath)
-            fileInfoList.append(fileSize)
-            fileList.append(fileInfoList)
-
-    end = time.time()
-    elapsed = end - start
-    print("Time to gather all files: %s" %elapsed)
-    return fileList
-
-def copy_file_set(setList, tarDir):
-    print("\nc=Copying file to set")
-    staticTarName = "vzStar"
-    uniqueName = staticTarName + str(time.time())
-    bundlePath = os.path.join(tarDir, uniqueName)
-    print("tarPath: %s" %bundlePath)
-    os.makedirs(bundlePath)
-    for srcFile in setList:
-        copy(srcFile, bundlePath)
-
-    print ("bundlePath: %s" %bundlePath)
-    print(len(setList))
-    return bundlePath, len(setList)
-
-def get_file_set(fileList, setSize):
-    print("\nselect the files that need to be backed up into sets of 10GB")
-    start = time.time()
-    setList = []
-    multiSet = []
-    count = 0
-
-    while len(fileList) > 0:
-        for fileTuple in fileList:
-            setList.append(fileTuple[0])
-            count += fileTuple[1]
-            fileList.remove(fileTuple)
-            #print(len(fileList))
-            if count > setSize:
-                print("COUNT: %s" %count)
-                count = 0
-                break;
-
-        #print("\n\nSETLIST")
-        #print(setList)
-        #print("COUNT: %s" %str(count))
-        multiSet.append(setList)
-        #setList = ()
-        setList = []
-    #print("\n\nMULTISET")
-    #print(len(fileList))
-    #print(multiSet)
-    end = time.time()
-    elapsed = end - start
-    print("Time to get file set: %s" %elapsed)
-    return multiSet
-
-
-"""
