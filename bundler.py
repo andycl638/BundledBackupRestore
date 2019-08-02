@@ -11,149 +11,212 @@ import json
 
 metadatajson = MetadataJson()
 
-def get_all_dirs(src_path, dest_path):
-    print("\nget a list of all the files that needs to be backed up")
-    print("path: %s" %src_path)
-    start = time.time()
-    dir_list = []
-    set_list = []
-    multi_set = []
-    dir_size = 0
-    total_size = 0
+class Bundler():
+    ''' Bundler class
+        Bundles files into .star files from filer to scratch space
+        Currently: Uses directories to bundle to decrease the count of files
+        Bundle: grouping large amount of files together to get archived
+        Star: linux unique standard tape archiver
+    '''
 
-    for root, dirs, files in os.walk(src_path):
-        for dir in dirs:
-            dir_path=os.path.join(root, dir)
+    def __init__(self, src_path, dest_path):
+        '''
+            Initialize Bundler object
 
-            for file in os.listdir(dir_path):
-                file_path=os.path.join(dir_path, file)
-                if os.path.isfile(file_path):
-                    dir_size += os.path.getsize(file_path)
+            Instance Variable:
+                src_path    -- The filer path containing volumes/files that need to be backed up
+                dest_path   -- The scratch path where the bundled files will be sent to
+        '''
+        self.src_path = src_path
+        self.dest_path = dest_path
 
+    def get_all_dirs(self):
+        '''
+            Prepares a list of directories that will be bundled
+
+            Returns
+                dir_list    -- list of directories
+                total_size  -- the total size of data that will be backed up
+        '''
+        print("\nget a list of all the dirs that needs to be backed up")
+        print("path: %s" %self.src_path)
+        start = time.time()
+        dir_list = []
+        set_list = []
+        multi_set = []
+        dir_size = 0
+        total_size = 0
+
+        for root, dirs, files in os.walk(self.src_path):
+            for dir in dirs:
+                dir_path=os.path.join(root, dir)
+
+                for file in os.listdir(dir_path):
+                    file_path=os.path.join(dir_path, file)
+                    if os.path.isfile(file_path):
+                        dir_size += os.path.getsize(file_path)
+
+                set_list.append(dir_path)
+                set_list.append(self.dest_path)
+                set_list.append(dir_size)
+                dir_list.append(set_list)
+                set_list = []
+                total_size += dir_size
+                dir_size = 0
+
+        end = time.time()
+        elapsed = end - start
+        print("Time to gather all files: %s" %elapsed)
+        print("Got all dirs and size")
+        return dir_list, total_size
+
+    def get_dir_size(self, dir_path):
+        set_list = []
+
+        dir_size = 0
+
+        for file in os.listdir(dir_path):
+            file_path=os.path.join(dir_path, file)
+            if os.path.isfile(file_path):
+                dir_size += os.path.getsize(file_path)
             set_list.append(dir_path)
-            set_list.append(dest_path)
             set_list.append(dir_size)
-            dir_list.append(set_list)
-            set_list = []
-            total_size += dir_size
-            dir_size = 0
 
-    end = time.time()
-    elapsed = end - start
-    print("Time to gather all files: %s" %elapsed)
-    print("Got all dirs and size")
-    return dir_list, total_size
+        print(set_list)
+        return set_list
 
-def get_dir_size(dir_path):
-    set_list = []
+    def parallel_bundler(self, dir_list, total_size, procs):
+        '''
+            Conducts the bundle function in parallel
+            Displays results of the bundle process
+            A json file is created containing metadata that were archived
+            The json file can be used to backup specific directories
 
-    dir_size = 0
+            Arguments:
+                dir_list    -- list of directories that will be bundled
+                total_size  -- the total size of data that will be backed up
+                                used to calculate results
+                proc        -- Number of processor used to perform bundling
+        '''
+        print("\nStarting parallel bundler")
+        start = time.time()
+        data = {}
+        star_file_arr = []
+        total_data_transferred = 0
+        with Pool(procs) as p:
+            proc_obj = p.map(Bundler.bundled_func, dir_list)
 
-    for file in os.listdir(dir_path):
-        file_path=os.path.join(dir_path, file)
-        if os.path.isfile(file_path):
-            dir_size += os.path.getsize(file_path)
-        set_list.append(dir_path)
-        set_list.append(dir_size)
+        for star_file_data, stat in proc_obj:
+            star_file_arr.append(star_file_data)
+            stat.display_stats_bundle()
+            total_data_transferred += stat.star_size
 
-    print(set_list)
-    return set_list
+        end = time.time()
+        elapsed = end - start
 
-def parallel_bundler(dir_list, total_size, procs):
-    print("\nStarting parallel bundler")
-    start = time.time()
-    data = {}
-    star_file_arr = []
-    total_data_transferred = 0
-    with Pool(procs) as p:
-        proc_obj = p.map(bundled_func, dir_list)
+        data['total_size'] = total_size
+        data['star_files'] = star_file_arr
 
-    for star_file_data, stat in proc_obj:
-        star_file_arr.append(star_file_data)
-        stat.display_stats_bundle()
-        total_data_transferred += stat.star_size
+        ''' TODO: Move total result calculations to Stats class'''
+        total_data_transferred_mib = total_data_transferred/1024/1024
+        total_throughput = total_data_transferred_mib/elapsed
+        day_normalization = elapsed/86400
+        tb_normalization = total_data_transferred_mib/1000000
+        days = day_normalization*15
 
-    end = time.time()
-    elapsed = end - start
+        normalization_throughput = tb_normalization / days
 
+        goal_throughput = 25/15
+        print("\nTotal Time elapsed (sec): %s" %elapsed)
+        print("Total data transferred (MiB): " + str(total_data_transferred_mib))
+        print("Aggregate Throughput (MiB/sec): " + str(total_throughput))
 
-    data['total_size'] = total_size
-    data['star_files'] = star_file_arr
+        print("Normalize day: " + str(day_normalization))
+        print("Normalize tb: " + str(tb_normalization))
+        print("Normalize throughput (TB/15days): " + str(normalization_throughput))
+        print("Goal: " + str(goal_throughput))
 
-    total_data_transferred_mib = total_data_transferred/1024/1024
-    total_throughput = total_data_transferred_mib/elapsed
-    day_normalization = elapsed/86400
-    tb_normalization = total_data_transferred_mib/1000000
-    days = day_normalization*15
+        print("\nCreating json metadata file")
+        metadatajson.write_to_file(data, dir_list[0])
+        print("Done.")
 
-    normalization_throughput = tb_normalization / days
+    def bundled_func(dir_list):
+        '''
+            Function called in parallel_bundler() which gives it an array containing
+            src_path and dest_path
+            Generates json object and captures stats of each process
 
-    goal_throughput = 25/15
-    print("\nTotal Time elapsed (sec): %s" %elapsed)
-    print("Total data transferred (MiB): " + str(total_data_transferred_mib))
-    print("Aggregate Throughput (MiB/sec): " + str(total_throughput))
+            Arguments:
+                dir_list        -- Array containing src_path and dest_path
 
-    print("Normalize day: " + str(day_normalization))
-    print("Normalize tb: " + str(tb_normalization))
-    print("Normalize throughput (TB/15days): " + str(normalization_throughput))
-    print("Goal: " + str(goal_throughput))
-    print("\nCreating json metadata file")
-    metadatajson.write_to_file(data, dir_list[0])
-    print("Done.")
+            Returns:
+                star_file_data  -- Json object of archive file
+                stat            -- Stat object of the process
+        '''
+        stat = Stats()
+        start = time.time()
 
-def bundled_func(dir_list):
-    stat = Stats()
-    start = time.time()
+        cmd, elapsed_proc_time, tar_path = Bundler.bundle_file_set(dir_list[0], dir_list[1])
 
-    cmd, elapsed_proc_time, tar_path = bundle_file_set(dir_list[0], dir_list[1])
+        end = time.time()
+        elapsed = end - start
+        star_file_data = {}
+        volume_path_arr = []
 
-    end = time.time()
-    elapsed = end - start
-    star_file_data = {}
-    volume_path_arr = []
+        star_file_data['name'] = tar_path
+        star_file_data['size'] =  dir_list[2]
+        star_file_data['volume_paths'] = volume_path_arr
+        volume_path_arr.append(dir_list[0])
 
-    star_file_data['name'] = tar_path
-    star_file_data['size'] =  dir_list[2]
-    star_file_data['volume_paths'] = volume_path_arr
-    volume_path_arr.append(dir_list[0])
+        size_mib = dir_list[2]/1024/1024
+        size_gib = size_mib/1024
 
-    size_mib = dir_list[2]/1024/1024
-    size_gib = size_mib/1024
+        throughput = size_mib / elapsed_proc_time
 
-    throughput = size_mib / elapsed_proc_time
+        stat.capture_stats(elapsed_proc_time, dir_list[2], 0, tar_path, 0, cmd)
 
-    stat.capture_stats(elapsed_proc_time, dir_list[2], 0, tar_path, 0, cmd)
+        return  star_file_data, stat
 
-    return  star_file_data, stat
+    def bundle_file_set(src_path, dest_path):
+        '''
+            Runs subprocess cmd to archive a directory to the destination path
 
-def bundle_file_set(src_path, dest_path):
-    print("bundle the file set into tar")
+            Arguments:
+                src_path            -- directory path that will be archived
+                dest_path           -- path where the archive file will be sent
 
-    static_tar_name = "vzStar"
-    unique_name = static_tar_name + str(time.time()) + ".star"
+            Returns:
+                message_cmd         -- Archive command string
+                elapsed_proc_time   -- The elapsed time of the subprocess cmd
+                tar_path            -- The archived file path
+        '''
 
-    tar_name_str = "\ntarname: %s" %unique_name
-    tar_path = os.path.join(dest_path, unique_name)
-    cmd = "time star -c -f \"" + tar_path + "\" fs=32m bs=64K pat=*.* " + src_path + "/*.*"
-    start = time.time()
+        print("bundle the file set into tar")
 
-    p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        static_tar_name = "vzStar"
+        unique_name = static_tar_name + str(time.time()) + ".star"
 
-    while p.poll() is None:
-        time.sleep(0.5)
+        tar_name_str = "\ntarname: %s" %unique_name
+        tar_path = os.path.join(dest_path, unique_name)
+        cmd = "time star -c -f \"" + tar_path + "\" fs=32m bs=64K pat=*.* " + src_path + "/*.*"
+        #cmd = "ls -l " + src_path
+        start = time.time()
 
-    if p.returncode != 0:
-        print(p.stdout.read())
-    end = time.time()
+        p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
-    elapsed_proc_time = end - start
-    message_cmd = tar_name_str + "\n" + cmd
-    return message_cmd, elapsed_proc_time, tar_path
+        while p.poll() is None:
+            time.sleep(0.5)
 
+        if p.returncode != 0:
+            print(p.stdout.read())
 
-def log_progress():
-    print("calculate progress")
+        end = time.time()
 
+        elapsed_proc_time = end - start
+        message_cmd = tar_name_str + "\n" + cmd
+        return message_cmd, elapsed_proc_time, tar_path
+
+'''
 def main(argv):
     #src
     #dest
@@ -201,4 +264,4 @@ def main(argv):
 if __name__ == '__main__':
     print("starting script\n")
 
-    main(sys.argv[1:])
+    main(sys.argv[1:])'''

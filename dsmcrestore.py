@@ -6,8 +6,12 @@ import time
 
 class DsmcRestore():
 
-    def restore_from_sp(self, restore_path):
-        cmd = "dsmc restore " + restore_path
+    def __init__(self, restore_path):
+        self.restore_path = restore_path
+
+    def restore(self):
+        cmd = "dsmc restore " + self.restore_path
+        #cmd = "ls -l " + self.restore_path
         print(cmd)
 
         start = time.time()
@@ -19,14 +23,18 @@ class DsmcRestore():
 
         if p.returncode != 0:
             print(p.stdout.read())
+            print("Error in the subprocess cmd")
+        else:
+            for line in p.stdout:
+                print (line.rstrip())
+
         end = time.time()
 
         elapsed_proc_time = end - start
 
         out, err = p.communicate()
 
-        print(out)
-
+'''
 def main(argv):
     #restore_path
     if len(argv) < 1:
@@ -51,4 +59,4 @@ def main(argv):
 if __name__ == '__main__':
     print("starting script\n")
 
-    main(sys.argv[1:])
+    main(sys.argv[1:])'''
