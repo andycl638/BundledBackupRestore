@@ -35,8 +35,8 @@ def dsmcplus():
         dir_list, total_size = bundler.get_all_dirs()
         bundler.parallel_bundler(dir_list, total_size, int(args.parallelism))
 
-        dsmc_backup = DsmcBackup(args.destination)
-        dsmc_backup.backup()
+        #dsmc_backup = DsmcBackup(args.destination)
+        #dsmc_backup.backup()
 
     elif args.mode == 'restore':
         if os.path.isdir(args.source):
