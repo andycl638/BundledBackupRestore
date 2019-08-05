@@ -140,6 +140,7 @@ class Bundler():
         metadatajson.write_to_file(data, dir_list[0])
         print("Done.")
 
+    @classmethod
     def bundled_func(dir_list):
         '''
             Function called in parallel_bundler() which gives it an array containing
@@ -177,6 +178,7 @@ class Bundler():
 
         return  star_file_data, stat
 
+    @classmethod
     def bundle_file_set(src_path, dest_path):
         '''
             Runs subprocess cmd to archive a directory to the destination path
