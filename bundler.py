@@ -141,7 +141,7 @@ class Bundler():
         print("Done.")
 
     @classmethod
-    def bundled_func(dir_list):
+    def bundled_func(self, dir_list):
         '''
             Function called in parallel_bundler() which gives it an array containing
             src_path and dest_path
@@ -179,7 +179,7 @@ class Bundler():
         return  star_file_data, stat
 
     @classmethod
-    def bundle_file_set(src_path, dest_path):
+    def bundle_file_set(self, src_path, dest_path):
         '''
             Runs subprocess cmd to archive a directory to the destination path
 
@@ -200,8 +200,8 @@ class Bundler():
 
         tar_name_str = "\ntarname: %s" %unique_name
         tar_path = os.path.join(dest_path, unique_name)
-        cmd = "time star -c -f \"" + tar_path + "\" fs=32m bs=64K pat=*.* " + src_path + "/*.*"
-        #cmd = "ls -l " + src_path
+        #cmd = "time star -c -f \"" + tar_path + "\" fs=32m bs=64K pat=*.* " + src_path + "/*.*"
+        cmd = "ls -l " + src_path
         start = time.time()
 
         p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
