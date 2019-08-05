@@ -98,6 +98,7 @@ class Unbundler():
         print("Normalize throughput (TB/15days): " + str(normalization_throughput))
         print("Goal: " + str(goal_throughput))
 
+    @staticmethod
     def unbundle_func(unbundle_list):
         '''
             Function called in parallel_unbundler() which gives it an array containing
@@ -122,6 +123,7 @@ class Unbundler():
 
         return stat
 
+    @staticmethod
     def unbundle(src, dest):
         '''
             Runs subprocess cmd to extract data from the archive file back to the filer
@@ -156,6 +158,7 @@ class Unbundler():
 
         return cmd, bundle_size, elapsed
 
+    @staticmethod
     def get_bundle_size(src):
         '''
             Get the size of each archive file
@@ -171,7 +174,7 @@ class Unbundler():
         #bundle_size = 1000
         return bundle_size
 
-    #
+
     def get_restore_list(self, data):
         '''
             get a list of star files from json obj
@@ -203,6 +206,7 @@ class Unbundler():
         print(restore_list)
         return restore_list
 
+    @staticmethod
     def delete_star(src):
         '''
             Delete all archive files from scratch once restore is complete

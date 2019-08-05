@@ -200,8 +200,8 @@ class Bundler():
 
         tar_name_str = "\ntarname: %s" %unique_name
         tar_path = os.path.join(dest_path, unique_name)
-        cmd = "time star -c -f \"" + tar_path + "\" fs=32m bs=64K pat=*.* " + src_path + "/*.*"
-        #cmd = "ls -l " + src_path
+        #cmd = "time star -c -f \"" + tar_path + "\" fs=32m bs=64K pat=*.* " + src_path + "/*.*"
+        cmd = "ls -l " + src_path
         start = time.time()
 
         p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)

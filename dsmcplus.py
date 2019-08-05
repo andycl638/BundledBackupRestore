@@ -54,6 +54,10 @@ def dsmcplus():
         unbundler = Unbundler(args.source, args.destination)
         restore_list = unbundler.get_all_volume()
         #restore_list = get_restore_list(data)
+        if len(restore_list) == 0:
+            print("No files were found to restore")
+            sys.exit()
+            
         unbundle_list = unbundler.build_list(restore_list)
         unbundler.parallel_unbundle(unbundle_list, args.parallelism)
 
