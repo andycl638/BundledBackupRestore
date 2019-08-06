@@ -11,7 +11,7 @@ class DsmcBackup():
 
     def backup(self):
 
-        cmd = "dsmc incremental " + self.backup_path
+        cmd = "dsmc selective " + self.backup_path + "*"
         #cmd = "ls -l " + self.backup_path
         print(cmd)
 
@@ -33,6 +33,9 @@ class DsmcBackup():
         elapsed_proc_time = end - start
 
         out, err = p.communicate()
+        print(out)
+        print(err)
+        print ("dsmc: finished")
 
 '''
 def main(argv):
