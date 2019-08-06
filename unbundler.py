@@ -98,8 +98,8 @@ class Unbundler():
         print("Normalize throughput (TB/15days): " + str(normalization_throughput))
         print("Goal: " + str(goal_throughput))
 
-    @staticmethod
-    def unbundle_func(unbundle_list):
+    @classmethod
+    def unbundle_func(self, unbundle_list):
         '''
             Function called in parallel_unbundler() which gives it an array containing
             src_path and dest_path
@@ -123,8 +123,8 @@ class Unbundler():
 
         return stat
 
-    @staticmethod
-    def unbundle(src, dest):
+    @classmethod
+    def unbundle(self, src, dest):
         '''
             Runs subprocess cmd to extract data from the archive file back to the filer
 
@@ -158,8 +158,8 @@ class Unbundler():
 
         return cmd, bundle_size, elapsed
 
-    @staticmethod
-    def get_bundle_size(src):
+    @classmethod
+    def get_bundle_size(self, src):
         '''
             Get the size of each archive file
 
@@ -206,8 +206,8 @@ class Unbundler():
         print(restore_list)
         return restore_list
 
-    @staticmethod
-    def delete_star(src):
+    @classmethod
+    def delete_star(self, src):
         '''
             Delete all archive files from scratch once restore is complete
 
