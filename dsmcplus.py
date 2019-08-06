@@ -31,7 +31,7 @@ def dsmcplus():
             print("Destination path is not valid: %s" %args.destination)
             sys.exit()
 
-        if args.s:
+        if args.scratch:
             print("filer to scratch only")
             bundler = Bundler(args.source, args.destination)
 
@@ -39,7 +39,7 @@ def dsmcplus():
             bundler.parallel_bundler(dir_list, total_size, int(args.parallelism))
             sys.exit()
 
-        if args.d:
+        if args.dsmc:
             print("scratch to dsmc only")
             dsmc_backup = DsmcBackup(args.destination)
             dsmc_backup.backup()
@@ -67,13 +67,13 @@ def dsmcplus():
             print("Destination path is not valid: %s" %args.destination)
             sys.exit()
 
-        if args.d:
+        if args.dsmc:
             print("restore dsmc to scratch")
             dsmc_restore = DsmcRestore(args.destination)
             dsmc_restore.restore()
             sys.exit()
 
-        if args.s:
+        if args.scratch:
             print("restore scratch to filer")
             #data = metadatajson.deserialize_json(json_file_path)
             unbundler = Unbundler(args.source, args.destination)
