@@ -11,7 +11,7 @@ class DsmcBackup():
 
     def backup(self):
 
-        cmd = "dsmc selective " + self.backup_path + "*"
+        cmd = "'dsmc selective " + self.backup_path + "*'"
         #cmd = "ls -l " + self.backup_path
         print(cmd)
 
