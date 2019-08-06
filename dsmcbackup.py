@@ -12,7 +12,8 @@ class DsmcBackup():
     def backup(self):
 
         #cmd = "'dsmc selective " + self.backup_path + "*'"
-        cmd = "netstat"
+        cmd = "dsmc q v"
+        #cmd = "netstat"
         print(cmd)
 
         start = time.time()
