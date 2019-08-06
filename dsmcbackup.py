@@ -11,8 +11,8 @@ class DsmcBackup():
 
     def backup(self):
 
-        #cmd = "'dsmc selective " + self.backup_path + "*'"
-        cmd = "dsmc q v"
+        cmd = "dsmc selective '" + self.backup_path + "*'"
+        #cmd = "dsmc q v"
         #cmd = "netstat"
         print(cmd)
 
