@@ -18,7 +18,7 @@ def dsmcplus():
 
     parser.add_argument('-s', '--scratch', action='store_true', help='run backup or restore to scratch space only')
     parser.add_argument('-d', '--dsmc', action='store_true', help='run backup or restore to dsmc only')
-    
+
     args = parser.parse_args()
 
     print("mode: " + args.mode)
@@ -72,7 +72,7 @@ def dsmcplus():
 
         if args.dsmc:
             print("restore dsmc to scratch")
-            dsmc_restore = DsmcRestore(args.destination)
+            dsmc_restore = DsmcRestore(args.source)
             dsmc_restore.restore()
             sys.exit()
 
@@ -91,7 +91,7 @@ def dsmcplus():
             sys.exit()
 
 
-        dsmc_restore = DsmcRestore(args.destination)
+        dsmc_restore = DsmcRestore(args.source)
         dsmc_restore.restore()
 
         #data = metadatajson.deserialize_json(json_file_path)
