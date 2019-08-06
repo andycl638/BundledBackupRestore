@@ -11,30 +11,20 @@ class DsmcBackup():
 
     def backup(self):
 
-        cmd = "'dsmc selective " + self.backup_path + "*'"
-        #cmd = "ls -l " + self.backup_path
+        #cmd = "'dsmc selective " + self.backup_path + "*'"
+        cmd = "netstat"
         print(cmd)
 
         start = time.time()
-        p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        p = subprocess.Popen(cmd, shell=True, stderr=subprocess.STDOUT)
 
-        while p.poll() is None:
-            time.sleep(0.5)
-
-        if p.returncode != 0:
-            print(p.stdout.read())
-            print("Error in the subprocess cmd")
-        else:
-            for line in p.stdout:
-                print (line.rstrip())
-
-        end = time.time()
-
-        elapsed_proc_time = end - start
-
-        out, err = p.communicate()
-        print(out)
-        print(err)
+        while True:
+            out = p.stderr.read(1)
+            if out == '' and p.pool() != None:
+                break
+            if out != '':
+                sys.stdout.write(out)
+                sys.stdout.flush()
         print ("dsmc: finished")
 
 '''
