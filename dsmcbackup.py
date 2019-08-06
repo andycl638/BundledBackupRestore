@@ -2,6 +2,7 @@ import sys
 import os
 import subprocess
 import time
+
 #Grab all .star files and backup to SP server using dsmc
 #delete all .star files from scratch
 
@@ -11,22 +12,27 @@ class DsmcBackup():
 
     def backup(self):
 
-        cmd = "dsmc selective '" + self.backup_path + "*'"
-        #cmd = "dsmc q v"
-        #cmd = "netstat"
+        #cmd = "dsmc selective '" + self.backup_path + "*' -resourceutilization=10"
+        cmd = "dsmc q v"
+        #cmd = "ping google.com -c 6"
         print(cmd)
 
         start = time.time()
-        p = subprocess.Popen(cmd, shell=True, stderr=subprocess.STDOUT)
+        p = subprocess.Popen(cmd, shell=True, stderr=subprocess.PIPE)
 
         while True:
-            out = p.stderr.read(1)
-            if out == '' and p.pool() != None:
+            out = p.stderr.readline()
+            if p.poll() != None:
                 break
-            if out != '':
-                sys.stdout.write(out)
-                sys.stdout.flush()
+
+            sys.stdout.write(out.decode('utf-8'))
+            sys.stdout.flush()
+
         print ("dsmc: finished")
+
+        end = time.time()
+
+        elapsed_proc_time = end - start
 
 '''
 def main(argv):

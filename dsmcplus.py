@@ -13,8 +13,12 @@ def dsmcplus():
     parser.add_argument('source', help='source path to backup or restore')
     parser.add_argument('destination', help='destination path to backup or restore')
     parser.add_argument('-p', '--parallelism', type=int, default=4, help='number of processor used to backup or restore')
+    parser.add_argument('-r', '--resourceutilization', type=int, help='dsmc backup sessions controlled by resource utilization ')
+    parser.add_argument('-b', '--bundlersize', type=int, help='Average size in Gb of each bundler being backup to dsmc')
+
     parser.add_argument('-s', '--scratch', action='store_true', help='run backup or restore to scratch space only')
     parser.add_argument('-d', '--dsmc', action='store_true', help='run backup or restore to dsmc only')
+    
     args = parser.parse_args()
 
     print("mode: " + args.mode)
@@ -49,7 +53,6 @@ def dsmcplus():
 
         dir_list, total_size = bundler.get_all_dirs()
         bundler.parallel_bundler(dir_list, total_size, int(args.parallelism))
-        sys.exit()
 
         dsmc_backup = DsmcBackup(args.destination)
         dsmc_backup.backup()

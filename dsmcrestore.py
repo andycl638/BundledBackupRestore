@@ -18,21 +18,18 @@ class DsmcRestore():
 
         p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
-        while p.poll() is None:
-            time.sleep(0.5)
+        while True:
+            out = p.stderr.readline()
+            if p.poll() != None:
+                break
 
-        if p.returncode != 0:
-            print(p.stdout.read())
-            print("Error in the subprocess cmd")
-        else:
-            for line in p.stdout:
-                print (line.rstrip())
+            sys.stdout.write(out.decode('utf-8'))
+            sys.stdout.flush()
+        print ("dsmc: finished")
 
         end = time.time()
 
         elapsed_proc_time = end - start
-
-        out, err = p.communicate()
 
 '''
 def main(argv):
