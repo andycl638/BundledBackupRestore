@@ -12,7 +12,7 @@ class DsmcBackup():
 
     def backup(self):
 
-        #cmd = "dsmc selective '" + self.backup_path + "*' -resourceutilization=10"
+        cmd = "dsmc selective '" + self.backup_path + "*'" #-resourceutilization=10"
         cmd = "dsmc q v"
         #cmd = "ping google.com -c 6"
         print(cmd)
