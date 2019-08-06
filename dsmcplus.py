@@ -13,8 +13,8 @@ def dsmcplus():
     parser.add_argument('source', help='source path to backup or restore')
     parser.add_argument('destination', help='destination path to backup or restore')
     parser.add_argument('-p', '--parallelism', type=int, default=4, help='number of processor used to backup or restore')
-    parser.add_argument('-s' '--scratch', action='store_true', help='run backup or restore to scratch space only')
-    parser.add_argument('-d' '--dsmc', action='store_true', help='run backup or restore to dsmc only')
+    parser.add_argument('-s', '--scratch', action='store_true', help='run backup or restore to scratch space only')
+    parser.add_argument('-d', '--dsmc', action='store_true', help='run backup or restore to dsmc only')
     args = parser.parse_args()
 
     print("mode: " + args.mode)
