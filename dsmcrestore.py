@@ -16,7 +16,7 @@ class DsmcRestore():
 
         start = time.time()
 
-        p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        p = subprocess.Popen(cmd, shell=True, shell=True, stderr=subprocess.PIPE)
 
         while True:
             out = p.stderr.readline()
