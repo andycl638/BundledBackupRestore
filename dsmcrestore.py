@@ -13,8 +13,8 @@ class DsmcRestore():
     def restore(self):
         cmd = "dsmc restore " + self.restore_path
         #cmd = "ls -l " + self.restore_path
-        if self.test:
-            cmd = "ping google.com -c 3"
+    '''    if self.test:
+            cmd = "ping google.com -c 3"'''
 
         print(cmd)
 

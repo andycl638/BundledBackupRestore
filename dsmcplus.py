@@ -113,3 +113,6 @@ if __name__ == '__main__':
 
     #python3 dsmcplus.py backup /Users/andy/Documents/tester/ /Users/andy/Documents/tester/ -p 16 -t
     #python3 dsmcplus.py restore /Users/andy/Documents/tester/ /Users/andy/Documents/tester/ -p 16 -t
+
+    #python3 dsmcplus.py restore /scale01/scratch/ /vz8 -p 8
+    #python3 dsmcplus.py backup /vz8 /scale01/scratch/ -p 8

@@ -31,8 +31,8 @@ class Unbundler():
         self.src_path = src_path
         self.dest_path = dest_path
         self.test = test
-        print(self.src_path)
-        print(self.test)
+        #print(self.src_path)
+    #    print(self.test)
 
     def build_list(self, src_list):
         '''
@@ -144,9 +144,10 @@ class Unbundler():
         bundle_size = Unbundler.get_bundle_size(src)
 
         cmd = "star -x -v -f " + src
-        if self.test:
+
+    '''    if self.test:
             print("RUNNING TEST")
-            cmd = "ls -l " + src
+            cmd = "ls -l " + src'''
 
         start = time.time()
         p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, cwd=dest)
@@ -224,8 +225,8 @@ class Unbundler():
                 message     -- Message display whether files were deleted or not
         '''
         try:
-            if not self.test:
-                os.remove(src)
+            '''if not self.test:'''
+            os.remove(src)
             message = "\nDeleted star: " + src
         except:
             message = "\nError while deleting file: " + src

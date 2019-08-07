@@ -158,8 +158,8 @@ class Bundler():
         '''
         stat = Stats()
         start = time.time()
-        print("TEST")
-        print(self.test)
+        #print("TEST")
+        #print(self.test)
         cmd, elapsed_proc_time, tar_path = Bundler.bundle_file_set(dir_list[0], dir_list[1])
 
         end = time.time()
@@ -205,9 +205,9 @@ class Bundler():
         tar_path = os.path.join(dest_path, unique_name)
         cmd = "time star -c -f \"" + tar_path + "\" fs=32m bs=64K pat=*.* " + src_path + "/*.*"
 
-        if self.test:
+        '''if self.test:
             print("RUNNING TEST")
-            cmd = "ls -l " + src_path
+            cmd = "ls -l " + src_path'''
 
         start = time.time()
 

@@ -18,8 +18,8 @@ class DsmcBackup():
         cmd = "dsmc selective '" + self.backup_path + "*'" #-resourceutilization=10"
         #cmd = "dsmc selective '" + self.backup_path + "*' -resourceutilization=" + self.resource_utilization
         #cmd = "dsmc q v"
-        if self.test:
-            cmd = "ping google.com -c 3"
+        '''if self.test:
+            cmd = "ping google.com -c 3"'''
 
         print(cmd)
 
