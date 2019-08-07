@@ -18,7 +18,7 @@ class Unbundler():
         Star: linux unique standard tape archiver
     '''
 
-    def __init__(self, src_path, dest_path, test):
+    def __init__(self, src_path, dest_path):
         '''
             Initialize Unbundler object
 
@@ -30,9 +30,6 @@ class Unbundler():
 
         self.src_path = src_path
         self.dest_path = dest_path
-        #self.test = test
-        #print(self.src_path)
-    #    print(self.test)
 
     def build_list(self, src_list):
         '''
@@ -57,7 +54,7 @@ class Unbundler():
 
         return unbundle_list
 
-    def parallel_unbundle(self, unbundle_list, procs):
+    def parallel_unbundle(self, obj, procs):
         '''
             Conducts the unbundle function in parallel
             Displays agregate results of the bundle process
@@ -71,35 +68,14 @@ class Unbundler():
         start = time.time()
         total_data_transferred = 0
 
-        with Pool(procs) as p:
-            unbundle_obj = p.map(Unbundler.unbundle_func, unbundle_list)
-
-        for stat in unbundle_obj:
+        for stat in obj:
             stat.display_stats_unbundle()
             total_data_transferred += stat.star_size
 
         end = time.time()
         elapsed = end - start
 
-        ''' TODO: send agregate info to Stat class to calculate'''
-        total_data_transferred_mib = total_data_transferred/1024/1024
-        total_throughput = total_data_transferred_mib/elapsed
-        day_normalization = elapsed/86400
-        tb_normalization = total_data_transferred_mib/1000000
-        days = day_normalization*15
-
-        normalization_throughput = tb_normalization / days
-
-        goal_throughput = 25/15
-
-        print("\nTotal Time elapsed (sec): %s" %elapsed)
-        print("Total data transferred (MiB): " + str(total_data_transferred_mib))
-        print("Aggregate Throughput (MiB/sec): " + str(total_throughput))
-
-        print("Normalize day: " + str(day_normalization))
-        print("Normalize tb: " + str(tb_normalization))
-        print("Normalize throughput (TB/15days): " + str(normalization_throughput))
-        print("Goal: " + str(goal_throughput))
+        Stats.display_total_stats(total_data_transferred, elapsed)
 
     @classmethod
     def unbundle_func(self, unbundle_list):
@@ -222,8 +198,7 @@ class Unbundler():
                 message     -- Message display whether files were deleted or not
         '''
         try:
-            '''if not self.test:'''
-            os.remove(src)
+            #os.remove(src)
             message = "\nDeleted star: " + src
         except:
             message = "\nError while deleting file: " + src

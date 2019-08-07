@@ -6,6 +6,7 @@ from bundler import Bundler
 from dsmcbackup import DsmcBackup
 from unbundler import Unbundler
 from dsmcrestore import DsmcRestore
+from parallelmgmt import ParallelMgmt
 
 def dsmcplus():
     parser = argparse.ArgumentParser()
@@ -19,86 +20,79 @@ def dsmcplus():
     '''TESTING PARAMETERS'''
     parser.add_argument('-s', '--scratch', action='store_true', help='run backup or restore to scratch space only')
     parser.add_argument('-d', '--dsmc', action='store_true', help='run backup or restore to dsmc only')
-    parser.add_argument('-t', '--test', action='store_true', help='run os cmd')
+    #parser.add_argument('-t', '--test', action='store_true', help='run os cmd')
 
 
     args = parser.parse_args()
 
     print("mode: " + args.mode)
     if args.mode == 'backup':
-
-        if os.path.isdir(args.source):
-            print("Source Path: %s" %args.source)
-        else:
-            print("Source path is not valid: %s" %args.source)
-            sys.exit()
-        if os.path.isdir(args.destination):
-            print("Destination Path: %s" %args.destination)
-        else:
-            print("Destination path is not valid: %s" %args.destination)
-            sys.exit()
-
-        if args.scratch:
-            print("filer to scratch only")
-            bundler = Bundler(args.source, args.destination, args.test)
-
-            dir_list, total_size = bundler.get_all_dirs()
-            bundler.parallel_bundler(dir_list, total_size, int(args.parallelism))
-            sys.exit()
-
-        if args.dsmc:
-            print("scratch to dsmc only")
-            dsmc_backup = DsmcBackup(args.destination, args.resourceutilization, args.test)
-            dsmc_backup.backup()
-            sys.exit()
-
-        bundler = Bundler(args.source, args.destination, args.test)
-
-        dir_list, total_size = bundler.get_all_dirs()
-        bundler.parallel_bundler(dir_list, total_size, int(args.parallelism))
-
-        dsmc_backup = DsmcBackup(args.destination, args.resourceutilization, args.test)
-        dsmc_backup.backup()
-
+        mainbackup(args)
 
     elif args.mode == 'restore':
-        if os.path.isdir(args.source):
-            print("Source Path: %s" %args.source)
-        else:
-            print("Source path is not valid: %s" %args.source)
-            sys.exit()
-        if os.path.isdir(args.destination):
-            print("Destination Path: %s" %args.destination)
-        else:
-            print("Destination path is not valid: %s" %args.destination)
-            sys.exit()
+        mainrestore(args)
 
-        if args.dsmc:
-            print("restore dsmc to scratch")
-            dsmc_restore = DsmcRestore(args.source, args.test)
-            dsmc_restore.restore()
-            sys.exit()
+def mainbackup(args):
+    if os.path.isdir(args.source):
+        print("Source Path: %s" %args.source)
+    else:
+        print("Source path is not valid: %s" %args.source)
+        sys.exit()
+    if os.path.isdir(args.destination):
+        print("Destination Path: %s" %args.destination)
+    else:
+        print("Destination path is not valid: %s" %args.destination)
+        sys.exit()
 
-        if args.scratch:
-            print("restore scratch to filer")
-            #data = metadatajson.deserialize_json(json_file_path)
-            unbundler = Unbundler(args.source, args.destination, args.test)
-            restore_list = unbundler.get_all_volume()
-            #restore_list = get_restore_list(data)
-            if len(restore_list) == 0:
-                print("No files were found to restore")
-                sys.exit()
+    if args.scratch:
+        print("filer to scratch only")
+        bundler = Bundler(args.source, args.destination)
+        dir_list, total_size = bundler.get_all_dirs()
 
-            unbundle_list = unbundler.build_list(restore_list)
-            unbundler.parallel_unbundle(unbundle_list, args.parallelism)
-            sys.exit()
+        proc_obj = ParallelMgmt.parallel_proc(bundler, dir_list, args.mode, int(args.parallelism))
 
+        bundler.parallel_bundler(proc_obj, total_size, dir_list[0])
+        sys.exit()
 
-        dsmc_restore = DsmcRestore(args.source, args.test)
+    if args.dsmc:
+        print("scratch to dsmc only")
+        dsmc_backup = DsmcBackup(args.destination, args.resourceutilization)
+        dsmc_backup.backup()
+        sys.exit()
+
+    #Init bundler object
+    bundler = Bundler(args.source, args.destination)
+    dir_list, total_size = bundler.get_all_dirs()
+
+    proc_obj = ParallelMgmt.parallel_proc(bundler, dir_list, args.mode, int(args.parallelism))
+
+    bundler.parallel_bundler(proc_obj, total_size, dir_list[0])
+
+    dsmc_backup = DsmcBackup(args.destination, args.resourceutilization)
+    dsmc_backup.backup()
+
+def mainrestore(args):
+    if os.path.isdir(args.source):
+        print("Source Path: %s" %args.source)
+    else:
+        print("Source path is not valid: %s" %args.source)
+        sys.exit()
+    if os.path.isdir(args.destination):
+        print("Destination Path: %s" %args.destination)
+    else:
+        print("Destination path is not valid: %s" %args.destination)
+        sys.exit()
+
+    if args.dsmc:
+        print("restore dsmc to scratch")
+        dsmc_restore = DsmcRestore(args.source)
         dsmc_restore.restore()
+        sys.exit()
 
+    if args.scratch:
+        print("restore scratch to filer")
         #data = metadatajson.deserialize_json(json_file_path)
-        unbundler = Unbundler(args.source, args.destination, args.test)
+        unbundler = Unbundler(args.source, args.destination)
         restore_list = unbundler.get_all_volume()
         #restore_list = get_restore_list(data)
         if len(restore_list) == 0:
@@ -106,7 +100,26 @@ def dsmcplus():
             sys.exit()
 
         unbundle_list = unbundler.build_list(restore_list)
-        unbundler.parallel_unbundle(unbundle_list, args.parallelism)
+        proc_obj = ParallelMgmt.parallel_proc(unbundler, unbundle_list, args.mode, int(args.parallelism))
+        unbundler.parallel_unbundle(proc_obj, args.parallelism)
+        sys.exit()
+
+
+    dsmc_restore = DsmcRestore(args.source)
+    dsmc_restore.restore()
+
+    #data = metadatajson.deserialize_json(json_file_path)
+    unbundler = Unbundler(args.source, args.destination)
+    restore_list = unbundler.get_all_volume()
+    #restore_list = get_restore_list(data)
+    if len(restore_list) == 0:
+        print("No files were found to restore")
+        sys.exit()
+
+    unbundle_list = unbundler.build_list(restore_list)
+    proc_obj = ParallelMgmt.parallel_proc(unbundler, unbundle_list, args.mode, int(args.parallelism))
+    unbundler.parallel_unbundle(proc_obj, args.parallelism)
+
 
 if __name__ == '__main__':
     dsmcplus()

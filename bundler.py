@@ -19,7 +19,7 @@ class Bundler():
         Star: linux unique standard tape archiver
     '''
 
-    def __init__(self, src_path, dest_path, test):
+    def __init__(self, src_path, dest_path):
         '''
             Initialize Bundler object
 
@@ -29,7 +29,6 @@ class Bundler():
         '''
         self.src_path = src_path
         self.dest_path = dest_path
-        #self.test = test
 
     def get_all_dirs(self):
         '''
@@ -86,7 +85,8 @@ class Bundler():
         print(set_list)
         return set_list
 
-    def parallel_bundler(self, dir_list, total_size, procs):
+    @classmethod
+    def parallel_bundler(self, proc_obj, total_size, path):
         '''
             Conducts the bundle function in parallel
             Displays results of the bundle process
@@ -100,12 +100,11 @@ class Bundler():
                 proc        -- Number of processor used to perform bundling
         '''
         print("\nStarting parallel bundler")
+
         start = time.time()
         data = {}
         star_file_arr = []
         total_data_transferred = 0
-        with Pool(procs) as p:
-            proc_obj = p.map(Bundler.bundled_func, dir_list)
 
         for star_file_data, stat in proc_obj:
             star_file_arr.append(star_file_data)
@@ -118,28 +117,10 @@ class Bundler():
         data['total_size'] = total_size
         data['star_files'] = star_file_arr
 
-        ''' TODO: Move total result calculations to Stats class'''
         Stats.display_total_stats(total_data_transferred, elapsed)
-        '''total_data_transferred_mib = total_data_transferred/1024/1024
-        total_throughput = total_data_transferred_mib/elapsed
-        day_normalization = elapsed/86400
-        tb_normalization = total_data_transferred_mib/1000000
-        days = day_normalization*15
-
-        normalization_throughput = tb_normalization / days
-
-        goal_throughput = 25/15
-        print("\nTotal Time elapsed (sec): %s" %elapsed)
-        print("Total data transferred (MiB): " + str(total_data_transferred_mib))
-        print("Aggregate Throughput (MiB/sec): " + str(total_throughput))
-
-        print("Normalize day: " + str(day_normalization))
-        print("Normalize tb: " + str(tb_normalization))
-        print("Normalize throughput (TB/15days): " + str(normalization_throughput))
-        print("Goal: " + str(goal_throughput))'''
 
         print("\nCreating json metadata file")
-        metadatajson.write_to_file(data, dir_list[0])
+        metadatajson.write_to_file(data, path)
         print("Done.")
 
     @classmethod
@@ -158,8 +139,7 @@ class Bundler():
         '''
         stat = Stats()
         start = time.time()
-        #print("TEST")
-        #print(self.test)
+
         cmd, elapsed_proc_time, tar_path = Bundler.bundle_file_set(dir_list[0], dir_list[1])
 
         end = time.time()
@@ -181,8 +161,8 @@ class Bundler():
 
         return  star_file_data, stat
 
-    @classmethod
-    def bundle_file_set(self, src_path, dest_path):
+    @staticmethod
+    def bundle_file_set(src_path, dest_path):
         '''
             Runs subprocess cmd to archive a directory to the destination path
 

@@ -2,13 +2,11 @@ import sys
 import os
 import subprocess
 import time
-#dsmc restore /scale01/scratch/ -subdir=yes
 
 class DsmcRestore():
 
-    def __init__(self, restore_path, test):
+    def __init__(self, restore_path):
         self.restore_path = restore_path
-        #self.test = test
 
     def restore(self):
         cmd = "dsmc restore " + self.restore_path
