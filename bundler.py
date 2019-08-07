@@ -19,7 +19,7 @@ class Bundler():
         Star: linux unique standard tape archiver
     '''
 
-    def __init__(self, src_path, dest_path):
+    def __init__(self, src_path, dest_path, test):
         '''
             Initialize Bundler object
 
@@ -29,6 +29,7 @@ class Bundler():
         '''
         self.src_path = src_path
         self.dest_path = dest_path
+        self.test = test
 
     def get_all_dirs(self):
         '''
@@ -118,7 +119,8 @@ class Bundler():
         data['star_files'] = star_file_arr
 
         ''' TODO: Move total result calculations to Stats class'''
-        total_data_transferred_mib = total_data_transferred/1024/1024
+        Stat().display_total_stats(total_data_transferred, elapsed)
+        '''total_data_transferred_mib = total_data_transferred/1024/1024
         total_throughput = total_data_transferred_mib/elapsed
         day_normalization = elapsed/86400
         tb_normalization = total_data_transferred_mib/1000000
@@ -134,7 +136,7 @@ class Bundler():
         print("Normalize day: " + str(day_normalization))
         print("Normalize tb: " + str(tb_normalization))
         print("Normalize throughput (TB/15days): " + str(normalization_throughput))
-        print("Goal: " + str(goal_throughput))
+        print("Goal: " + str(goal_throughput))'''
 
         print("\nCreating json metadata file")
         metadatajson.write_to_file(data, dir_list[0])
@@ -156,7 +158,8 @@ class Bundler():
         '''
         stat = Stats()
         start = time.time()
-
+        print("TEST")
+        print(self.test)
         cmd, elapsed_proc_time, tar_path = Bundler.bundle_file_set(dir_list[0], dir_list[1])
 
         end = time.time()
@@ -201,7 +204,11 @@ class Bundler():
         tar_name_str = "\ntarname: %s" %unique_name
         tar_path = os.path.join(dest_path, unique_name)
         cmd = "time star -c -f \"" + tar_path + "\" fs=32m bs=64K pat=*.* " + src_path + "/*.*"
-        #cmd = "ls -l " + src_path
+
+        if self.test:
+            print("RUNNING TEST")
+            cmd = "ls -l " + src_path
+
         start = time.time()
 
         p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)

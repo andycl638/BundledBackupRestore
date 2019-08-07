@@ -7,14 +7,20 @@ import time
 #delete all .star files from scratch
 
 class DsmcBackup():
-    def __init__(self, backup_path):
+    def __init__(self, backup_path, resource_utilization, test):
         self.backup_path = backup_path
+        self.resource_utilization = resource_utilization
+        self.test = test
 
     def backup(self):
 
+
         cmd = "dsmc selective '" + self.backup_path + "*'" #-resourceutilization=10"
+        #cmd = "dsmc selective '" + self.backup_path + "*' -resourceutilization=" + self.resource_utilization
         #cmd = "dsmc q v"
-        #cmd = "ping google.com -c 6"
+        if self.test:
+            cmd = "ping google.com -c 3"
+
         print(cmd)
 
         start = time.time()

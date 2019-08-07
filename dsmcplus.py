@@ -16,8 +16,11 @@ def dsmcplus():
     parser.add_argument('-r', '--resourceutilization', type=int, help='dsmc backup sessions controlled by resource utilization ')
     parser.add_argument('-b', '--bundlersize', type=int, help='Average size in Gb of each bundler being backup to dsmc')
 
+    '''TESTING PARAMETERS'''
     parser.add_argument('-s', '--scratch', action='store_true', help='run backup or restore to scratch space only')
     parser.add_argument('-d', '--dsmc', action='store_true', help='run backup or restore to dsmc only')
+    parser.add_argument('-t', '--test', action='store_true', help='run os cmd')
+
 
     args = parser.parse_args()
 
@@ -37,7 +40,7 @@ def dsmcplus():
 
         if args.scratch:
             print("filer to scratch only")
-            bundler = Bundler(args.source, args.destination)
+            bundler = Bundler(args.source, args.destination, args.test)
 
             dir_list, total_size = bundler.get_all_dirs()
             bundler.parallel_bundler(dir_list, total_size, int(args.parallelism))
@@ -45,16 +48,16 @@ def dsmcplus():
 
         if args.dsmc:
             print("scratch to dsmc only")
-            dsmc_backup = DsmcBackup(args.destination)
+            dsmc_backup = DsmcBackup(args.destination, args.test)
             dsmc_backup.backup()
             sys.exit()
 
-        bundler = Bundler(args.source, args.destination)
+        bundler = Bundler(args.source, args.destination, args.test)
 
         dir_list, total_size = bundler.get_all_dirs()
         bundler.parallel_bundler(dir_list, total_size, int(args.parallelism))
 
-        dsmc_backup = DsmcBackup(args.destination)
+        dsmc_backup = DsmcBackup(args.destination, args.test)
         dsmc_backup.backup()
 
 
@@ -72,14 +75,14 @@ def dsmcplus():
 
         if args.dsmc:
             print("restore dsmc to scratch")
-            dsmc_restore = DsmcRestore(args.source)
+            dsmc_restore = DsmcRestore(args.source, args.test)
             dsmc_restore.restore()
             sys.exit()
 
         if args.scratch:
             print("restore scratch to filer")
             #data = metadatajson.deserialize_json(json_file_path)
-            unbundler = Unbundler(args.source, args.destination)
+            unbundler = Unbundler(args.source, args.destination, args.test)
             restore_list = unbundler.get_all_volume()
             #restore_list = get_restore_list(data)
             if len(restore_list) == 0:
@@ -91,11 +94,11 @@ def dsmcplus():
             sys.exit()
 
 
-        dsmc_restore = DsmcRestore(args.source)
+        dsmc_restore = DsmcRestore(args.source, args.test)
         dsmc_restore.restore()
 
         #data = metadatajson.deserialize_json(json_file_path)
-        unbundler = Unbundler(args.source, args.destination)
+        unbundler = Unbundler(args.source, args.destination, args.test)
         restore_list = unbundler.get_all_volume()
         #restore_list = get_restore_list(data)
         if len(restore_list) == 0:
@@ -107,3 +110,6 @@ def dsmcplus():
 
 if __name__ == '__main__':
     dsmcplus()
+
+    #python3 dsmcplus.py backup /Users/andy/Documents/tester/ /Users/andy/Documents/tester/ -p 16 -t
+    #python3 dsmcplus.py restore /Users/andy/Documents/tester/ /Users/andy/Documents/tester/ -p 16 -t

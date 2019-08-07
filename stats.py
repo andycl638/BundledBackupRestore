@@ -49,3 +49,22 @@ class Stats:
         throughput_str = "\nThroughput (MiB/sec): " + str(self.throughput)
         display_message = result_str + cmd_str + bundle_size_str + throughput_str  + elapsed_str
         print(display_message)
+
+    def display_total_stats(self, total_data_transferred, elapsed):
+        total_data_transferred_mib = total_data_transferred/1024/1024
+        total_throughput = total_data_transferred_mib/elapsed
+        day_normalization = elapsed/86400
+        tb_normalization = total_data_transferred_mib/1000000
+        days = day_normalization*15
+
+        normalization_throughput = tb_normalization / days
+
+        goal_throughput = 25/15
+        print("\nTotal Time elapsed (sec): %s" %elapsed)
+        print("Total data transferred (MiB): " + str(total_data_transferred_mib))
+        print("Aggregate Throughput (MiB/sec): " + str(total_throughput))
+
+        print("Normalize day: " + str(day_normalization))
+        print("Normalize tb: " + str(tb_normalization))
+        print("Normalize throughput (TB/15days): " + str(normalization_throughput))
+        print("Goal: " + str(goal_throughput))
