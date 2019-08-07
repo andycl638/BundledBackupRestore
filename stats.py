@@ -50,7 +50,8 @@ class Stats:
         display_message = result_str + cmd_str + bundle_size_str + throughput_str  + elapsed_str
         print(display_message)
 
-    def display_total_stats(self, total_data_transferred, elapsed):
+    @staticmethod
+    def display_total_stats(total_data_transferred, elapsed):
         total_data_transferred_mib = total_data_transferred/1024/1024
         total_throughput = total_data_transferred_mib/elapsed
         day_normalization = elapsed/86400

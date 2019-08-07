@@ -29,7 +29,7 @@ class Bundler():
         '''
         self.src_path = src_path
         self.dest_path = dest_path
-        self.test = test
+        #self.test = test
 
     def get_all_dirs(self):
         '''
@@ -119,7 +119,7 @@ class Bundler():
         data['star_files'] = star_file_arr
 
         ''' TODO: Move total result calculations to Stats class'''
-        Stat().display_total_stats(total_data_transferred, elapsed)
+        Stats.display_total_stats(total_data_transferred, elapsed)
         '''total_data_transferred_mib = total_data_transferred/1024/1024
         total_throughput = total_data_transferred_mib/elapsed
         day_normalization = elapsed/86400
@@ -205,9 +205,8 @@ class Bundler():
         tar_path = os.path.join(dest_path, unique_name)
         cmd = "time star -c -f \"" + tar_path + "\" fs=32m bs=64K pat=*.* " + src_path + "/*.*"
 
-        '''if self.test:
-            print("RUNNING TEST")
-            cmd = "ls -l " + src_path'''
+
+        #cmd = "ls -l " + src_path
 
         start = time.time()
 

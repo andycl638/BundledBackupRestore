@@ -48,7 +48,7 @@ def dsmcplus():
 
         if args.dsmc:
             print("scratch to dsmc only")
-            dsmc_backup = DsmcBackup(args.destination, args.test)
+            dsmc_backup = DsmcBackup(args.destination, args.resourceutilization, args.test)
             dsmc_backup.backup()
             sys.exit()
 
@@ -57,7 +57,7 @@ def dsmcplus():
         dir_list, total_size = bundler.get_all_dirs()
         bundler.parallel_bundler(dir_list, total_size, int(args.parallelism))
 
-        dsmc_backup = DsmcBackup(args.destination, args.test)
+        dsmc_backup = DsmcBackup(args.destination, args.resourceutilization, args.test)
         dsmc_backup.backup()
 
 

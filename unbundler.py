@@ -30,7 +30,7 @@ class Unbundler():
 
         self.src_path = src_path
         self.dest_path = dest_path
-        self.test = test
+        #self.test = test
         #print(self.src_path)
     #    print(self.test)
 
@@ -145,10 +145,7 @@ class Unbundler():
 
         cmd = "star -x -v -f " + src
 
-    '''    if self.test:
-            print("RUNNING TEST")
-            cmd = "ls -l " + src'''
-
+        '''cmd = "ls -l " + src'''
         start = time.time()
         p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, cwd=dest)
 
