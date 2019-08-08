@@ -15,7 +15,7 @@ class DsmcBackup():
 
 
         #cmd = "dsmc selective '" + self.backup_path + "*'" #-resourceutilization=10"
-        cmd = "dsmc selective '" + self.backup_path + "*' -resourceutilization=" + self.resource_utilization
+        cmd = "dsmc selective '" + self.backup_path + "*' -resourceutilization=" + str(self.resource_utilization)
         #cmd = "dsmc q v"
 
         #cmd = "ping google.com -c 3"
