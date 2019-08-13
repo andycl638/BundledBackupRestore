@@ -1,13 +1,12 @@
-import os
-import sys
-import time
+import os, sys, time, errno
+import json, subprocess
 from shutil import copy
 from multiprocessing import Pool
-import subprocess
+
 from os.path import join, getsize
 from metadatajson import MetadataJson
 from stats import Stats
-import json
+
 
 metadatajson = MetadataJson()
 
@@ -19,7 +18,7 @@ class Bundler():
         Star: linux unique standard tape archiver
     '''
 
-    def __init__(self, src_path, dest_path):
+    def __init__(self, src_path, dest_path, optfile):
         '''
             Initialize Bundler object
 
@@ -29,6 +28,7 @@ class Bundler():
         '''
         self.src_path = src_path
         self.dest_path = dest_path
+        self.optfile = optfile
 
     def get_all_dirs(self):
         '''
@@ -203,6 +203,18 @@ class Bundler():
         elapsed_proc_time = end - start
         message_cmd = tar_name_str + "\n" + cmd
         return message_cmd, elapsed_proc_time, tar_path
+
+    def create_vol(self):
+        optfiledata = MetadataJson.deserialize_json(self.optfile)
+        volume = optfiledata['volume']
+        path = os.path.join(self.dest_path, volume)
+
+        try:
+            os.mkdir(path)
+        except OSError as exc:
+            if exc.errno != errno.EEXIST:
+                raise
+            pass
 
 '''
 def main(argv):

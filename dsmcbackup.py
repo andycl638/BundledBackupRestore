@@ -1,7 +1,4 @@
-import sys
-import os
-import subprocess
-import time
+import sys, os, subprocess, time
 
 #Grab all .star files and backup to SP server using dsmc
 #delete all .star files from scratch

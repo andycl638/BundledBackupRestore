@@ -1,19 +1,19 @@
 #Main script
-import argparse
-import os
-import sys
+import argparse, os, sys, errno
+
 from bundler import Bundler
 from dsmcbackup import DsmcBackup
 from unbundler import Unbundler
 from dsmcrestore import DsmcRestore
 from parallelmgmt import ParallelMgmt
+from metadatajson import MetadataJson
 
 def dsmcplus():
     parser = argparse.ArgumentParser()
     parser.add_argument('mode', choices=['backup', 'restore'], help='backup to tsm server or restore to filer')
     parser.add_argument('source', help='source path to backup or restore')
     parser.add_argument('destination', help='destination path to backup or restore')
-    #parser.add_argument('optfile', help='option file path')
+    parser.add_argument('optfile', help='option file path')
     parser.add_argument('-p', '--parallelism', type=int, default=4, help='number of processor used to backup or restore')
     parser.add_argument('-r', '--resourceutilization', type=int, help='dsmc backup sessions controlled by resource utilization ')
     parser.add_argument('-b', '--bundlersize', type=int, help='Average size in Gb of each bundler being backup to dsmc')
@@ -50,13 +50,11 @@ def mainbackup(args):
         dsmc_backup.backup()
         sys.exit()
 
-    #optfiledata = metadatajson.deserialize_json(args.optfile)
-    #volume = optfiledata['volume']
-    #path = os.path.join(args.destination, volume)
-    #print(path)
-    #os.mkdir(path)
     #Init bundler object
-    bundler = Bundler(args.source, args.destination)
+    bundler = Bundler(args.source, args.destination, args.optfile)
+
+    bundler.create_vol()
+
     dir_list, total_size = bundler.get_all_dirs()
 
     proc_obj = ParallelMgmt.parallel_proc(bundler, dir_list, args.mode, int(args.parallelism))
@@ -114,11 +112,11 @@ def check_input(args):
     else:
         print("Destination path is not valid: %s" %args.destination)
         sys.exit()
-    '''if os.path.exists(args.optifle):
-        print("Option file path: %s" %args.optifle)
+    if os.path.exists(args.optfile):
+        print("Option file path: %s" %args.optfile)
     else:
         print("Option file path is not valid: %s" %args.optfile)
-        sys.exit()'''
+        sys.exit()
 
 if __name__ == '__main__':
     dsmcplus()

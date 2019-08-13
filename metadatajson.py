@@ -1,6 +1,4 @@
-import json
-import os
-import time
+import json, os, time
 
 class MetadataJson:
     '''
@@ -16,7 +14,8 @@ class MetadataJson:
         with open(file_path, "w") as write_file:
             json.dump(data, write_file)
 
-    def deserialize_json(self, file_name):
+    @staticmethod
+    def deserialize_json(file_name):
         with open(file_name, "r") as read_file:
             data = json.load(read_file)
 

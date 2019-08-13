@@ -1,7 +1,5 @@
-import sys
-import os
-import subprocess
-import time
+import sys, os, sybprocess, time
+
 
 class DsmcRestore():
 
