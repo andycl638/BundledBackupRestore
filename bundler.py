@@ -1,6 +1,6 @@
 import os, sys, time, errno
 import json, subprocess
-from shutil import copy
+from shutil import copy, rmtree
 from multiprocessing import Pool
 
 from os.path import join, getsize
@@ -217,6 +217,22 @@ class Bundler():
             pass
         return path
 
+    def delete_bundle(self):
+        '''
+            Delete all archive files from scratch once backup is complete
+
+            Arguments:
+                src         -- Archive file Path
+
+            Returns:
+                message     -- Message display whether files were deleted or not
+        '''
+        try:
+            rmtree(self.dest_path)
+            message = "\nDeleted bundle: " + self.dest_path
+        except OSError as e: # this would be "except OSError, e:" before Python 2.6
+            if e.errno != errno.ENOENT: # errno.ENOENT = no such file or directory
+                raise # re-raise exception if a different error occurred
 '''
 def main(argv):
     #src

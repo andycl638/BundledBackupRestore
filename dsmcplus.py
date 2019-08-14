@@ -55,6 +55,7 @@ def mainbackup(args):
 
     dest_path = bundler.create_vol()
 
+    #update the destination path with new volume path
     bundler.dest_path = dest_path
 
     dir_list, total_size = bundler.get_all_dirs()
@@ -63,8 +64,11 @@ def mainbackup(args):
 
     bundler.parallel_bundler(proc_obj, total_size, dir_list[0])
 
-    dsmc_backup = DsmcBackup(args.destination, args.resourceutilization)
+    dsmc_backup = DsmcBackup(dest_path, args.resourceutilization)
     dsmc_backup.backup()
+
+    bundler.delete_bundle()
+
 
 def mainrestore(args):
     if args.dsmc:
