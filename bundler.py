@@ -215,6 +215,7 @@ class Bundler():
             if exc.errno != errno.EEXIST:
                 raise
             pass
+        return path
 
 '''
 def main(argv):

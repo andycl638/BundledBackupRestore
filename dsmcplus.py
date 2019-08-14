@@ -53,7 +53,9 @@ def mainbackup(args):
     #Init bundler object
     bundler = Bundler(args.source, args.destination, args.optfile)
 
-    bundler.create_vol()
+    dest_path = bundler.create_vol()
+
+    bundler.dest_path = dest_path
 
     dir_list, total_size = bundler.get_all_dirs()
 
