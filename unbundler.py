@@ -204,7 +204,7 @@ class Unbundler():
     def create_vol(self):
         optfiledata = MetadataJson.deserialize_json(self.optfile)
         volume = optfiledata['volume']
-        path = os.path.join(self.dest_path, volume)
+        path = os.path.join(self.src_path, volume)
         return path
     '''    try:
             os.mkdir(path)
