@@ -7,7 +7,7 @@ class DsmcRestore():
         self.restore_path = restore_path
 
     def restore(self):
-        cmd = "dsmc restore " + self.restore_path
+        cmd = "dsmc restore " + self.restore_path + "/"
         #cmd = "ls -l " + self.restore_path
 
         #cmd = "ping google.com -c 3"
