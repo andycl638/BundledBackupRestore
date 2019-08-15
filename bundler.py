@@ -29,6 +29,7 @@ class Bundler():
         self.src_path = src_path
         self.dest_path = dest_path
         self.optfile = optfile
+        self.size = 0
 
     def get_all_dirs(self):
         '''
@@ -118,7 +119,6 @@ class Bundler():
         metadatajson.write_to_file(data, path)
         print("Done.")
 
-    @classmethod
     def bundled_func(self, dir_list):
         '''
             Function called in parallel_bundler() which gives it an array containing
@@ -142,15 +142,14 @@ class Bundler():
         elapsed = end - start
 
         backup_list.append(tar_path)
-        bundle_size += int(Bundler.get_bundle_size(tar_path))
+        self.size += Bundler.get_bundle_size(tar_path)
         print("BUNDLE")
-        print(bundle_size)
+        print(self.size)
 
-        if bundle_size >= 20000000000:
-            print("LIST")
-            print (backup_list)
-            bundle_size = 0
-
+        #if bundle_size >= 20000000000:
+            #print("LIST")
+            #print (backup_list)
+            #bundle_size = 0
 
         star_file_data = {}
         volume_path_arr = []
