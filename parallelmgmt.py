@@ -17,7 +17,7 @@ class ParallelMgmt():
                                 used to calculate results
                 proc        -- Number of processor used to perform bundling
         '''
-        print("\nStarting parallel bundler")
+        print("\nStarting parallel func")
         start = time.time()
 
         with Pool(procs) as p:
@@ -28,4 +28,4 @@ class ParallelMgmt():
 
         end = time.time()
         elapsed = end - start
-        return proc_obj
+        return proc_obj, elapsed

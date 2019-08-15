@@ -51,7 +51,7 @@ class Unbundler():
 
         return unbundle_list
 
-    def parallel_unbundle(self, obj, procs):
+    def parallel_unbundle(self, obj, procs, elapsed):
         '''
             Conducts the unbundle function in parallel
             Displays agregate results of the bundle process
@@ -60,17 +60,11 @@ class Unbundler():
             unbundle_list       -- list of archive files that will be extracted
             proc                -- Number of processor used to perform bundling
         '''
-
-        print("\nStarting parallel unbundler")
-        start = time.time()
         total_data_transferred = 0
 
         for stat in obj:
             stat.display_stats_unbundle()
             total_data_transferred += stat.star_size
-
-        end = time.time()
-        elapsed = end - start
 
         Stats.display_total_stats(total_data_transferred, elapsed)
 

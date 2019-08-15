@@ -60,9 +60,9 @@ def mainbackup(args):
 
     dir_list, total_size = bundler.get_all_dirs()
 
-    proc_obj = ParallelMgmt.parallel_proc(bundler, dir_list, args.mode, int(args.parallelism))
+    proc_obj, elapsed = ParallelMgmt.parallel_proc(bundler, dir_list, args.mode, int(args.parallelism))
 
-    bundler.parallel_bundler(proc_obj, total_size, dir_list[0])
+    bundler.parallel_bundler(proc_obj, total_size, dir_list[0], elapsed)
 
     dsmc_backup = DsmcBackup(dest_path, args.resourceutilization)
     dsmc_backup.backup()
@@ -110,8 +110,8 @@ def mainrestore(args):
         sys.exit()
 
     unbundle_list = unbundler.build_list(restore_list)
-    proc_obj = ParallelMgmt.parallel_proc(unbundler, unbundle_list, args.mode, int(args.parallelism))
-    unbundler.parallel_unbundle(proc_obj, args.parallelism)
+    proc_obj, elapsed = ParallelMgmt.parallel_proc(unbundler, unbundle_list, args.mode, int(args.parallelism))
+    unbundler.parallel_unbundle(proc_obj, args.parallelism, elapsed)
 
 def check_input(args):
     if os.path.isdir(args.source):

@@ -86,7 +86,7 @@ class Bundler():
         return set_list
 
     @classmethod
-    def parallel_bundler(self, proc_obj, total_size, path):
+    def parallel_bundler(self, proc_obj, total_size, path, elapsed):
         '''
             Conducts the bundle function in parallel
             Displays results of the bundle process
@@ -99,9 +99,7 @@ class Bundler():
                                 used to calculate results
                 proc        -- Number of processor used to perform bundling
         '''
-        print("\nStarting parallel bundler")
 
-        start = time.time()
         data = {}
         star_file_arr = []
         total_data_transferred = 0
@@ -110,9 +108,6 @@ class Bundler():
             star_file_arr.append(star_file_data)
             stat.display_stats_bundle()
             total_data_transferred += stat.star_size
-
-        end = time.time()
-        elapsed = end - start
 
         data['total_size'] = total_size
         data['star_files'] = star_file_arr
@@ -185,7 +180,6 @@ class Bundler():
         tar_path = os.path.join(dest_path, unique_name)
         cmd = "time star -c -f \"" + tar_path + "\" fs=32m bs=64K pat=*.* " + src_path + "/*.*"
 
-
         #cmd = "ls -l " + src_path
 
         start = time.time()
@@ -200,9 +194,25 @@ class Bundler():
 
         end = time.time()
 
+        print(Bundler.get_bundle_size(tar_path))
         elapsed_proc_time = end - start
         message_cmd = tar_name_str + "\n" + cmd
         return message_cmd, elapsed_proc_time, tar_path
+
+    @staticmethod
+    def get_bundle_size(src):
+        '''
+            Get the size of each archive file
+
+            Arguments:
+                src             -- Archive file path
+
+            Returns:
+                bundle_size     -- size of Archive file in bytes
+        '''
+
+        bundle_size = os.path.getsize(src)
+        return bundle_size
 
     def create_vol(self):
         optfiledata = MetadataJson.deserialize_json(self.optfile)
