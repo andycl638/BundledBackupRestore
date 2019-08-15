@@ -3,6 +3,7 @@ from os.path import getsize
 from multiprocessing import Pool
 from metadatajson import MetadataJson
 from stats import Stats
+from shutil import rmtree
 
 metadatajson = MetadataJson()
 
@@ -85,7 +86,7 @@ class Unbundler():
         start = time.time()
 
         cmd, bundle_size, elapsed_proc = Unbundler.unbundle(unbundle_list[0], unbundle_list[1])
-        delete_message = Unbundler.delete_star(unbundle_list[0])
+        #delete_message = Unbundler.delete_star(unbundle_list[0])
 
         end = time.time()
         elapsed = end - start
@@ -194,6 +195,23 @@ class Unbundler():
         except:
             message = "\nError while deleting file: " + src
         return message
+
+    def delete_bundle(self):
+        '''
+            Delete all archive files from scratch once restore is complete
+
+            Arguments:
+                src         -- Archive file Path
+
+            Returns:
+                message     -- Message display whether files were deleted or not
+        '''
+        try:
+            rmtree(self.src_path)
+            message = "\nDeleted bundle: " + self.src_path
+        except OSError as e: # this would be "except OSError, e:" before Python 2.6
+            if e.errno != errno.ENOENT: # errno.ENOENT = no such file or directory
+                raise # re-raise exception if a different error occurred
 
     def create_vol(self):
         optfiledata = MetadataJson.deserialize_json(self.optfile)

@@ -113,6 +113,8 @@ def mainrestore(args):
     proc_obj, elapsed = ParallelMgmt.parallel_proc(unbundler, unbundle_list, args.mode, int(args.parallelism))
     unbundler.parallel_unbundle(proc_obj, args.parallelism, elapsed)
 
+    unbundler.delete_bundle()
+
 def check_input(args):
     if os.path.isdir(args.source):
         print("Source Path: %s" %args.source)
