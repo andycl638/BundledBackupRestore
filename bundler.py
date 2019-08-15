@@ -142,13 +142,14 @@ class Bundler():
         elapsed = end - start
 
         backup_list.append(tar_path)
-        bundle_size += Bundler.get_bundle_size(tar_path)
+        bundle_size += int(Bundler.get_bundle_size(tar_path))
         print("BUNDLE")
         print(bundle_size)
 
-        if bundle_size == 20000000000:
+        if bundle_size >= 20000000000:
             print("LIST")
             print (backup_list)
+            bundle_size = 0
 
 
         star_file_data = {}
