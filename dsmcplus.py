@@ -34,22 +34,6 @@ def dsmcplus():
         mainrestore(args)
 
 def mainbackup(args):
-    if args.scratch:
-        print("filer to scratch only")
-        bundler = Bundler(args.source, args.destination)
-        dir_list, total_size = bundler.get_all_dirs()
-
-        proc_obj = ParallelMgmt.parallel_proc(bundler, dir_list, args.mode, int(args.parallelism))
-
-        bundler.parallel_bundler(proc_obj, total_size, dir_list[0])
-        sys.exit()
-
-    if args.dsmc:
-        print("scratch to dsmc only")
-        dsmc_backup = DsmcBackup(args.destination, args.resourceutilization)
-        dsmc_backup.backup()
-        sys.exit()
-
     #Init bundler object
     bundler = Bundler(args.source, args.destination, args.optfile)
 
@@ -57,6 +41,22 @@ def mainbackup(args):
 
     #update the destination path with new volume path
     bundler.dest_path = dest_path
+
+    if args.scratch:
+        print("filer to scratch only")
+        dir_list, total_size = bundler.get_all_dirs()
+
+        proc_obj, elapsed = ParallelMgmt.parallel_proc(bundler, dir_list, args.mode, int(args.parallelism))
+
+        bundler.parallel_bundler(proc_obj, total_size, dir_list[0], elapsed)
+        sys.exit()
+
+    if args.dsmc:
+        print("scratch to dsmc only")
+        dsmc_backup = DsmcBackup(dest_path, args.resourceutilization)
+        dsmc_backup.backup()
+        sys.exit()
+
 
     dir_list, total_size = bundler.get_all_dirs()
 

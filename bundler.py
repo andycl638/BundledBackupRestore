@@ -134,11 +134,23 @@ class Bundler():
         '''
         stat = Stats()
         start = time.time()
-
+        backup_list = []
+        bundle_size = 0
         cmd, elapsed_proc_time, tar_path = Bundler.bundle_file_set(dir_list[0], dir_list[1])
 
         end = time.time()
         elapsed = end - start
+
+        backup_list.append(tar_path)
+        bundle_size += Bundler.get_bundle_size(tar_path)
+        print("BUNDLE")
+        print(bundle_size)
+
+        if bundle_size == 20000000000:
+            print("LIST")
+            print (backup_list)
+
+
         star_file_data = {}
         volume_path_arr = []
 
@@ -194,7 +206,7 @@ class Bundler():
 
         end = time.time()
 
-        print(Bundler.get_bundle_size(tar_path))
+
         elapsed_proc_time = end - start
         message_cmd = tar_name_str + "\n" + cmd
         return message_cmd, elapsed_proc_time, tar_path
