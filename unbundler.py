@@ -1,8 +1,4 @@
-import subprocess
-import sys
-import os
-import time
-import glob
+import subprocess, sys, os, time, glob, errno
 from os.path import getsize
 from multiprocessing import Pool
 from metadatajson import MetadataJson
@@ -18,7 +14,7 @@ class Unbundler():
         Star: linux unique standard tape archiver
     '''
 
-    def __init__(self, src_path, dest_path):
+    def __init__(self, src_path, dest_path, optfile):
         '''
             Initialize Unbundler object
 
@@ -30,6 +26,7 @@ class Unbundler():
 
         self.src_path = src_path
         self.dest_path = dest_path
+        self.optfile = optfile
 
     def build_list(self, src_list):
         '''
@@ -182,7 +179,7 @@ class Unbundler():
                 restore_list    -- List with full path of all archive files
         '''
         restore_list = []
-        restore_list = glob.glob(self.src_path + "*.star")
+        restore_list = glob.glob(os.path.join(self.src_path, "*.star"))
         print(restore_list)
         return restore_list
 
@@ -203,6 +200,19 @@ class Unbundler():
         except:
             message = "\nError while deleting file: " + src
         return message
+
+    def create_vol(self):
+        optfiledata = MetadataJson.deserialize_json(self.optfile)
+        volume = optfiledata['volume']
+        path = os.path.join(self.dest_path, volume)
+        return path
+    '''    try:
+            os.mkdir(path)
+        except OSError as exc:
+            if exc.errno != errno.EEXIST:
+                raise
+            pass
+        return path'''
 
 '''
 def main(argv):

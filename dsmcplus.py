@@ -92,11 +92,17 @@ def mainrestore(args):
         unbundler.parallel_unbundle(proc_obj, args.parallelism)
         sys.exit()
 
-    dsmc_restore = DsmcRestore(args.source)
+    unbundler = Unbundler(args.source, args.destination, args.optfile)
+    source_path = unbundler.create_vol()
+
+    #update the destination path with new volume path
+    unbundler.src_path = source_path
+
+    dsmc_restore = DsmcRestore(unbundler.src_path)
     dsmc_restore.restore()
 
     #data = metadatajson.deserialize_json(json_file_path)
-    unbundler = Unbundler(args.source, args.destination)
+    #unbundler = Unbundler(unbundler.src_path, args.destination)
     restore_list = unbundler.get_all_volume()
     #restore_list = get_restore_list(data)
     if len(restore_list) == 0:
