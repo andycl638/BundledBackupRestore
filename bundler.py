@@ -164,7 +164,7 @@ class Bundler():
 
         throughput = size_mib / elapsed_proc_time
 
-        stat.capture_stats(elapsed_proc_time, dir_list[2], 0, tar_path, 0, cmd)
+        stat.capture_stats(elapsed_proc_time, dir_list[2], 0, tar_path, 0, cmd, "")
 
         return  star_file_data, stat
 

@@ -108,7 +108,7 @@ class Unbundler():
                 bundle_size     -- size of Archive file in bytes
                 elapsed         -- The elapsed time of the subprocess cmd
         '''
-
+        print("unbundle the tar into filer")
         bundle_size = Unbundler.get_bundle_size(src)
 
         cmd = "star -x -v -f " + src
