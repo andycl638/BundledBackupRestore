@@ -228,11 +228,13 @@ class Bundler():
 
     def create_vol(self):
         optfiledata = MetadataJson.deserialize_json(self.optfile)
+        group = optfiledata['group']
+        filer = optfiledata['filer']
         volume = optfiledata['volume']
-        path = os.path.join(self.dest_path, volume)
-
+        path = os.path.join(self.dest_path, group, filer, volume)
+        print(path)
         try:
-            os.mkdir(path)
+            os.makedirs(path)
         except OSError as exc:
             if exc.errno != errno.EEXIST:
                 raise

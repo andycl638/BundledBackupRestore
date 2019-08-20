@@ -49,6 +49,7 @@ def mainbackup(args):
         proc_obj, elapsed = ParallelMgmt.parallel_proc(bundler, dir_list, args.mode, int(args.parallelism))
 
         bundler.parallel_bundler(proc_obj, total_size, dir_list[0], elapsed)
+        bundler.delete_bundle()
         sys.exit()
 
     if args.dsmc:
@@ -135,8 +136,8 @@ def check_input(args):
 if __name__ == '__main__':
     dsmcplus()
 
-    #python3 dsmcplus.py backup /Users/andy/Documents/tester/ /Users/andy/Documents/tester/ -p 16 -t
-    #python3 dsmcplus.py restore /Users/andy/Documents/tester/ /Users/andy/Documents/tester/ -p 16 -t
+    #python3 dsmcplus.py backup /Users/andy/Documents/tester/ /Users/andy/Documents/tester/ /Users/andy/Documents/tester/optfile.json -p 16 -r 10 -s
+    #python3 dsmcplus.py restore /Users/andy/Documents/tester/ /Users/andy/Documents/tester/ -p 16
 
     #python3 dsmcplus.py restore /scale01/scratch/ /vz9 -p 8
     #python3 dsmcplus.py backup /vz8 /scale01/scratch/ -p 8
