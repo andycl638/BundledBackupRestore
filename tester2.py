@@ -24,7 +24,7 @@ def delete_bundle(path):
             raise # re-raise exception if a different error occurred
     end = time.time()
 
-    elapsed = start-end
+    elapsed = end-start
     print("Deleting with rmtree")
     print(elapsed)
 
@@ -47,7 +47,7 @@ def remove(path):
 
     end = time.time()
 
-    elapsed = start-end
+    elapsed = end-start
     print("Deleting with rmdir and remove")
     print(elapsed)
 
