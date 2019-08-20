@@ -36,13 +36,13 @@ def remove(path):
         try:
             os.rmdir(path)
         except OSError:
-            print "Unable to remove folder: %s" % path
+            print ("Unable to remove folder: %s" % path)
     else:
         try:
             if os.path.exists(path):
                 os.remove(path)
         except OSError:
-            print "Unable to remove file: %s" % path
+            print ("Unable to remove file: %s" % path)
     end = time.time()
 
     elapsed = start-end
