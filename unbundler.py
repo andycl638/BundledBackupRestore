@@ -215,16 +215,12 @@ class Unbundler():
 
     def create_vol(self):
         optfiledata = MetadataJson.deserialize_json(self.optfile)
+        group = optfiledata['group']
+        filer = optfiledata['filer']
         volume = optfiledata['volume']
-        path = os.path.join(self.src_path, volume)
+        path = os.path.join(self.dest_path, group, filer, volume)
+        print(path)
         return path
-    '''    try:
-            os.mkdir(path)
-        except OSError as exc:
-            if exc.errno != errno.EEXIST:
-                raise
-            pass
-        return path'''
 
 '''
 def main(argv):
