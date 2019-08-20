@@ -85,12 +85,12 @@ class Unbundler():
         stat = Stats()
         start = time.time()
 
-        cmd, bundle_size, elapsed_proc = Unbundler.unbundle(unbundle_list[0], unbundle_list[1])
+        cmd, bundle_size, elapsed_proc, dest = Unbundler.unbundle(unbundle_list[0], unbundle_list[1])
         #delete_message = Unbundler.delete_star(unbundle_list[0])
 
         end = time.time()
         elapsed = end - start
-        stat.capture_stats(elapsed_proc, bundle_size, 0, "", 0, cmd)
+        stat.capture_stats(elapsed_proc, bundle_size, 0, "", 0, cmd, dest)
 
         return stat
 
@@ -128,7 +128,7 @@ class Unbundler():
 
         out, err = p.communicate()
 
-        return cmd, bundle_size, elapsed
+        return cmd, bundle_size, elapsed, dest
 
     @classmethod
     def get_bundle_size(self, src):

@@ -15,6 +15,7 @@ class Stats:
         self.throughput = 0
         self.process_id = 0
         self.cmd = ""
+        self.dest = ""
 
     def calculate_throughput(self, star_size, elapsed_time):
         return ""
@@ -22,7 +23,7 @@ class Stats:
     def calculate_size_gb(self, star_size):
         self.star_size = star_size/1024/1024/1024
 
-    def capture_stats(self, elapsed_time, star_size, file_count, star_name, process_id, cmd):
+    def capture_stats(self, elapsed_time, star_size, file_count, star_name, process_id, cmd, dest):
         self.elapsed_time = elapsed_time
         self.star_size = star_size
         self.file_count = file_count
@@ -32,6 +33,7 @@ class Stats:
         throughput = size_mib / elapsed_time
         self.throughput = throughput
         self.cmd = cmd
+        self.dest = dest
 
     def display_stats_bundle(self):
         result_str = "\nResults:"
@@ -44,10 +46,11 @@ class Stats:
     def display_stats_unbundle(self):
         result_str = "\nResults:"
         cmd_str = "\nUnbundle cmd: %s" %self.cmd
+        dest_str = "\nDestination Path: %s" %self.dest
         bundle_size_str = "\nSize of bundle: " + str(self.star_size/1024/1024/1024)
         elapsed_str = "\nTime elapsed per process: %s" %self.elapsed_time
         throughput_str = "\nThroughput (MiB/sec): " + str(self.throughput)
-        display_message = result_str + cmd_str + bundle_size_str + throughput_str  + elapsed_str
+        display_message = result_str + cmd_str + dest_str + bundle_size_str + throughput_str  + elapsed_str
         print(display_message)
 
     @staticmethod
