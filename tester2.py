@@ -32,18 +32,19 @@ def remove(path):
     """
     Remove the file or directory
     """
+
+    cmd = "rm -rf " + path
+
     start = time.time()
-    if os.path.isdir(path):
-        try:
-            os.rmdir(path)
-        except OSError:
-            print ("Unable to remove folder: %s" % path)
-    else:
-        try:
-            if os.path.exists(path):
-                os.remove(path)
-        except OSError:
-            print ("Unable to remove file: %s" % path)
+
+    p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+
+    while p.poll() is None:
+        time.sleep(0.5)
+
+    if p.returncode != 0:
+        print(p.stdout.read())
+
     end = time.time()
 
     elapsed = start-end
