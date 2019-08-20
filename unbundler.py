@@ -218,7 +218,7 @@ class Unbundler():
         group = optfiledata['group']
         filer = optfiledata['filer']
         volume = optfiledata['volume']
-        path = os.path.join(self.dest_path, group, filer, volume)
+        path = os.path.join(self.src_path, group, filer, volume)
         print(path)
         return path
 
