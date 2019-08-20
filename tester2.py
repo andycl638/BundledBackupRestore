@@ -34,6 +34,7 @@ def remove(path):
     """
 
     cmd = "rm -rf " + path
+    print (cmd)
 
     start = time.time()
 
@@ -57,4 +58,4 @@ print (num_consumers)
 print("TESTING DELETE FUNCTION SPEED")
 
 delete_bundle('/scale01/scratch/vz8/vz8')
-remove('scale01/scratch/vz8/vz7')
+remove('/scale01/scratch/vz8/vz7')
