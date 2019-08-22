@@ -73,7 +73,7 @@ def mainbackup(args):
 
     total_elapsed_time = end-start
 
-    aggregate = ()(total_throughput + float(transfer_rate))/2)/1024
+    aggregate = ((total_throughput + float(transfer_rate))/2)/1024
 
     #add total_throughput with dsmc transfer and divide by 2 for total throughput
     print("Total Elapsed Time: %s" %total_elapsed_time)
@@ -128,7 +128,7 @@ def mainrestore(args):
     end = time.time()
 
     total_elapsed_time = end - start
-    aggregate = ()(total_throughput + float(transfer_rate))/2)/1024
+    aggregate = ((total_throughput + float(transfer_rate))/2)/1024
 
     #add total_throughput with dsmc transfer and divide by 2 for total throughput
     print("Total Elapsed Time: %s" %total_elapsed_time)
