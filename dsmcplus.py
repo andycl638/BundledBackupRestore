@@ -1,5 +1,5 @@
 #Main script
-import argparse, os, sys, errno
+import argparse, os, sys, errno, time
 
 from bundler import Bundler
 from dsmcbackup import DsmcBackup
