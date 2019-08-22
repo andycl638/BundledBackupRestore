@@ -58,18 +58,26 @@ def mainbackup(args):
         dsmc_backup.backup()
         sys.exit()
 
-
+    start = time.time()
     dir_list, total_size = bundler.get_all_dirs()
 
     proc_obj, elapsed = ParallelMgmt.parallel_proc(bundler, dir_list, args.mode, int(args.parallelism))
 
-    bundler.parallel_bundler(proc_obj, total_size, dir_list[0], elapsed)
+    total_throughput = bundler.parallel_bundler(proc_obj, total_size, dir_list[0], elapsed)
 
     dsmc_backup = DsmcBackup(dest_path, args.resourceutilization)
-    dsmc_backup.backup()
+    transfer_rate = dsmc_backup.backup()
 
     bundler.delete_bundle()
+    end = time.time()
 
+    total_elapsed_time = end-start
+
+    aggregate = (total_throughput + transfer_rate)/2
+
+    #add total_throughput with dsmc transfer and divide by 2 for total throughput
+    print("Total Elapsed Time: %s" %total_elapsed_time)
+    print("Total Aggregate transfer rate: %s" %aggregate)
 
 def mainrestore(args):
     if args.dsmc:
@@ -93,6 +101,7 @@ def mainrestore(args):
         unbundler.parallel_unbundle(proc_obj, args.parallelism)
         sys.exit()
 
+    start = time.time()
     unbundler = Unbundler(args.source, args.destination, args.optfile)
     source_path = unbundler.create_vol()
 
@@ -100,7 +109,7 @@ def mainrestore(args):
     unbundler.src_path = source_path
 
     dsmc_restore = DsmcRestore(unbundler.src_path)
-    dsmc_restore.restore()
+    transfer_rate = dsmc_restore.restore()
 
     #data = metadatajson.deserialize_json(json_file_path)
     #unbundler = Unbundler(unbundler.src_path, args.destination)
@@ -112,9 +121,18 @@ def mainrestore(args):
 
     unbundle_list = unbundler.build_list(restore_list)
     proc_obj, elapsed = ParallelMgmt.parallel_proc(unbundler, unbundle_list, args.mode, int(args.parallelism))
-    unbundler.parallel_unbundle(proc_obj, args.parallelism, elapsed)
+    total_throughput = unbundler.parallel_unbundle(proc_obj, args.parallelism, elapsed)
 
     unbundler.delete_bundle()
+
+    end = time.time()
+
+    total_elapsed_time = end - start
+    aggregate = (total_throughput + transfer_rate)/2
+
+    #add total_throughput with dsmc transfer and divide by 2 for total throughput
+    print("Total Elapsed Time: %s" %total_elapsed_time)
+    print("Total Aggregate transfer rate: %s" %aggregate)
 
 def check_input(args):
     if os.path.isdir(args.source):

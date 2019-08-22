@@ -71,4 +71,6 @@ class Stats:
         print("Normalize day: " + str(day_normalization))
         print("Normalize tb: " + str(tb_normalization))
         print("Normalize throughput (TB/15days): " + str(normalization_throughput))
-        print("Goal: " + str(goal_throughput))
+        print("Goal throughput (25TB/15days): " + str(goal_throughput))
+
+        return total_throughput

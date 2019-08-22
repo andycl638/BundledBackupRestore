@@ -113,11 +113,12 @@ class Bundler():
         data['total_size'] = total_size
         data['star_files'] = star_file_arr
 
-        Stats.display_total_stats(total_data_transferred, elapsed)
+        total_throughput = Stats.display_total_stats(total_data_transferred, elapsed)
 
         print("\nCreating json metadata file")
         metadatajson.write_to_file(data, path)
         print("Done.")
+        return total_throughput
 
     def bundled_func(self, dir_list):
         '''

@@ -67,7 +67,8 @@ class Unbundler():
             stat.display_stats_unbundle()
             total_data_transferred += stat.star_size
 
-        Stats.display_total_stats(total_data_transferred, elapsed)
+        total_throughput = Stats.display_total_stats(total_data_transferred, elapsed)
+        return total_throughput
 
     @classmethod
     def unbundle_func(self, unbundle_list):

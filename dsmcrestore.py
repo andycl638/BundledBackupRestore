@@ -8,28 +8,31 @@ class DsmcRestore():
 
     def restore(self):
         cmd = "dsmc restore " + self.restore_path + "/"
-        #cmd = "ls -l " + self.restore_path
-
-        #cmd = "ping google.com -c 3"
 
         print(cmd)
 
-        start = time.time()
+        transfer_rate_arr = []
 
         p = subprocess.Popen(cmd, shell=True, stderr=subprocess.PIPE)
 
         while True:
-            out = p.stderr.readline()
+            output = p.stdout.readline().decode('utf-8')
             if p.poll() != None:
                 break
 
-            sys.stdout.write(out.decode('utf-8'))
-            sys.stdout.flush()
+            if output:
+                print (output.strip())
+                if "Aggregate data transfer rate:" in output:
+                    transfer_rate_arr = re.findall('\d*\.?\d+', output)
+
         print ("dsmc: finished")
 
-        end = time.time()
+        transfer_rate = ""
+        for num in transfer_rate_arr:
+            transfer_rate = transfer_rate + num
 
-        elapsed_proc_time = end - start
+        print (transfer_rate)
+        return transfer_rate
 
 '''
 def main(argv):

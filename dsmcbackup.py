@@ -1,7 +1,6 @@
 import sys, os, subprocess, time
 
 #Grab all .star files and backup to SP server using dsmc
-#delete all .star files from scratch
 
 class DsmcBackup():
     def __init__(self, backup_path, resource_utilization):
@@ -9,32 +8,32 @@ class DsmcBackup():
         self.resource_utilization = resource_utilization
 
     def backup(self):
-
-    
-        #cmd = "dsmc selective '" + self.backup_path + "*'" #-resourceutilization=10"
         cmd = "dsmc selective '" + os.path.join(self.backup_path, '*') + "' -resourceutilization=" + str(self.resource_utilization)
-        #cmd = "dsmc q v"
-
-        #cmd = "ping google.com -c 3"
 
         print(cmd)
 
-        start = time.time()
-        p = subprocess.Popen(cmd, shell=True, stderr=subprocess.PIPE)
+        p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+        transfer_rate_arr = []
 
         while True:
-            out = p.stderr.readline()
+            output = p.stdout.readline().decode('utf-8')
             if p.poll() != None:
                 break
 
-            sys.stdout.write(out.decode('utf-8'))
-            sys.stdout.flush()
+            if output:
+                print (output.strip())
+                if "Aggregate data transfer rate:" in output:
+                    transfer_rate_arr = re.findall('\d*\.?\d+', output)
 
         print ("dsmc: finished")
 
-        end = time.time()
+        transfer_rate = ""
+        for num in transfer_rate_arr:
+            transfer_rate = transfer_rate + num
 
-        elapsed_proc_time = end - start
+        print (transfer_rate)
+        return transfer_rate
+
 
 '''
 def main(argv):
