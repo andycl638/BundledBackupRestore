@@ -13,7 +13,7 @@ class DsmcRestore():
 
         transfer_rate_arr = []
 
-        p = subprocess.Popen(cmd, shell=True, stderr=subprocess.PIPE)
+        p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
 
         while True:
             output = p.stdout.readline().decode('utf-8')
