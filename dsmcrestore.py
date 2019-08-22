@@ -1,4 +1,4 @@
-import sys, os, subprocess, time
+import sys, os, subprocess, time, re
 
 
 class DsmcRestore():

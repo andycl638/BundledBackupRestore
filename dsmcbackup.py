@@ -1,4 +1,4 @@
-import sys, os, subprocess, time
+import sys, os, subprocess, time, re
 
 #Grab all .star files and backup to SP server using dsmc
 
