@@ -129,6 +129,8 @@ def mainrestore(args):
 
     end = time.time()
 
+    total_elapsed_time = end - start
+
     transfer_rate_mib = float(transfer_rate)/1024
     print(transfer_rate_mib)
     aggregate = (total_throughput + transfer_rate_mib)/2
