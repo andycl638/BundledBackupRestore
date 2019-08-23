@@ -31,7 +31,6 @@ class DsmcRestore():
         for num in transfer_rate_arr:
             transfer_rate = transfer_rate + num
 
-        print (transfer_rate)
         return transfer_rate
 
 '''
