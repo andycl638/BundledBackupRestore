@@ -74,3 +74,15 @@ class Stats:
         print("Goal throughput (25TB/15days): " + str(goal_throughput))
 
         return total_throughput
+
+    @staticmethod
+    def overall_stats(total_elapsed_time, transfer_rate, total_throughput):
+
+        print(transfer_rate)
+        transfer_rate_mib = float(transfer_rate)/1024
+        print(transfer_rate_mib)
+        aggregate = (total_throughput + transfer_rate_mib)/2
+
+        #add total_throughput with dsmc transfer and divide by 2 for total throughput
+        print("Total Elapsed Time: %s" %total_elapsed_time)
+        print("Total Aggregate transfer rate: %s" %aggregate)

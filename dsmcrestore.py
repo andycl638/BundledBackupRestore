@@ -30,7 +30,7 @@ class DsmcRestore():
         transfer_rate = ""
         for num in transfer_rate_arr:
             transfer_rate = transfer_rate + num
-
+        
         return transfer_rate
 
 '''

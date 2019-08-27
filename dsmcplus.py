@@ -7,6 +7,7 @@ from unbundler import Unbundler
 from dsmcrestore import DsmcRestore
 from parallelmgmt import ParallelMgmt
 from metadatajson import MetadataJson
+from stats import Stats
 
 def dsmcplus():
     parser = argparse.ArgumentParser()
@@ -72,14 +73,14 @@ def mainbackup(args):
     end = time.time()
 
     total_elapsed_time = end-start
-
-    transfer_rate_mib = float(transfer_rate)/1024
+    Stats.overall_stats(total_elapsed_time, transfer_rate, total_throughput)
+    '''transfer_rate_mib = float(transfer_rate)/1024
 
     aggregate = (total_throughput + transfer_rate_mib)/2
 
     #add total_throughput with dsmc transfer and divide by 2 for total throughput
     print("Total Elapsed Time: %s" %total_elapsed_time)
-    print("Total Aggregate transfer rate: %s" %aggregate)
+    print("Total Aggregate transfer rate: %s" %aggregate)'''
 
 def mainrestore(args):
     if args.dsmc:
@@ -130,14 +131,14 @@ def mainrestore(args):
     end = time.time()
 
     total_elapsed_time = end - start
-
-    transfer_rate_mib = float(transfer_rate)/1024
+    Stats.overall_stats(total_elapsed_time, transfer_rate, total_throughput)
+    '''transfer_rate_mib = float(transfer_rate)/1024
 
     aggregate = (total_throughput + transfer_rate_mib)/2
 
     #add total_throughput with dsmc transfer and divide by 2 for total throughput
     print("Total Elapsed Time: %s" %total_elapsed_time)
-    print("Total Aggregate transfer rate: %s" %aggregate)
+    print("Total Aggregate transfer rate: %s" %aggregate)'''
 
 def check_input(args):
     if os.path.isdir(args.source):
