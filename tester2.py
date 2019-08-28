@@ -1,61 +1,37 @@
 import multiprocessing
 import os, sys, time, errno
-import json, subprocess
+import json, subprocess, re
 from shutil import copy, rmtree
 
+from bundler import Bundler
+from dsmcbackup import DsmcBackup
+from unbundler import Unbundler
+from dsmcrestore import DsmcRestore
+from parallelmgmt import ParallelMgmt
+from metadatajson import MetadataJson
 
-def delete_bundle(path):
-    '''
-        Delete all archive files from scratch once backup is complete
 
-        Arguments:
-            src         -- Archive file Path
+def write_virtualmnt(file_path, virtual_mnt_pt):
+    newfile = []
+    with open(file_path, 'r') as file:
+        lines = file.readlines()
 
-        Returns:
-            message     -- Message display whether files were deleted or not
-    '''
-    start = time.time()
-    try:
-        rmtree(path)
-        message = "\nDeleted bundle: " + path
-        print(message)
-    except OSError as e: # this would be "except OSError, e:" before Python 2.6
-        if e.errno != errno.ENOENT: # errno.ENOENT = no such file or directory
-            raise # re-raise exception if a different error occurred
-    end = time.time()
+        for line in lines:
+            if "virtualmountpoint" in line:
+                line = line.replace(line, "virtualmountpoint "  + virtual_mnt_pt + "\n")
+            newfile.append(line)
 
-    elapsed = end-start
-    print("Deleting with rmtree")
-    print(elapsed)
+    with open(file_path, 'w') as file:
+        file.writelines(newfile)
 
-def remove(path):
-    """
-    Remove the file or directory
-    """
 
-    cmd = "rm -rf " + path
-    print (cmd)
 
-    start = time.time()
 
-    p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-
-    while p.poll() is None:
-        time.sleep(0.5)
-
-    if p.returncode != 0:
-        print(p.stdout.read())
-
-    end = time.time()
-
-    elapsed = end-start
-    print("Deleting with rmdir and remove")
-    print(elapsed)
 
 num_consumers = multiprocessing.cpu_count()
 print (num_consumers)
 
-print("TESTING DELETE FUNCTION SPEED")
 
-delete_bundle('/scale01/scratch/vz8/vz8')
-remove('/scale01/scratch/vz8/vz7')
+
+#delete_bundle('/scale01/scratch/vz8/vz8')
+#remove('/scale01/scratch/vz8/vz7')
