@@ -3,9 +3,11 @@ import sys, os, subprocess, time, re
 #Grab all .star files and backup to SP server using dsmc
 
 class DsmcBackup():
-    def __init__(self, backup_path, resource_utilization):
+    def __init__(self, backup_path, resource_utilization, dsm_opt, virtual_mnt_pt):
         self.backup_path = backup_path
         self.resource_utilization = resource_utilization
+        self.dsm_opt = dsm_opt
+        self.virtual_mnt_pt = virtual_mnt_pt
 
     def backup(self):
         cmd = "dsmc selective '" + os.path.join(self.backup_path, '*') + "' -resourceutilization=" + str(self.resource_utilization)
@@ -32,6 +34,19 @@ class DsmcBackup():
             transfer_rate = transfer_rate + num
 
         return transfer_rate
+
+    def write_virtualmnt(self):
+        newfile = []
+        with open(self.dsm_opt, 'r') as file:
+            lines = file.readlines()
+
+            for line in lines:
+                if "virtualmountpoint" in line:
+                    line = line.replace(line, "virtualmountpoint "  + self.virtual_mnt_pt + "\n")
+                newfile.append(line)
+
+        with open(self.dsm_opt, 'w') as file:
+            file.writelines(newfile)
 
 
 '''

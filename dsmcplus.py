@@ -38,7 +38,7 @@ def mainbackup(args):
     #Init bundler object
     bundler = Bundler(args.source, args.destination, args.optfile)
 
-    dest_path = bundler.create_vol()
+    dest_path, dsm_opt, virtual_mnt_pt = bundler.create_vol()
 
     #update the destination path with new volume path
     bundler.dest_path = dest_path
@@ -66,7 +66,8 @@ def mainbackup(args):
 
     total_throughput = bundler.parallel_bundler(proc_obj, total_size, dir_list[0], elapsed)
 
-    dsmc_backup = DsmcBackup(dest_path, args.resourceutilization)
+    dsmc_backup = DsmcBackup(dest_path, args.resourceutilization, dsm_opt, virtual_mnt_pt)
+    dsmc_backup.write_virtualmnt()
     transfer_rate = dsmc_backup.backup()
 
     bundler.delete_bundle()
@@ -74,13 +75,6 @@ def mainbackup(args):
 
     total_elapsed_time = end-start
     Stats.overall_stats(total_elapsed_time, transfer_rate, total_throughput)
-    '''transfer_rate_mib = float(transfer_rate)/1024
-
-    aggregate = (total_throughput + transfer_rate_mib)/2
-
-    #add total_throughput with dsmc transfer and divide by 2 for total throughput
-    print("Total Elapsed Time: %s" %total_elapsed_time)
-    print("Total Aggregate transfer rate: %s" %aggregate)'''
 
 def mainrestore(args):
     if args.dsmc:
@@ -132,13 +126,6 @@ def mainrestore(args):
 
     total_elapsed_time = end - start
     Stats.overall_stats(total_elapsed_time, transfer_rate, total_throughput)
-    '''transfer_rate_mib = float(transfer_rate)/1024
-
-    aggregate = (total_throughput + transfer_rate_mib)/2
-
-    #add total_throughput with dsmc transfer and divide by 2 for total throughput
-    print("Total Elapsed Time: %s" %total_elapsed_time)
-    print("Total Aggregate transfer rate: %s" %aggregate)'''
 
 def check_input(args):
     if os.path.isdir(args.source):

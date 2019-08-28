@@ -233,14 +233,15 @@ class Bundler():
         filer = optfiledata['filer']
         volume = optfiledata['volume']
         path = os.path.join(self.dest_path, group, filer, volume)
+        virtual_mnt_pt = os.path.join(self.dest_path, group)
         print(path)
-        try:
+        '''try:
             os.makedirs(path)
         except OSError as exc:
             if exc.errno != errno.EEXIST:
                 raise
-            pass
-        return path
+            pass'''
+        return path, optfiledata['dsmoptfile'], virtual_mnt_pt
 
     def delete_bundle(self):
         '''
