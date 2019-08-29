@@ -7,7 +7,7 @@ class DsmcRestore():
         self.restore_path = restore_path
 
     def restore(self):
-        cmd = "dsmc restore " + self.restore_path + "-sub=yes"
+        cmd = "dsmc restore " + self.restore_path + " -sub=yes"
 
         print(cmd)
 
