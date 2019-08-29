@@ -7,7 +7,7 @@ class DsmcRestore():
         self.restore_path = restore_path
 
     def restore(self):
-        cmd = "dsmc restore " + self.restore_path + "/"
+        cmd = "dsmc restore " + self.restore_path + "-sub=yes"
 
         print(cmd)
 
@@ -30,7 +30,7 @@ class DsmcRestore():
         transfer_rate = ""
         for num in transfer_rate_arr:
             transfer_rate = transfer_rate + num
-        
+
         return transfer_rate
 
 '''
