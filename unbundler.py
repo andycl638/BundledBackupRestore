@@ -217,9 +217,9 @@ class Unbundler():
     def create_vol(self):
         optfiledata = MetadataJson.deserialize_json(self.optfile)
         group = optfiledata['group']
-        filer = optfiledata['filer']
-        volume = optfiledata['volume']
-        path = os.path.join(self.src_path, group, filer, volume)
+        #filer = optfiledata['filer']
+        #volume = optfiledata['volume']
+        path = os.path.join(self.src_path, group, "*")
         print(path)
         return path
 
