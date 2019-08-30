@@ -233,7 +233,7 @@ class Unbundler():
             if exc.errno != errno.EEXIST:
                 raise
             pass
-        return path, virtual_mnt_pt
+        return path
 
 
 '''
