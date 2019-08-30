@@ -175,7 +175,13 @@ class Unbundler():
                 restore_list    -- List with full path of all archive files
         '''
         restore_list = []
-        restore_list = glob.glob(os.path.join(self.src_path, "*.star"))
+        #restore_list = glob.glob(os.path.join(self.src_path, "*.star"))
+
+        for root, dirs, files in os.walk(self.src_path):
+            for name in files:
+                if name.lower().endswith('.star'):
+                    restore_list.append(os.path.join(root,name))
+
         print(restore_list)
         return restore_list
 
@@ -221,7 +227,14 @@ class Unbundler():
         #volume = optfiledata['volume']
         path = os.path.join(self.src_path, group)
         print(path)
-        return path
+        try:
+            os.makedirs(path)
+        except OSError as exc:
+            if exc.errno != errno.EEXIST:
+                raise
+            pass
+        return path, virtual_mnt_pt
+
 
 '''
 def main(argv):
