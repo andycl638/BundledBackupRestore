@@ -61,7 +61,7 @@ if __name__ == '__main__':
     p2.join()'''
 
     print("\nget a list of all the dirs that needs to be backed up")
-    print("path: /vz6)
+    print("path: /vz6")
     start = time.time()
     dir_size = 0
 
