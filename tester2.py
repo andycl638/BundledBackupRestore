@@ -47,7 +47,7 @@ def test1():
     total_size = 0
 
     for root, dirs, files in os.walk('/vz6'):
-        print(root)
+
         for file in files:
             file_path=os.path.join(root, file)
             dir_size += os.path.getsize(file_path)
@@ -63,8 +63,9 @@ def test1():
 
     end = time.time()
     elapsed = end - start
-    print("Time to gather all files: %s" %elapsed)
     print(dir_list)
+    print("Time to gather all files: %s" %elapsed)
+
 
 def test2():
     print("\nget a list of all the dirs that needs to be backed up")
@@ -145,7 +146,7 @@ if __name__ == '__main__':
     print(q.get())
     p2.join()'''
 
-    test3()
+    test1()
 
 '''
 [['/Users/andy/Documents/tester/untitled folder', 'dest', 5254493],
