@@ -74,7 +74,7 @@ def test2():
     dir_size = 0
     set_list = []
 
-    for root, dirs, files in os.walk('/Users/andy/Documents/tester'):
+    for root, dirs, files in os.walk('/vz6'):
         set_list.append(root)
         set_list.append("dest")
 
