@@ -2,7 +2,7 @@ from multiprocessing import Process, Queue
 import os, sys, time, errno
 import json, subprocess, re
 from shutil import copy, rmtree
-
+from glob import glob
 from parallelmgmt import ParallelMgmt
 
 arr = 0
@@ -69,18 +69,22 @@ def test1():
 
 def test2():
     print("\nget a list of all the dirs that needs to be backed up")
-    print("path: /vz6")
+    print("path: /Users/andy/Documents/tester")
     start = time.time()
     dir_size = 0
+    set_list = []
 
     for root, dirs, files in os.walk('/Users/andy/Documents/tester'):
-        print(root)
-        arr = os.listdir(root)
-        print(arr)
+        set_list.append(root)
+        set_list.append("dest")
+
+    end = time.time()
+    elapsed = end - start
 
     end = time.time()
     elapsed = end - start
     print("Time to gather all files: %s" %elapsed)
+    print(set_list)
 
 def test3():
     '''
@@ -146,7 +150,7 @@ if __name__ == '__main__':
     print(q.get())
     p2.join()'''
 
-    test1()
+    test2()
 
 '''
 [['/Users/andy/Documents/tester/untitled folder', 'dest', 5254493],
