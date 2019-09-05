@@ -69,7 +69,7 @@ def test1():
 
 def test2():
     print("\nget a list of all the dirs that needs to be backed up")
-    print("path: /Users/andy/Documents/tester")
+    print("path: /vz6")
     start = time.time()
     dir_size = 0
     set_list = []
