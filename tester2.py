@@ -77,12 +77,12 @@ def test2():
     count = 0
     #set_list = [f.name for f in os.scandir('/vz6') if f.is_dir()]
     #'/Users/andy/Documents/folder'
-    '''for root, dirs, files in os.walk('/vz6/Level3-10'):
+    for root, dirs, files in os.walk('/vz6/Level3-5'):
         print(root)
-        count += 1'''
+        count += 1
 
 
-    for p in pathlib.Path('/vz6/').iterdir():
+    '''for p in pathlib.Path('/vz6/').iterdir():
         if p.is_dir():
             count += 1
             set_list.append(str(p))
@@ -92,9 +92,8 @@ def test2():
         print(i)
         for root, dirs, files in os.walk(i):
             count += 1
-
             print(root)
-
+'''
     end = time.time()
     elapsed = end - start
     print("Time to gather all files: %s" %elapsed)
