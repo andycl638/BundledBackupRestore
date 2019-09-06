@@ -85,8 +85,8 @@ def test2():
         if p.is_dir():
             count += 1
             set_list.append(str(p))
-'''
-    for i in set_list:
+
+    '''for i in set_list:
         print('ENTERING')
         print(i)
         for root, dirs, files in os.walk(i):
