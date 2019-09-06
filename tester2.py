@@ -85,7 +85,7 @@ def test2():
     #for root, dirs, files in os.walk('/vz6/Level3-1'):
         #print(root)
 
-    set_list = [x[0] for x in os.walk('/vz6/Level3-1')]
+    set_list = [x[0] for x in os.walk('/vz6/Level3-5')]
     '''for p in pathlib.Path('/vz6/Level3-5').iterdir():
         if p.is_dir():
             count += 1
