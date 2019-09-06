@@ -85,16 +85,15 @@ def test2():
     for p in pathlib.Path('/vz6/').iterdir():
         if p.is_dir():
             count += 1
-            print(p)
             set_list.append(str(p))
 
     for i in set_list:
+        print('ENTERING')
         print(i)
-
-    '''for i in set_list:
         for root, dirs, files in os.walk(i):
             count += 1
-            print(root)'''
+
+            print(root)
 
     end = time.time()
     elapsed = end - start
