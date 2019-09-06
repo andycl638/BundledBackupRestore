@@ -81,7 +81,7 @@ def test2():
         count += 1'''
 
 
-    for p in pathlib.Path('/Users/andy/Documents/folder').iterdir():
+    for p in pathlib.Path('/vz6').iterdir():
         if p.is_dir():
             count += 1
             print(p)
