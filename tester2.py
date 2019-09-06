@@ -74,12 +74,13 @@ def test2():
     dir_size = 0
     set_list = []
 
-    for root, dirs, files in os.walk('/vz6'):
-        set_list.append(root)
-        set_list.append("dest")
+    #set_list = [f.name for f in os.scandir('/vz6') if f.is_dir()]
 
-    end = time.time()
-    elapsed = end - start
+    for entry in os.scandir('/vz6'):
+        if entry.is_dir():
+            print(entry)
+            set_list.append(entry.path)
+            print(entry.path) 
 
     end = time.time()
     elapsed = end - start
