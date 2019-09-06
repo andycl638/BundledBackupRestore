@@ -74,12 +74,16 @@ def test2():
     start = time.time()
     dir_size = 0
     set_list = []
-
+    try:
+        curdir, dirlist, flist = next(os.walk('/vz6'))
+        print(curdir)
+    except StopIteration:
+        pass
     #set_list = [f.name for f in os.scandir('/vz6') if f.is_dir()]
-    for root, dirs, files in os.walk('/vz6'):
+    '''for root, dirs, files in os.walk('/vz6'):
         print(root)
 
-    '''for p in pathlib.Path('/Users/andy/Documents/tester/1').iterdir():
+    for p in pathlib.Path('/Users/andy/Documents/tester/1').iterdir():
         if p.is_dir():
             print('first')
             print(p)
