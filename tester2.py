@@ -74,30 +74,29 @@ def test2():
     start = time.time()
     dir_size = 0
     set_list = []
-    try:
-        curdir, dirlist, flist = next(os.walk('/vz6'))
-        print(curdir)
-    except StopIteration:
-        pass
+    count = 0
     #set_list = [f.name for f in os.scandir('/vz6') if f.is_dir()]
-    '''for root, dirs, files in os.walk('/vz6'):
+    '''for root, dirs, files in os.walk('/Users/andy/Documents/folder'):
         print(root)
+        count += 1'''
 
-    for p in pathlib.Path('/Users/andy/Documents/tester/1').iterdir():
+
+    for p in pathlib.Path('/vz6').iterdir():
         if p.is_dir():
-            print('first')
+            count += 1
             print(p)
             set_list.append(p)
 
     for i in set_list:
         for root, dirs, files in os.walk(i):
-            print('second')
+            count += 1
             print(root)
-'''
+
     end = time.time()
     elapsed = end - start
     print("Time to gather all files: %s" %elapsed)
     print(set_list)
+    print (count)
 
 def test3():
     '''
