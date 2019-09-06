@@ -81,11 +81,11 @@ def test2():
         count += 1'''
 
 
-    for p in pathlib.Path('/vz6').iterdir():
+    for p in pathlib.Path('/Users/andy/Documents/folder').iterdir():
         if p.is_dir():
             count += 1
             print(p)
-            set_list.append(p)
+            set_list.append(str(p))
 
     for i in set_list:
         for root, dirs, files in os.walk(i):
