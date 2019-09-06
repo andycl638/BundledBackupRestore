@@ -76,11 +76,11 @@ def test2():
 
     #set_list = [f.name for f in os.scandir('/vz6') if f.is_dir()]
 
-    for entry in os.scandir('/vz6'):
+    for entry in os.listdir('/vz6'):
         if entry.is_dir():
             print(entry)
             set_list.append(entry.path)
-            print(entry.path) 
+            print(entry.path)
 
     end = time.time()
     elapsed = end - start
