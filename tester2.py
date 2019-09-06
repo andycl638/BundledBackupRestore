@@ -77,11 +77,12 @@ def test2():
     count = 0
     #set_list = [f.name for f in os.scandir('/vz6') if f.is_dir()]
     #'/Users/andy/Documents/folder'
-    for root, dirs, files in os.walk('/vz6/Level3-5'):
+    '''for root, dirs, files in os.walk('/vz6/Level3-5'):
         print(root)
-        count += 1
+        count += 1'''
 
-
+    for i in os.listdir('/vz6/Level3-5'):
+        print(i)
     '''for p in pathlib.Path('/vz6/').iterdir():
         if p.is_dir():
             count += 1
