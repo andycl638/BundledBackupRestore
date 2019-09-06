@@ -81,7 +81,7 @@ def test2():
     for p in pathlib.Path('/vz6').iterdir():
         if p.is_dir():
             print(p)
-            flist.append(p)
+            set_list.append(p)
 
     end = time.time()
     elapsed = end - start
