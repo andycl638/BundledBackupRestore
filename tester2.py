@@ -81,9 +81,11 @@ def test2():
         print(root)
         count += 1'''
     print('ENTERING')
-    for root, dirs, files in os.walk('/vz6/Level3-1'):
-        print(root)
 
+    #for root, dirs, files in os.walk('/vz6/Level3-1'):
+        #print(root)
+
+    set_list = [x[0] for x in os.walk('/vz6/Level3-1')]
     '''for p in pathlib.Path('/vz6/Level3-5').iterdir():
         if p.is_dir():
             count += 1
@@ -98,9 +100,10 @@ def test2():
 '''
     end = time.time()
     elapsed = end - start
-    print("Time to gather all files: %s" %elapsed)
+
     print(set_list)
     print (count)
+    print("Time to gather all files: %s" %elapsed)
 
 def test3():
     '''
