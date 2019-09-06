@@ -77,12 +77,15 @@ def test2():
 
     #set_list = [f.name for f in os.scandir('/vz6') if f.is_dir()]
 
-    for root, dirs, files in os.walk('/vz6'):
-        print(root)
-    '''for p in pathlib.Path('/vz6').iterdir():
+
+    for p in pathlib.Path('/Users').iterdir():
         if p.is_dir():
             print(p)
-            set_list.append(p)'''
+            set_list.append(p)
+
+    for i in set_list:
+        for root, dirs, files in os.walk(i):
+            print(root)
 
     end = time.time()
     elapsed = end - start
