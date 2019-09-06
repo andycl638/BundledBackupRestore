@@ -80,9 +80,9 @@ def test2():
     '''for root, dirs, files in os.walk('/vz6/Level3-5'):
         print(root)
         count += 1'''
-    for i in os.listdir('/vz6/Level3-1'):
-        if i.is_dir():
-            print(i)
+    print('ENTERING')
+    for root, dirs, files in os.walk('/vz6/Level3-1'):
+        print(root)
 
     '''for p in pathlib.Path('/vz6/Level3-5').iterdir():
         if p.is_dir():
