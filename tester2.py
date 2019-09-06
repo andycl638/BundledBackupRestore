@@ -4,6 +4,7 @@ import json, subprocess, re
 from shutil import copy, rmtree
 from glob import glob
 from parallelmgmt import ParallelMgmt
+import pathlib
 
 arr = 0
 
@@ -76,11 +77,11 @@ def test2():
 
     #set_list = [f.name for f in os.scandir('/vz6') if f.is_dir()]
 
-    for entry in os.listdir('/vz6'):
-        if entry.is_dir():
-            print(entry)
-            set_list.append(entry.path)
-            print(entry.path)
+
+    for p in pathlib.Path('/vz6').iterdir():
+        if p.is_dir():
+            print(p)
+            flist.append(p)
 
     end = time.time()
     elapsed = end - start
