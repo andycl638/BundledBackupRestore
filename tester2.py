@@ -77,10 +77,11 @@ def test2():
     count = 0
     #set_list = [f.name for f in os.scandir('/vz6') if f.is_dir()]
     #'/Users/andy/Documents/folder'
-    '''for root, dirs, files in os.walk('/vz6/Level3-5'):
-        print(root)
-        count += 1'''
     print('ENTERING')
+    for root, dirs, files in os.walk('/vz6/Level3-5'):
+        set_list.append(root)
+        count += 1
+
 
     #for root, dirs, files in os.walk('/vz6/Level3-1'):
         #print(root)
@@ -170,6 +171,23 @@ if __name__ == '__main__':
     p2.join()'''
 
     test2()
+
+import subprocess
+cmd = 'curl -X GET https://apple.com/getnumberdetails -d number="' + 'tel:4445556666"'
+
+p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+
+while True:
+    output = p.stdout.readline().decode('utf-8')
+    if p.poll() != None:
+        break
+
+    if output:
+        print (output.strip())
+        if "Aggregate data transfer rate:" in output:
+            transfer_rate_arr = re.findall('\d*\.?\d+', output)
+
+
 
 '''
 [['/Users/andy/Documents/tester/untitled folder', 'dest', 5254493],
