@@ -2,9 +2,8 @@
 import argparse, os, sys, errno, time
 
 from bundler import Bundler
-from dsmcbackup import DsmcBackup
 from unbundler import Unbundler
-from dsmcrestore import DsmcRestore
+from dsmcwrapper import DsmcWrapper
 from parallelmgmt import ParallelMgmt
 from metadatajson import MetadataJson
 from stats import Stats
@@ -66,9 +65,10 @@ def mainbackup(args):
 
     total_throughput = bundler.parallel_bundler(proc_obj, total_size, dir_list[0], elapsed)
 
-    dsmc_backup = DsmcBackup(dest_path, args.resourceutilization, dsm_opt, virtual_mnt_pt)
-    dsmc_backup.write_virtualmnt()
-    transfer_rate = dsmc_backup.backup()
+    dsmc = DsmcWrapper(dest_path, args.resourceutilization, dsm_opt, virtual_mnt_pt, '')
+    dsmc.write_virtualmnt()
+    backup = dsmc.backup()
+    transfer_rate = dsmc.cmd(backup)
 
     bundler.delete_bundle()
     end = time.time()
@@ -105,8 +105,10 @@ def mainrestore(args):
     #update the destination path with new volume path
     unbundler.src_path = source_path
 
-    dsmc_restore = DsmcRestore(unbundler.src_path)
-    transfer_rate = dsmc_restore.restore()
+    dsmc = DsmcWrapper('', 0, '', '', unbundler.src_path)
+
+    restore = dsmc.restore()
+    transfer_rate = dsmc.cmd(restore)
 
     #data = metadatajson.deserialize_json(json_file_path)
     #unbundler = Unbundler(unbundler.src_path, args.destination)

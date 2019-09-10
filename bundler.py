@@ -49,21 +49,17 @@ class Bundler():
         total_size = 0
 
         for root, dirs, files in os.walk(self.src_path):
-            for dir in dirs:
-                dir_path=os.path.join(root, dir)
+            for file in files:
+                file_path=os.path.join(root, file)
+                dir_size += os.path.getsize(file_path)
 
-                for file in os.listdir(dir_path):
-                    file_path=os.path.join(dir_path, file)
-                    if os.path.isfile(file_path):
-                        dir_size += os.path.getsize(file_path)
-
-                set_list.append(dir_path)
-                set_list.append(self.dest_path)
-                set_list.append(dir_size)
-                dir_list.append(set_list)
-                set_list = []
-                total_size += dir_size
-                dir_size = 0
+            set_list.append(root)
+            set_list.append(self.dest_path)
+            set_list.append(dir_size)
+            dir_list.append(set_list)
+            set_list = []
+            total_size += dir_size
+            dir_size = 0
 
         end = time.time()
         elapsed = end - start

@@ -31,7 +31,7 @@ class ParallelMgmt():
         return proc_obj, elapsed
 
     @staticmethod
-    def test_proc(obj, list, mode):
+    def test_proc(list):
         '''
             Conducts the bundle function in parallel
             Displays results of the bundle process
@@ -47,10 +47,17 @@ class ParallelMgmt():
         print("\nStarting parallel func")
         start = time.time()
 
-        with Pool(8) as p:
-            if mode == 'backup':
-                proc_obj = p.map(obj.bundled_func, list)
+        with Pool(4) as p:
+                proc_obj = p.map(ParallelMgmt.test_func, list)
 
         end = time.time()
         elapsed = end - start
-        return proc_obj, elapsed
+        for i in proc_obj:
+            if i == 6:
+                return i
+
+    def test_func(var):
+        print("Before sleep: " + str(var))
+        time.sleep(5)
+        print("After sleep: " + str(var*2))
+        return var*2
