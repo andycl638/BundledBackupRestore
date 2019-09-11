@@ -49,6 +49,7 @@ def bundle_func(list):
 
 
 if __name__ == '__main__':
+    start = time.time()
     with mp.Pool(4) as pool:
         data_q = mp.JoinableQueue()
         p = pool.Process(target=consumer, args=(data_q, ))
@@ -58,3 +59,8 @@ if __name__ == '__main__':
 
         p.join()
         c.join()
+    end = time.time()
+
+    elapsed = end-start
+    print('END')
+    print(elapsed)
