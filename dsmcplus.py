@@ -155,3 +155,6 @@ if __name__ == '__main__':
 
     #python3 dsmcplus.py restore /scale01/scratch/ /vz9 -p 8
     #python3 dsmcplus.py backup /vz8 /scale01/scratch/ -p 8
+
+    #python3 dsmcplus.py restore /scale01/scratch/ / /scale01/scratch/optfile.json -p 16
+    #python3 dsmcplus.py backup /vz8 /scale01/scratch/ /scale01/scratch/optfile.json -p 8 -r 10
