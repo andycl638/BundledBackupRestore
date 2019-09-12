@@ -15,7 +15,7 @@ def producer(queue):
 
         dir_list.append(set_list)
         set_list = []
-        if len(dir_list) == 10:
+        if len(dir_list) == 5:
             queue.put(dir_list)
             dir_list = []
 
