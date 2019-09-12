@@ -19,6 +19,7 @@ def producer(queue):
             print(dir_list)
             queue.put(dir_list)
             dir_list = []
+
     print("No more dirs")
     end = time.time()
     elapsed = end - start
@@ -31,8 +32,9 @@ def consumer(queue):
         if list is None:
             print("list is none")
             break
-
+        print("got a list")
         with mp.Pool(8) as pool:
+            print("running pool")
             proc_obj = pool.map(bundle_func, list)
 
         print("run dsmc")
