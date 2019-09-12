@@ -28,6 +28,7 @@ def producer(queue):
 def consumer(queue):
     print("Consumer")
     while True:
+        print("enter Consumer loop")
         list = queue.get()
         if list is None:
             print("list is none")
