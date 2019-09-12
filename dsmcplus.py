@@ -44,7 +44,7 @@ def mainbackup(args):
 
     start = time.time()
     #dir_list, total_size = bundler.get_all_dirs()
-    controller = ParallelMgmt(int(args.parallelism), args.source, args.destination)
+    controller = ParallelMgmt(int(args.parallelism), args.source, dest_path)
     dsmc = DsmcWrapper(dest_path, args.resourceutilization, dsm_opt, virtual_mnt_pt, '')
     p, c = controller.start_controller(bundler, dsmc)
     print(p)

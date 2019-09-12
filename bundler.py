@@ -171,7 +171,7 @@ class Bundler():
         tar_name_str = "\ntarname: %s" %unique_name
         tar_path = os.path.join(dest_path, unique_name)
         cmd = "time star -c -f \"" + tar_path + "\" fs=32m bs=64K pat=*.* " + src_path + "/*.*"
-
+        print(cmd)
 
         start = time.time()
 
