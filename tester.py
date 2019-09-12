@@ -19,6 +19,7 @@ def producer(queue):
             print(dir_list)
             queue.put(dir_list)
             dir_list = []
+        print('here')
 
     print("No more dirs")
     end = time.time()
@@ -57,7 +58,7 @@ def bundle_func(list):
 
 if __name__ == '__main__':
     start = time.time()
-    with mp.Pool(4) as pool:
+    with mp.Pool(3) as pool:
         data_q = mp.JoinableQueue()
         p = pool.Process(target=consumer, args=(data_q, ))
         c = pool.Process(target=producer, args=(data_q, ))
