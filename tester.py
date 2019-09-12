@@ -7,7 +7,7 @@ def producer(queue):
     start = time.time()
     dir_list = []
     set_list = []
-    src_path = '/vz8'
+    src_path = '/vz6'
 
     for root, dirs, files in os.walk(src_path):
         set_list.append(root)
@@ -18,6 +18,8 @@ def producer(queue):
         if len(dir_list) == 10:
             queue.put(dir_list)
             dir_list = []
+
+    #adding remaining dirs to queue
     if len(dir_list) != 0:
         queue.put(dir_list)
         dir_list = []
@@ -25,6 +27,7 @@ def producer(queue):
     #poisonpill
     if len(dir_list) == 0:
         queue.put(None)
+
     print("No more dirs")
     end = time.time()
     elapsed = end - start
