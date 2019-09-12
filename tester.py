@@ -15,10 +15,12 @@ def producer(queue):
 
         dir_list.append(set_list)
         set_list = []
-        if len(dir_list) == 5:
+        if len(dir_list) == 10:
             queue.put(dir_list)
             dir_list = []
-
+    if len(dir_list) != 0:
+        queue.put(dir_list)
+        dir_list = []
     print("No more dirs")
     end = time.time()
     elapsed = end - start
