@@ -56,14 +56,14 @@ class ParallelMgmt():
                 conc = ''
                 for star_file_data, stat, tar_path in proc_obj:
                     conc = conc + str(tar_path) + ' '
-                print(dsmc)
-                #dsmc.write_virtualmnt()
-                #backup = dsmc.backup(conc)
+
+                dsmc.write_virtualmnt()
+                backup = dsmc.backup(conc)
 
 
-            #    transfer_rate = dsmc.cmd(backup)
+                transfer_rate = dsmc.cmd(backup)
 
-            #    bundler.delete_bundle()
+                bundler.delete_bundle()
 
             finally:
                 print("enter finally")
