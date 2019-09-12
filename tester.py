@@ -21,6 +21,10 @@ def producer(queue):
     if len(dir_list) != 0:
         queue.put(dir_list)
         dir_list = []
+
+    #poisonpill
+    if len(dir_list) == 0:
+        queue.put(None)
     print("No more dirs")
     end = time.time()
     elapsed = end - start
