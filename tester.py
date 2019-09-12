@@ -39,8 +39,10 @@ def consumer(queue):
         try:
             with mp.Pool(8) as pool:
                 proc_obj = pool.map(bundle_func, list)
+            print(proc_obj)
             print("run dsmc")
         finally:
+            print("enter finally")
             queue.task_done()
         #print(len(queue))
 
@@ -54,7 +56,7 @@ def bundle_func(list):
     tar_path = os.path.join(dest_path, unique_name)
     cmd = "time star -c -f \"" + tar_path + "\" fs=32m bs=64K pat=*.* " + src_path + "/*.*"
     print('\n' + cmd)
-
+    return "done"
 
 if __name__ == '__main__':
     start = time.time()
