@@ -16,10 +16,8 @@ def producer(queue):
         dir_list.append(set_list)
         set_list = []
         if len(dir_list) == 10:
-            print(dir_list)
             queue.put(dir_list)
             dir_list = []
-        print('here')
 
     print("No more dirs")
     end = time.time()
@@ -29,22 +27,21 @@ def producer(queue):
 def consumer(queue):
     print("Consumer")
     while True:
-        print("enter Consumer loop")
         list = queue.get()
-
-        print("got a list")
-        with mp.Pool(8) as pool:
-            print("running pool")
-            proc_obj = pool.map(bundle_func, list)
+        print(list)
 
         if list is None:
             print("list is none")
-            break
-
-        print("run dsmc")
+            continue
+            
+        try:
+            with mp.Pool(8) as pool:
+                print("running pool")
+                proc_obj = pool.map(bundle_func, list)
+            print("run dsmc")
+        finally:
+            queue.task_done()
         #print(len(queue))
-
-        queue.task_done()
 
 def bundle_func(list):
     src_path = list[0]
