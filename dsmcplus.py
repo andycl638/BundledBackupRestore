@@ -42,62 +42,29 @@ def mainbackup(args):
     #update the destination path with new volume path
     bundler.dest_path = dest_path
 
-    if args.scratch:
-        print("filer to scratch only")
-        dir_list, total_size = bundler.get_all_dirs()
-
-        proc_obj, elapsed = ParallelMgmt.parallel_proc(bundler, dir_list, args.mode, int(args.parallelism))
-
-        bundler.parallel_bundler(proc_obj, total_size, dir_list[0], elapsed)
-        bundler.delete_bundle()
-        sys.exit()
-
-    if args.dsmc:
-        print("scratch to dsmc only")
-        dsmc_backup = DsmcBackup(dest_path, args.resourceutilization)
-        dsmc_backup.backup()
-        sys.exit()
-
     start = time.time()
-    dir_list, total_size = bundler.get_all_dirs()
-
-    proc_obj, elapsed = ParallelMgmt.parallel_proc(bundler, dir_list, args.mode, int(args.parallelism))
-
-    total_throughput = bundler.parallel_bundler(proc_obj, total_size, dir_list[0], elapsed)
-
+    #dir_list, total_size = bundler.get_all_dirs()
+    controller = ParallelMgmt(int(args.parallelism), args.source, args.destination)
     dsmc = DsmcWrapper(dest_path, args.resourceutilization, dsm_opt, virtual_mnt_pt, '')
-    dsmc.write_virtualmnt()
-    backup = dsmc.backup()
-    transfer_rate = dsmc.cmd(backup)
+    p, c = controller.start_controller(bundler, dsmc)
+    print(p)
+    print(c)
+    #proc_obj, elapsed = ParallelMgmt.parallel_proc(bundler, dir_list, args.mode, int(args.parallelism))
 
-    bundler.delete_bundle()
+    #total_throughput = bundler.parallel_bundler(proc_obj, total_size, dir_list[0], elapsed)
+
+    #dsmc = DsmcWrapper(dest_path, args.resourceutilization, dsm_opt, virtual_mnt_pt, '')
+    #dsmc.write_virtualmnt()
+    #backup = dsmc.backup()
+    #transfer_rate = dsmc.cmd(backup)
+
+    #bundler.delete_bundle()
     end = time.time()
 
     total_elapsed_time = end-start
-    Stats.overall_stats(total_elapsed_time, transfer_rate, total_throughput)
+    #Stats.overall_stats(total_elapsed_time, transfer_rate, total_throughput)
 
 def mainrestore(args):
-    if args.dsmc:
-        print("restore dsmc to scratch")
-        dsmc_restore = DsmcRestore(args.source)
-        dsmc_restore.restore()
-        sys.exit()
-
-    if args.scratch:
-        print("restore scratch to filer")
-        #data = metadatajson.deserialize_json(json_file_path)
-        unbundler = Unbundler(args.source, args.destination)
-        restore_list = unbundler.get_all_volume()
-        #restore_list = get_restore_list(data)
-        if len(restore_list) == 0:
-            print("No files were found to restore")
-            sys.exit()
-
-        unbundle_list = unbundler.build_list(restore_list)
-        proc_obj = ParallelMgmt.parallel_proc(unbundler, unbundle_list, args.mode, int(args.parallelism))
-        unbundler.parallel_unbundle(proc_obj, args.parallelism)
-        sys.exit()
-
     start = time.time()
     unbundler = Unbundler(args.source, args.destination, args.optfile)
     source_path = unbundler.create_vol()

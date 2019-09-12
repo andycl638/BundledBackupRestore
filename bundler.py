@@ -44,28 +44,18 @@ class Bundler():
         start = time.time()
         dir_list = []
         set_list = []
-        multi_set = []
-        #dir_size = 0
-        #total_size = 0
 
         for root, dirs, files in os.walk(self.src_path):
-            '''for file in files:
-                file_path=os.path.join(root, file)
-                dir_size += os.path.getsize(file_path)'''
-
             set_list.append(root)
             set_list.append(self.dest_path)
-            #set_list.append(dir_size)
             dir_list.append(set_list)
             set_list = []
-            #total_size += dir_size
-            dir_size = 0
 
         end = time.time()
         elapsed = end - start
         print("Time to gather all files: %s" %elapsed)
         print("Got all dirs and size")
-        return dir_list, total_size
+        return dir_list
 
     def get_dir_size(self, dir_path):
         set_list = []
@@ -101,7 +91,7 @@ class Bundler():
         star_file_arr = []
         total_data_transferred = 0
 
-        for star_file_data, stat in proc_obj:
+        for star_file_data, stat, tar_path in proc_obj:
             star_file_arr.append(star_file_data)
             stat.display_stats_bundle()
             total_data_transferred += stat.star_size
@@ -116,7 +106,7 @@ class Bundler():
         print("Done.")
         return total_throughput
 
-    def bundled_func(self, dir_list):
+    def bundle_func(self, dir_list):
         '''
             Function called in parallel_bundler() which gives it an array containing
             src_path and dest_path
@@ -139,31 +129,24 @@ class Bundler():
         elapsed = end - start
 
         backup_list.append(tar_path)
-        self.size += Bundler.get_bundle_size(tar_path)
-        print("BUNDLE")
-        print(self.size)
-
-        #if bundle_size >= 20000000000:
-            #print("LIST")
-            #print (backup_list)
-            #bundle_size = 0
+        #self.size += Bundler.get_bundle_size(tar_path)
 
         star_file_data = {}
         volume_path_arr = []
 
         star_file_data['name'] = tar_path
-        star_file_data['size'] =  dir_list[2]
+        #star_file_data['size'] =  dir_list[2]
         star_file_data['volume_paths'] = volume_path_arr
         volume_path_arr.append(dir_list[0])
 
-        size_mib = dir_list[2]/1024/1024
+        size_mib = 5/1024/1024
         size_gib = size_mib/1024
 
         throughput = size_mib / elapsed_proc_time
 
-        stat.capture_stats(elapsed_proc_time, dir_list[2], 0, tar_path, 0, cmd, "")
+        stat.capture_stats(elapsed_proc_time, 0, 0, tar_path, 0, cmd, "")
 
-        return  star_file_data, stat
+        return  star_file_data, stat, tar_path
 
     @staticmethod
     def bundle_file_set(src_path, dest_path):
@@ -189,7 +172,6 @@ class Bundler():
         tar_path = os.path.join(dest_path, unique_name)
         cmd = "time star -c -f \"" + tar_path + "\" fs=32m bs=64K pat=*.* " + src_path + "/*.*"
 
-        #cmd = "ls -l " + src_path
 
         start = time.time()
 
@@ -256,52 +238,3 @@ class Bundler():
         except OSError as e: # this would be "except OSError, e:" before Python 2.6
             if e.errno != errno.ENOENT: # errno.ENOENT = no such file or directory
                 raise # re-raise exception if a different error occurred
-'''
-def main(argv):
-    #src
-    #dest
-    #parallel process #
-    if len(argv) < 2:
-        print("Not enough arguments. Need at least two arguments.")
-        print("Syntax: python3 bundler.py <src path> <dest path>")
-        sys.exit()
-    if len(argv) > 3:
-        print("Too many arguments. Need at least two arguments.")
-        print("Syntax: python3 bundler.py <src path> <dest path>")
-        sys.exit()
-    if len(argv) != 3:
-        print("Using default number of parallelism: 8")
-        print("Syntax: python3 bundler.py <src path> <dest path> <parallel process>")
-        procs = 8
-    else:
-        procs = argv[2]
-
-    try:
-        int(procs)
-    except ValueError:
-        print("Third value needs to be an integer")
-        sys.exit()
-
-    src_path = argv[0]
-    dest_path = argv[1]
-
-    if os.path.isdir(src_path):
-        print("Source Path: %s" %src_path)
-    else:
-        print("Source path is not valid: %s" %src_path)
-        sys.exit()
-    if os.path.isdir(dest_path):
-        print("Destination Path: %s" %dest_path)
-    else:
-        print("Destination path is not valid: %s" %dest_path)
-        sys.exit()
-
-    print("Using parallelism: " + str(procs))
-
-    dir_list, total_size = get_all_dirs(src_path, dest_path)
-    parallel_bundler(dir_list, total_size, int(procs))
-
-if __name__ == '__main__':
-    print("starting script\n")
-
-    main(sys.argv[1:])'''
