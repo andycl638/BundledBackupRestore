@@ -72,38 +72,27 @@ def test2():
     print("\nget a list of all the dirs that needs to be backed up")
     print("path: /vz6")
     start = time.time()
-    dir_size = 0
+
     set_list = []
-    count = 0
+    dir_list = []
+
     #set_list = [f.name for f in os.scandir('/vz6') if f.is_dir()]
     #'/Users/andy/Documents/folder'
     print('ENTERING')
-    for root, dirs, files in os.walk('/vz8'):
+    for root, dirs, files in os.walk(src_path):
         set_list.append(root)
-        count += 1
+        set_list.append('/scratch')
 
+        dir_list.append(set_list)
+        set_list = []
+        if len(dir_list) == 10:
+            queue.put(dir_list)
+            dir_list = []
 
-    #for root, dirs, files in os.walk('/vz6/Level3-1'):
-        #print(root)
-
-    #set_list = [x[0] for x in os.walk('/vz6/Level3-5')]
-    '''for p in pathlib.Path('/vz6/Level3-5').iterdir():
-        if p.is_dir():
-            count += 1
-            set_list.append(str(p))
-
-    for i in set_list:
-        print('ENTERING')
-        print(i)
-        for root, dirs, files in os.walk(i):
-            count += 1
-            print(root)
-'''
     end = time.time()
     elapsed = end - start
 
     print(set_list)
-    print (count)
     print("Time to gather all files: %s" %elapsed)
 
 def test3():
