@@ -7,7 +7,7 @@ def producer(queue):
     start = time.time()
     dir_list = []
     set_list = []
-    src_path = '/vz6'
+    src_path = '/vz8'
 
     for root, dirs, files in os.walk(src_path):
         set_list.append(root)
@@ -33,10 +33,9 @@ def consumer(queue):
         if list is None:
             print("list is none")
             continue
-            
+
         try:
             with mp.Pool(8) as pool:
-                print("running pool")
                 proc_obj = pool.map(bundle_func, list)
             print("run dsmc")
         finally:
