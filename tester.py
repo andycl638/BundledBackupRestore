@@ -19,7 +19,7 @@ def producer(queue):
             print(dir_list)
             queue.put(dir_list)
             dir_list = []
-
+    print("No more dirs")
     end = time.time()
     elapsed = end - start
     print("Time to gather all files: %s" %elapsed)
@@ -28,12 +28,16 @@ def consumer(queue):
     print("Consumer")
     while True:
         list = queue.get()
+        if list is None:
+            print("list is none")
+            break
+
         with mp.Pool(8) as pool:
             proc_obj = pool.map(bundle_func, list)
 
         print("run dsmc")
-        if list is None:
-            break
+        print(len(queue))
+
         queue.task_done()
 
 def bundle_func(list):

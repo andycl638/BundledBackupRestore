@@ -105,7 +105,7 @@ def mainrestore(args):
     #update the destination path with new volume path
     unbundler.src_path = source_path
 
-    dsmc = DsmcWrapper('', 0, '', '', unbundler.src_path)
+    dsmc = DsmcWrapper('', args.resourceutilization, '', '', unbundler.src_path)
 
     restore = dsmc.restore()
     transfer_rate = dsmc.cmd(restore)

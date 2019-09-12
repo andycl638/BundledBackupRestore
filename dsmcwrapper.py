@@ -17,10 +17,9 @@ class DsmcWrapper():
         return cmd
 
     def restore(self):
-        cmd = "dsmc restore " + self.restore_path + "/ -sub=yes"
+        cmd = "dsmc restore " + self.restore_path + "/ -sub=yes -resourceutilization=" + str(self.resource_utilization)
 
         print(cmd)
-
         return cmd
 
     def cmd(self, cmd):

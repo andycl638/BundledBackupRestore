@@ -45,20 +45,20 @@ class Bundler():
         dir_list = []
         set_list = []
         multi_set = []
-        dir_size = 0
-        total_size = 0
+        #dir_size = 0
+        #total_size = 0
 
         for root, dirs, files in os.walk(self.src_path):
-            for file in files:
+            '''for file in files:
                 file_path=os.path.join(root, file)
-                dir_size += os.path.getsize(file_path)
+                dir_size += os.path.getsize(file_path)'''
 
             set_list.append(root)
             set_list.append(self.dest_path)
-            set_list.append(dir_size)
+            #set_list.append(dir_size)
             dir_list.append(set_list)
             set_list = []
-            total_size += dir_size
+            #total_size += dir_size
             dir_size = 0
 
         end = time.time()
