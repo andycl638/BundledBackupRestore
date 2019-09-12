@@ -31,16 +31,18 @@ def consumer(queue):
     while True:
         print("enter Consumer loop")
         list = queue.get()
-        if list is None:
-            print("list is none")
-            break
+
         print("got a list")
         with mp.Pool(8) as pool:
             print("running pool")
             proc_obj = pool.map(bundle_func, list)
 
+        if list is None:
+            print("list is none")
+            break
+
         print("run dsmc")
-        print(len(queue))
+        #print(len(queue))
 
         queue.task_done()
 
