@@ -34,7 +34,7 @@ def consumer(queue):
 
         if list is None:
             print("list is none")
-            continue
+            break
 
         try:
             with mp.Pool(8) as pool:
