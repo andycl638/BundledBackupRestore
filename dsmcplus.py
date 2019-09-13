@@ -50,6 +50,7 @@ def mainbackup(args):
     print(p)
     print(c)
     bundler.delete_bundle()
+
     #proc_obj, elapsed = ParallelMgmt.parallel_proc(bundler, dir_list, args.mode, int(args.parallelism))
 
     #total_throughput = bundler.parallel_bundler(proc_obj, total_size, dir_list[0], elapsed)

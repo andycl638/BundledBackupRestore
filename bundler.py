@@ -133,9 +133,9 @@ class Bundler():
 
         star_file_data = {}
         volume_path_arr = []
-
+        tar_size = Bundler.get_bundle_size(tar_path)
         star_file_data['name'] = tar_path
-        #star_file_data['size'] =  dir_list[2]
+        star_file_data['size'] = tar_size
         star_file_data['volume_paths'] = volume_path_arr
         volume_path_arr.append(dir_list[0])
 
@@ -144,7 +144,7 @@ class Bundler():
 
         throughput = size_mib / elapsed_proc_time
 
-        stat.capture_stats(elapsed_proc_time, 0, 0, tar_path, 0, cmd, "")
+        stat.capture_stats(elapsed_proc_time, tar_size, 0, tar_path, 0, cmd, "")
 
         return  star_file_data, stat, tar_path
 
@@ -221,7 +221,7 @@ class Bundler():
             pass
         return path, optfiledata['dsmoptfile'], virtual_mnt_pt
 
-    def delete_bundle(self, tar_list):
+    def delete_bundle(self):
         '''
             Delete all archive files from scratch once backup is complete
 

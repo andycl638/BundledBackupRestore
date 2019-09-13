@@ -1,5 +1,6 @@
 import multiprocessing as mp
 import time, os
+from stats import Stats
 
 class ParallelMgmt():
 
@@ -41,6 +42,7 @@ class ParallelMgmt():
 
     def consumer(self, queue, bundler, dsmc):
         print("Consumer")
+        results = []
         while True:
             list = queue.get()
             print(list)
@@ -50,25 +52,35 @@ class ParallelMgmt():
                 break
 
             try:
+                start = time.time()
                 with mp.Pool(8) as pool:
                     proc_obj = pool.map(bundler.bundle_func, list)
 
+                end = time.time()
+                elapsed = end - start
                 backup_list = ''
-                tar_list = []
+                data = {}
+                star_file_arr = []
+                total_data_transferred = 0
+
                 for star_file_data, stat, tar_path in proc_obj:
                     backup_list = backup_list + str(tar_path) + ' '
-                    tar_list.append(tar_path)
+                    star_file_arr.append(star_file_data)
+                    stat.display_stats_bundle()
+                    total_data_transferred += stat.star_size
 
-                dsmc.write_virtualmnt()
-                backup = dsmc.backup(backup_list)
+                #data['total_size'] = total_size
+                data['star_files'] = star_file_arr
 
+                total_throughput = Stats.display_total_stats(total_data_transferred, elapsed)
+                #dsmc.write_virtualmnt()
+                #backup = dsmc.backup(backup_list)
 
-                transfer_rate = dsmc.cmd(backup)
+                #transfer_rate = dsmc.cmd(backup)
 
             finally:
                 print("enter finally")
                 queue.task_done()
-        return "consumer done"
 
     def start_controller(self, bundler, dsmc):
         start = time.time()
