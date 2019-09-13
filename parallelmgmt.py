@@ -73,10 +73,10 @@ class ParallelMgmt():
                 data['star_files'] = star_file_arr
 
                 total_throughput = Stats.display_total_stats(total_data_transferred, elapsed)
-                #dsmc.write_virtualmnt()
-                #backup = dsmc.backup(backup_list)
+                dsmc.write_virtualmnt()
+                backup = dsmc.backup(backup_list)
 
-                #transfer_rate = dsmc.cmd(backup)
+                transfer_rate = dsmc.cmd(backup)
 
             finally:
                 queue.task_done()
