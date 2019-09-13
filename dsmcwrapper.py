@@ -13,9 +13,9 @@ class DsmcWrapper():
     def __str__(self):
         return 'Backup path: ' + self.backup_path + '\nRU: ' + str(self.resource_utilization) + '\nDSM OPT: ' + self.dsm_opt + '\nvmp: ' + self.virtual_mnt_pt + '\nRestore Path: ' + self.restore_path
 
-    def backup(self, conc):
+    def backup(self, backup_list):
         #cmd = "dsmc selective '" + os.path.join(self.backup_path, '*') + "' -resourceutilization=" + str(self.resource_utilization)
-        cmd = "dsmc selective " + conc + " -resourceutilization=" + str(self.resource_utilization)
+        cmd = "dsmc selective " + backup_list + " -resourceutilization=" + str(self.resource_utilization)
 
         print(cmd)
         return cmd

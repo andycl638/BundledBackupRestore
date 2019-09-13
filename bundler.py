@@ -221,7 +221,7 @@ class Bundler():
             pass
         return path, optfiledata['dsmoptfile'], virtual_mnt_pt
 
-    def delete_bundle(self):
+    def delete_bundle(self, tar_list):
         '''
             Delete all archive files from scratch once backup is complete
 

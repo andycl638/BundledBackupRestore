@@ -53,17 +53,17 @@ class ParallelMgmt():
                 with mp.Pool(8) as pool:
                     proc_obj = pool.map(bundler.bundle_func, list)
 
-                conc = ''
+                backup_list = ''
+                tar_list = []
                 for star_file_data, stat, tar_path in proc_obj:
-                    conc = conc + str(tar_path) + ' '
+                    backup_list = backup_list + str(tar_path) + ' '
+                    tar_list.append(tar_path)
 
                 dsmc.write_virtualmnt()
-                backup = dsmc.backup(conc)
+                backup = dsmc.backup(backup_list)
 
 
                 transfer_rate = dsmc.cmd(backup)
-
-                bundler.delete_bundle()
 
             finally:
                 print("enter finally")
