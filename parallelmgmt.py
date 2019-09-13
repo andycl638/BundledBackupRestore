@@ -48,7 +48,7 @@ class ParallelMgmt():
             print(list)
 
             if list is None:
-                print("list is none")
+                #print("list is none")
                 break
 
             try:
@@ -79,7 +79,6 @@ class ParallelMgmt():
                 #transfer_rate = dsmc.cmd(backup)
 
             finally:
-                print("enter finally")
                 queue.task_done()
 
     def start_controller(self, bundler, dsmc):
