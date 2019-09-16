@@ -29,7 +29,6 @@ class Bundler():
         self.src_path = src_path
         self.dest_path = dest_path
         self.optfile = optfile
-        self.size = 0
 
     def get_all_dirs(self):
         '''

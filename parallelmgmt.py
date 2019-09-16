@@ -53,7 +53,7 @@ class ParallelMgmt():
 
             try:
                 start = time.time()
-                with mp.Pool(8) as pool:
+                with mp.Pool(self.procs) as pool:
                     proc_obj = pool.map(bundler.bundle_func, list)
 
                 end = time.time()
