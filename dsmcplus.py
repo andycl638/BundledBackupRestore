@@ -35,7 +35,7 @@ def dsmcplus():
 
 def mainbackup(args):
     #Init bundler object
-    bundler = Bundler(args.source, args.destination, args.optfile, int(args.parallelism))
+    bundler = Bundler(args.source, args.destination, args.optfile)
 
     dest_path, dsm_opt, virtual_mnt_pt = bundler.create_vol()
 
