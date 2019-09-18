@@ -77,9 +77,9 @@ class ParallelMgmt():
                 backup = dsmc.backup(backup_list)
 
                 transfer_rate = dsmc.cmd(backup)
-                return_q.put(float(transfer_rate))
-                print("DSMC Transfer Rate: " + str(transfer_rate))
-
+                transfer_rate_mib = float(transfer_rate)/1024
+                aggregate = (total_throughput + transfer_rate_mib)/2
+                return_q.put(float(aggregate))
             finally:
                 queue.task_done()
 

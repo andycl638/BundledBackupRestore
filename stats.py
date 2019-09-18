@@ -67,7 +67,7 @@ class Stats:
         print("\nTotal Time elapsed (sec): %s" %elapsed)
         print("Total data transferred (MiB): " + str(total_data_transferred_mib))
         print("Aggregate Throughput (MiB/sec): " + str(total_throughput))
-    
+
 
         print("Normalize day: " + str(day_normalization))
         print("Normalize tb: " + str(tb_normalization))
@@ -81,5 +81,10 @@ class Stats:
         transfer_rate_mib = float(transfer_rate)/1024
         aggregate = (total_throughput + transfer_rate_mib)/2
 
+        print("Total Elapsed Time: %s" %total_elapsed_time)
+        print("Total Aggregate transfer rate: %s" %aggregate)
+
+    @staticmethod
+    def overall_backup_stats(total_elapsed_time, aggregate):
         print("Total Elapsed Time: %s" %total_elapsed_time)
         print("Total Aggregate transfer rate: %s" %aggregate)

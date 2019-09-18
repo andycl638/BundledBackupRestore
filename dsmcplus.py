@@ -43,32 +43,21 @@ def mainbackup(args):
     bundler.dest_path = dest_path
 
     start = time.time()
-    #dir_list, total_size = bundler.get_all_dirs()
+
     controller = ParallelMgmt(int(args.parallelism), args.source, dest_path)
     dsmc = DsmcWrapper(dest_path, args.resourceutilization, dsm_opt, virtual_mnt_pt, '')
     return_q, elapsed = controller.start_controller(bundler, dsmc)
-    total_tr = 0.0
+
+    aggregate = 0.0
     while not return_q.empty():
-        total_tr = total_tr + return_q.get()
-    print(total_tr)
-    print(elapsed)
+        aggregate = aggregate + return_q.get()
+
     bundler.delete_bundle()
 
-    #proc_obj, elapsed = ParallelMgmt.parallel_proc(bundler, dir_list, args.mode, int(args.parallelism))
-
-    #total_throughput = bundler.parallel_bundler(proc_obj, total_size, dir_list[0], elapsed)
-
-    #dsmc = DsmcWrapper(dest_path, args.resourceutilization, dsm_opt, virtual_mnt_pt, '')
-    #dsmc.write_virtualmnt()
-    #backup = dsmc.backup()
-    #transfer_rate = dsmc.cmd(backup)
-
-    #bundler.delete_bundle()
     end = time.time()
-
     total_elapsed_time = end-start
 
-    #Stats.overall_stats(total_elapsed_time, transfer_rate, total_throughput)
+    Stats.overall_backup_stats(elapsed, aggregate)
 
 def mainrestore(args):
     start = time.time()
