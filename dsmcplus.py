@@ -47,7 +47,7 @@ def mainbackup(args):
     controller = ParallelMgmt(int(args.parallelism), args.source, dest_path)
     dsmc = DsmcWrapper(dest_path, args.resourceutilization, dsm_opt, virtual_mnt_pt, '')
     return_q, elapsed = controller.start_controller(bundler, dsmc)
-    total_tr = 0
+    total_tr = 0.0
     while not return_q.empty():
         total_tr = total_tr + return_q.get()
     print(total_tr)
