@@ -77,7 +77,7 @@ class ParallelMgmt():
                 backup = dsmc.backup(backup_list)
 
                 transfer_rate = dsmc.cmd(backup)
-                return_q.append(transfer_rate)
+                return_q.put(transfer_rate)
                 print("DSMC Transfer Rate: " + str(transfer_rate))
 
             finally:
