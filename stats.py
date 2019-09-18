@@ -67,6 +67,7 @@ class Stats:
         print("\nTotal Time elapsed (sec): %s" %elapsed)
         print("Total data transferred (MiB): " + str(total_data_transferred_mib))
         print("Aggregate Throughput (MiB/sec): " + str(total_throughput))
+    
 
         print("Normalize day: " + str(day_normalization))
         print("Normalize tb: " + str(tb_normalization))

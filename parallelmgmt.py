@@ -40,7 +40,7 @@ class ParallelMgmt():
         print("Time to gather all files: %s" %elapsed)
         return "producer done"
 
-    def consumer(self, queue, bundler, dsmc):
+    def consumer(self, queue, bundler, dsmc, t_arr):
         print("Consumer")
         results = []
         while True:
@@ -77,15 +77,18 @@ class ParallelMgmt():
                 backup = dsmc.backup(backup_list)
 
                 transfer_rate = dsmc.cmd(backup)
+                t_arr.append(transfer_rate)
+                print("DSMC Transfer Rate: " + str(transfer_rate))
 
             finally:
                 queue.task_done()
 
     def start_controller(self, bundler, dsmc):
         start = time.time()
+        t_arr = []
         with mp.Pool(3) as pool:
             data_q = mp.JoinableQueue()
-            c = pool.Process(target=ParallelMgmt.consumer, args=(self, data_q, bundler, dsmc, ))
+            c = pool.Process(target=ParallelMgmt.consumer, args=(self, data_q, bundler, dsmc, t_arr, ))
             p = pool.Process(target=ParallelMgmt.producer, args=(self, data_q, ))
             c.start()
             p.start()
