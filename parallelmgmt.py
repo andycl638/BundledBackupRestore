@@ -77,7 +77,7 @@ class ParallelMgmt():
                 backup = dsmc.backup(backup_list)
 
                 transfer_rate = dsmc.cmd(backup)
-                t_arr.append(transfer_rate)
+                return_q.append(transfer_rate)
                 print("DSMC Transfer Rate: " + str(transfer_rate))
 
             finally:
@@ -85,10 +85,10 @@ class ParallelMgmt():
 
     def start_controller(self, bundler, dsmc):
         start = time.time()
-        t_arr = []
+        return_q = mp.Queue()
         with mp.Pool(3) as pool:
             data_q = mp.JoinableQueue()
-            c = pool.Process(target=ParallelMgmt.consumer, args=(self, data_q, bundler, dsmc, t_arr, ))
+            c = pool.Process(target=ParallelMgmt.consumer, args=(self, data_q, bundler, dsmc, return_q, ))
             p = pool.Process(target=ParallelMgmt.producer, args=(self, data_q, ))
             c.start()
             p.start()
@@ -98,9 +98,7 @@ class ParallelMgmt():
         end = time.time()
 
         elapsed = end-start
-        print('END')
-        print(elapsed)
-        return p, c
+        return return_q, elapsed
 
     @staticmethod
     def parallel_proc(obj, list, mode, procs):
