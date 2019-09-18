@@ -40,7 +40,7 @@ class ParallelMgmt():
         print("Time to gather all files: %s" %elapsed)
         return "producer done"
 
-    def consumer(self, queue, bundler, dsmc, t_arr):
+    def consumer(self, queue, bundler, dsmc, return_q):
         print("Consumer")
         results = []
         while True:
