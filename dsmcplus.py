@@ -58,6 +58,7 @@ def mainbackup(args):
     total_elapsed_time = end-start
 
     Stats.overall_backup_stats(elapsed, aggregate)
+    Stats.poc_proof(elapsed, aggregate)
 
 def mainrestore(args):
     start = time.time()
@@ -89,7 +90,8 @@ def mainrestore(args):
     end = time.time()
 
     total_elapsed_time = end - start
-    Stats.overall_stats(total_elapsed_time, transfer_rate, total_throughput)
+    aggregate = Stats.overall_stats(total_elapsed_time, transfer_rate, total_throughput)
+    Stats.poc_proof(total_elapsed_time, aggregate)
 
 def check_input(args):
     if os.path.isdir(args.source):

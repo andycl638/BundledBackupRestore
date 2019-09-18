@@ -83,8 +83,25 @@ class Stats:
 
         print("Total Elapsed Time: %s" %total_elapsed_time)
         print("Total Aggregate transfer rate: %s" %aggregate)
+        return aggregate
 
     @staticmethod
-    def overall_backup_stats(total_elapsed_time, aggregate):
-        print("Total Elapsed Time: %s" %total_elapsed_time)
+    def overall_backup_stats(elapsed, aggregate):
+        print("Total Elapsed Time: %s" %elapsed)
         print("Total Aggregate transfer rate: %s" %aggregate)
+
+    @staticmethod
+    def poc_proof(elapsed, aggregate):
+        print('POC PROOF')
+        convert_to_tib = aggregate/1024/1024
+        print('Aggregate in TiB: ' + str(convert_to_tib))
+        convert_to_day = elapsed/60/60/24
+        print('Time as Day: ' + str(convert_to_day))
+
+        tib_goal = convert_to_tib * 25
+        time_goal = convert_to_day * 15
+        transfer_rate_goal = tib_goal/time_goal
+
+        print('Aggregate in TiB (25TB): ' + str(tib_goal))
+        print('Time as Days (15): ' + str(time_goal))
+        print('Transfer rate (25TiB/15day): ' + str(transfer_rate_goal))
