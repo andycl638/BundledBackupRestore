@@ -57,23 +57,10 @@ class Stats:
     def display_total_stats(total_data_transferred, elapsed):
         total_data_transferred_mib = total_data_transferred/1024/1024
         total_throughput = total_data_transferred_mib/elapsed
-        day_normalization = elapsed/86400
-        tb_normalization = total_data_transferred_mib/1000000
-        days = day_normalization*15
 
-        normalization_throughput = tb_normalization / days
-
-        goal_throughput = 25/15
         print("\nTotal Time elapsed (sec): %s" %elapsed)
         print("Total data transferred (MiB): " + str(total_data_transferred_mib))
         print("Aggregate Throughput (MiB/sec): " + str(total_throughput))
-
-
-        print("Normalize day: " + str(day_normalization))
-        print("Normalize tb: " + str(tb_normalization))
-        print("Normalize throughput (TB/15days): " + str(normalization_throughput))
-        print("Goal throughput (25TB/15days): " + str(goal_throughput))
-
         return total_throughput
 
     @staticmethod
@@ -88,7 +75,7 @@ class Stats:
     @staticmethod
     def overall_backup_stats(elapsed, aggregate):
         print("Total Elapsed Time: %s" %elapsed)
-        print("Total Aggregate transfer rate: %s" %aggregate)
+        print("Aggregate transfer rate (MiB/sec): %s" %aggregate)
 
     @staticmethod
     def poc_proof(elapsed, aggregate):

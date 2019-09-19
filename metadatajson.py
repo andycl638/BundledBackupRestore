@@ -22,6 +22,7 @@ class MetadataJson:
         return data
 
 """
+JSON structure
 {
   "total_size": 0,
   "star_files": [

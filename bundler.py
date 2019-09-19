@@ -53,7 +53,6 @@ class Bundler():
         end = time.time()
         elapsed = end - start
         print("Time to gather all files: %s" %elapsed)
-        print("Got all dirs and size")
         return dir_list
 
     def get_dir_size(self, dir_path):
@@ -128,7 +127,6 @@ class Bundler():
         elapsed = end - start
 
         backup_list.append(tar_path)
-        #self.size += Bundler.get_bundle_size(tar_path)
 
         star_file_data = {}
         volume_path_arr = []
@@ -137,11 +135,6 @@ class Bundler():
         star_file_data['size'] = tar_size
         star_file_data['volume_paths'] = volume_path_arr
         volume_path_arr.append(dir_list[0])
-
-        size_mib = 5/1024/1024
-        size_gib = size_mib/1024
-
-        throughput = size_mib / elapsed_proc_time
 
         stat.capture_stats(elapsed_proc_time, tar_size, 0, tar_path, 0, cmd, "")
 
@@ -184,7 +177,6 @@ class Bundler():
 
         end = time.time()
 
-
         elapsed_proc_time = end - start
         message_cmd = tar_name_str + "\n" + cmd
         return message_cmd, elapsed_proc_time, tar_path
@@ -200,7 +192,6 @@ class Bundler():
             Returns:
                 bundle_size     -- size of Archive file in bytes
         '''
-
         bundle_size = os.path.getsize(src)
         return bundle_size
 
@@ -234,6 +225,6 @@ class Bundler():
             rmtree(self.dest_path)
             message = "\nDeleted bundle: " + self.dest_path
             print(message)
-        except OSError as e: # this would be "except OSError, e:" before Python 2.6
+        except OSError as e:
             if e.errno != errno.ENOENT: # errno.ENOENT = no such file or directory
                 raise # re-raise exception if a different error occurred

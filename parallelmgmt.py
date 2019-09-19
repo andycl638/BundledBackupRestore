@@ -34,7 +34,7 @@ class ParallelMgmt():
         if len(dir_list) == 0:
             queue.put(None)
 
-        print("No more dirs")
+        #print("No more dirs")
         end = time.time()
         elapsed = end - start
         print("Time to gather all files: %s" %elapsed)
@@ -69,7 +69,6 @@ class ParallelMgmt():
                     stat.display_stats_bundle()
                     total_data_transferred += stat.star_size
 
-                #data['total_size'] = total_size
                 data['star_files'] = star_file_arr
 
                 total_throughput = Stats.display_total_stats(total_data_transferred, elapsed)

@@ -142,11 +142,8 @@ class Unbundler():
             Returns:
                 bundle_size     -- size of Archive file in bytes
         '''
-
         bundle_size = os.path.getsize(src)
-        #bundle_size = 1000
         return bundle_size
-
 
     def get_restore_list(self, data):
         '''
@@ -175,14 +172,13 @@ class Unbundler():
                 restore_list    -- List with full path of all archive files
         '''
         restore_list = []
-        #restore_list = glob.glob(os.path.join(self.src_path, "*.star"))
 
         for root, dirs, files in os.walk(self.src_path):
             for name in files:
                 if name.lower().endswith('.star'):
                     restore_list.append(os.path.join(root,name))
 
-        print(restore_list)
+        #print(restore_list)
         return restore_list
 
     @classmethod
@@ -216,15 +212,13 @@ class Unbundler():
         try:
             rmtree(self.src_path)
             message = "\nDeleted bundle: " + self.src_path
-        except OSError as e: # this would be "except OSError, e:" before Python 2.6
-            if e.errno != errno.ENOENT: # errno.ENOENT = no such file or directory
-                raise # re-raise exception if a different error occurred
+        except OSError as e:
+            if e.errno != errno.ENOENT:
+                raise
 
     def create_vol(self):
         optfiledata = MetadataJson.deserialize_json(self.optfile)
         group = optfiledata['group']
-        #filer = optfiledata['filer']
-        #volume = optfiledata['volume']
         path = os.path.join(self.src_path, group)
         print(path)
         try:
@@ -234,58 +228,3 @@ class Unbundler():
                 raise
             pass
         return path
-
-
-'''
-def main(argv):
-    #json file
-    #dest
-    #parallel process #
-    if len(argv) < 2:
-        print("Not enough arguments. Need at least two arguments.")
-        print("Syntax: python3 unbundler.py <json file> <dest path>")
-        sys.exit()
-    if len(argv) > 3:
-        print("Too many arguments. Need at least two arguments.")
-        print("Syntax: python3 unbundler.py <json file> <dest path>")
-        sys.exit()
-    if len(argv) != 3:
-        print("Using default number of parallelism: 8")
-        print("Syntax: python3 unbundler.py <json file> <dest path> <parallel process>")
-        procs = 8
-    else:
-        procs = argv[2]
-
-    try:
-        int(procs)
-    except ValueError:
-        print("Third value needs to be an integer")
-        sys.exit()
-
-    json_file_path = argv[0]
-    dest_path = argv[1]
-
-    if os.path.isfile(json_file_path):
-        print("Json file : %s" %json_file_path)
-    else:
-        print("Json file path is not valid: %s" %json_file_path)
-        sys.exit()
-    if os.path.isdir(dest_path):
-        print("Destination Path: %s" %dest_path)
-    else:
-        print("Destination path is not valid: %s" %dest_path)
-        sys.exit()
-
-    print("Using parallelism: " + str(procs))
-
-    data = metadatajson.deserialize_json(json_file_path)
-
-    restore_list = get_restore_list(data)
-    unbundle_list = build_list(restore_list, dest_path)
-    parallel_unbundle(unbundle_list, int(procs))
-
-if __name__ == '__main__':
-    print("starting restore script\n")
-
-    main(sys.argv[1:])
-'''
