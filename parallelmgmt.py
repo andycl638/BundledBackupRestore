@@ -21,7 +21,7 @@ class ParallelMgmt():
 
             dir_list.append(set_list)
             set_list = []
-            if len(dir_list) == procs:
+            if len(dir_list) == self.procs:
                 queue.put(dir_list)
                 dir_list = []
 
