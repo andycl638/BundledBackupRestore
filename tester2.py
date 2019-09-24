@@ -14,4 +14,4 @@ def get_file_time(path):
 
 if __name__ == '__main__':
     #get_file_time('/Users/andy/Documents/tester/test.txt')
-    get_file_time('/scale01/scratch/test.txt')
+    get_file_time('/vz9/5/testfile1.txt')
