@@ -11,4 +11,5 @@ def get_file_time(path):
     print("Created: %s" % time.ctime(os.path.getctime(path)))
 
 if __name__ == '__main__':
-    get_file_time('/Users/andy/Documents/tester/test.txt')
+    #get_file_time('/Users/andy/Documents/tester/test.txt')
+    get_file_time('/scale01/scratch/test.txt')
