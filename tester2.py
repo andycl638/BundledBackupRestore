@@ -11,6 +11,7 @@ def get_file_time(path):
     print("Created: %s" % time.ctime(os.path.getctime(path)))
     stat = os.stat(path)
     print(stat)
+    print("Created: %s" % time.ctime(stat.st_ctime))
 
 if __name__ == '__main__':
     #get_file_time('/Users/andy/Documents/tester/test.txt')
