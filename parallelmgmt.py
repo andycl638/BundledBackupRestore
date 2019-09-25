@@ -42,6 +42,7 @@ class ParallelMgmt():
 
     def consumer(self, queue, bundler, dsmc, return_q):
         print("Consumer")
+        backup_time = time.time()
         results = []
         while True:
             list = queue.get()
@@ -60,16 +61,20 @@ class ParallelMgmt():
                 elapsed = end - start
                 backup_list = ''
                 data = {}
-                star_file_arr = []
+                bundled_file_arr = []
                 total_data_transferred = 0
 
-                for star_file_data, stat, tar_path in proc_obj:
+                for bundled_file_data, stat, tar_path in proc_obj:
                     backup_list = backup_list + str(tar_path) + ' '
-                    star_file_arr.append(star_file_data)
+                    bundled_file_arr.append(bundled_file_data)
                     stat.display_stats_bundle()
                     total_data_transferred += stat.star_size
 
-                data['star_files'] = star_file_arr
+                data['bundled_files'] = bundled_file_arr
+                data['backup_time'] = backup_time
+
+                print("\nCreating json metadata file")
+                metadatajson.write_to_file(data, path)
 
                 total_throughput = Stats.display_total_stats(total_data_transferred, elapsed)
                 dsmc.write_virtualmnt()

@@ -86,16 +86,16 @@ class Bundler():
         '''
 
         data = {}
-        star_file_arr = []
+        bundled_file_arr = []
         total_data_transferred = 0
 
-        for star_file_data, stat, tar_path in proc_obj:
-            star_file_arr.append(star_file_data)
+        for bundled_file_data, stat, tar_path in proc_obj:
+            bundled_file_arr.append(bundled_file_data)
             stat.display_stats_bundle()
             total_data_transferred += stat.star_size
 
         data['total_size'] = total_size
-        data['star_files'] = star_file_arr
+        data['bundled_files'] = bundled_file_arr
 
         total_throughput = Stats.display_total_stats(total_data_transferred, elapsed)
 
@@ -131,14 +131,14 @@ class Bundler():
         star_file_data = {}
         volume_path_arr = []
         tar_size = Bundler.get_bundle_size(tar_path)
-        star_file_data['name'] = tar_path
-        star_file_data['size'] = tar_size
-        star_file_data['volume_paths'] = volume_path_arr
+        bundled_file_data['name'] = tar_path
+        bundled_file_data['size'] = tar_size
+        bundled_file_data['volume_paths'] = volume_path_arr
         volume_path_arr.append(dir_list[0])
 
         stat.capture_stats(elapsed_proc_time, tar_size, 0, tar_path, 0, cmd, "")
 
-        return  star_file_data, stat, tar_path
+        return  bundled_file_data, stat, tar_path
 
     @staticmethod
     def bundle_file_set(src_path, dest_path):

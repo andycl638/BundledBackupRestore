@@ -24,6 +24,7 @@ class MetadataJson:
 """
 JSON structure
 {
+  "backup_time": 0
   "total_size": 0,
   "star_files": [
     {
