@@ -77,7 +77,7 @@ class ParallelMgmt():
                 data['backup_time'] = backup_time
 
                 print("\nCreating json metadata file")
-                metadatajson.write_to_file(data, path)
+                metadatajson.write_to_file(data, bundler.dest_path)
 
                 total_throughput = Stats.display_total_stats(total_data_transferred, elapsed)
                 dsmc.write_virtualmnt()
