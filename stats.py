@@ -51,7 +51,7 @@ class Stats:
         elapsed_str = "\nTime elapsed per process: %s" %self.elapsed_time
         throughput_str = "\nThroughput (MiB/sec): " + str(self.throughput)
         display_message = result_str + cmd_str + dest_str + bundle_size_str + throughput_str  + elapsed_str
-        print(display_message)1
+        print(display_message)
 
     @staticmethod
     def display_total_stats(total_data_transferred, elapsed):
