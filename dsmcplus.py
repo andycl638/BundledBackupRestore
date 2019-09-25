@@ -58,7 +58,7 @@ def mainbackup(args):
     total_elapsed_time = end-start
 
     Stats.overall_backup_stats(elapsed, aggregate)
-    Stats.poc_proof(elapsed, aggregate)
+    Stats.normalize_gib(elapsed, aggregate)
 
 def mainrestore(args):
     start = time.time()

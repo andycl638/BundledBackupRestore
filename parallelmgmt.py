@@ -68,7 +68,7 @@ class ParallelMgmt():
                     backup_list = backup_list + str(tar_path) + ' '
                     bundled_file_arr.append(bundled_file_data)
                     stat.display_stats_bundle()
-                    total_data_transferred += stat.star_size
+                    total_data_transferred += stat.bundled_size
 
                 data['bundled_files'] = bundled_file_arr
                 data['backup_time'] = backup_time

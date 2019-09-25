@@ -78,6 +78,15 @@ class Stats:
         print("Aggregate transfer rate (MiB/sec): %s" %aggregate)
 
     @staticmethod
+    def normalize_gib(elapsed, aggregate):
+        print('Normalize to GiB and Hours')
+        convert_to_gib = aggregate/1024
+        print('Aggregate in GiB: ' + str(convert_to_gib))
+        convert_to_hr = elapsed/60/60
+        print('Hour: ' + str(convert_to_hour))
+
+
+    @staticmethod
     def poc_proof(elapsed, aggregate):
         print('POC PROOF')
         convert_to_tib = aggregate/1024/1024
