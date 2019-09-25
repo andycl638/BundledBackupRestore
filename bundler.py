@@ -92,7 +92,7 @@ class Bundler():
         for bundled_file_data, stat, tar_path in proc_obj:
             bundled_file_arr.append(bundled_file_data)
             stat.display_stats_bundle()
-            total_data_transferred += stat.star_size
+            total_data_transferred += stat.bundled_size
 
         data['total_size'] = total_size
         data['bundled_files'] = bundled_file_arr
@@ -128,7 +128,7 @@ class Bundler():
 
         backup_list.append(tar_path)
 
-        star_file_data = {}
+        bundled_file_data = {}
         volume_path_arr = []
         tar_size = Bundler.get_bundle_size(tar_path)
         bundled_file_data['name'] = tar_path

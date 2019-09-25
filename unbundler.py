@@ -65,7 +65,7 @@ class Unbundler():
 
         for stat in obj:
             stat.display_stats_unbundle()
-            total_data_transferred += stat.star_size
+            total_data_transferred += stat.bundled_size
 
         total_throughput = Stats.display_total_stats(total_data_transferred, elapsed)
         return total_throughput
@@ -157,10 +157,10 @@ class Unbundler():
                 restore_list    -- List with full path of all archive files
         '''
         restore_list = []
-        star_files_arr = data['star_files']
+        bundled_files_arr = data['bundled_files']
 
-        for star_file_data in star_files_arr:
-            restore_list.append(star_file_data['name'])
+        for bundled_file_data in bundled_files_arr:
+            restore_list.append(bundled_file_data['name'])
 
         return restore_list
 
