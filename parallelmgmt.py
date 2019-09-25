@@ -1,6 +1,9 @@
 import multiprocessing as mp
 import time, os
 from stats import Stats
+from metadatajson import MetadataJson
+
+metadatajson = MetadataJson()
 
 class ParallelMgmt():
 

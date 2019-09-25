@@ -83,7 +83,7 @@ class Stats:
         convert_to_gib = aggregate/1024
         print('Aggregate in GiB: ' + str(convert_to_gib))
         convert_to_hr = elapsed/60/60
-        print('Hour: ' + str(convert_to_hour))
+        print('Hour: ' + str(convert_to_hr))
 
 
     @staticmethod
