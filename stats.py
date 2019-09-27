@@ -64,7 +64,7 @@ class Stats:
 
         Stats.display_gib_stats(total_data_transferred_mib, elapsed)
 
-        return total_throughput
+        return total_throughput, total_data_transferred_mib
 
     @staticmethod
     def display_gib_stats(total_data_transferred_mib, elapsed_sec):

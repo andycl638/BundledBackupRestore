@@ -21,6 +21,27 @@ class MetadataJson:
 
         return data
 
+    def create_obj():
+        data = {}
+        bundled_file_arr = []
+        data['bundled_files'] = bundled_file_arr
+        data['backup_time'] = backup_time
+
+    def create_file_obj(tar_size):
+        bundled_file_data = {}
+        volume_path_arr = []
+        file_path_arr = []
+
+        bundled_file_data['name'] = tar_path
+        bundled_file_data['size'] = tar_size
+        bundled_file_data['volume_paths'] = volume_path_arr
+        bundled_file_data['file_paths'] = file_path_arr
+        volume_path_arr.append(dir_list[0])
+
+        for file in os.listdir(dir_list[0]):
+            if os.path.isfile(os.path.join(dir_list[0], file)):
+                file_path_arr.append(file)
+
 """
 JSON structure
 {

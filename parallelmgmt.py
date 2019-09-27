@@ -76,18 +76,20 @@ class ParallelMgmt():
                 data['bundled_files'] = bundled_file_arr
                 data['backup_time'] = backup_time
 
-                print("\nCreating json metadata file")
-                metadatajson.write_to_file(data, bundler.dest_path)
 
-                total_throughput = Stats.display_total_stats(total_data_transferred, elapsed)
+
+                total_throughput, mib = Stats.display_total_stats(total_data_transferred, elapsed)
                 dsmc.write_virtualmnt()
                 backup = dsmc.backup(backup_list)
 
-                transfer_rate = dsmc.cmd(backup)
+                #transfer_rate = dsmc.cmd(backup)
                 transfer_rate = 10000
                 transfer_rate_mib = float(transfer_rate)/1024
                 aggregate = (total_throughput + transfer_rate_mib)/2
-                return_q.put(float(aggregate))
+                print("\nCreating json metadata file")
+                metadatajson.write_to_file(data, bundler.dest_path)
+                results.append(float(aggregate), mib, data)
+                return_q.put(results)
             finally:
                 queue.task_done()
 

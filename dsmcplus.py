@@ -50,14 +50,19 @@ def mainbackup(args):
 
     aggregate = 0.0
     while not return_q.empty():
-        aggregate = aggregate + return_q.get()
+        #aggregate = aggregate + return_q.get()
+        results = return_q.get()
+        print(results)
 
     bundler.delete_star()
 
     end = time.time()
     total_elapsed_time = end-start
 
-    Stats.overall_backup_stats(elapsed, aggregate)
+    print("\nCreating json metadata file")
+    metadatajson.write_to_file(data, bundler.dest_path)
+
+    #Stats.overall_backup_stats(elapsed, aggregate)
     #Stats.normalize_gib(elapsed, aggregate)
 
 def mainrestore(args):
