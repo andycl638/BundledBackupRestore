@@ -50,10 +50,12 @@ def mainbackup(args):
     return_q, elapsed = controller.start_controller(bundler, dsmc)
 
     aggregate = 0.0
+    mib = 0
+    data = []
     while not return_q.empty():
-        #aggregate = aggregate + return_q.get()
-        results = return_q.get()
-        print(results)
+        aggregate = aggregate + return_q.get()[0]
+        mib = mib + return_q.get()[1]
+        data.append(return_q.get()[2])
 
     bundler.delete_star()
 
@@ -64,6 +66,7 @@ def mainbackup(args):
     metadatajson.write_to_file(data, bundler.dest_path)
 
     #Stats.overall_backup_stats(elapsed, aggregate)
+    Stats.display_gib_stats(mib, elapsed)
     #Stats.normalize_gib(elapsed, aggregate)
 
 def mainrestore(args):
