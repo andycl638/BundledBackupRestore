@@ -138,8 +138,8 @@ class Bundler():
         bundled_file_data['file_paths'] = file_path_arr
         volume_path_arr.append(dir_list[0])
 
-        for root, dirs, files in os.walk(dir_list[0]):
-            for file in files:
+        for file in os.listdir(dir_list[0]):
+            if os.path.isfile(os.path.join(dir_list[0], file)):
                 file_path_arr.append(file)
 
         stat.capture_stats(elapsed_proc_time, tar_size, 0, tar_path, 0, cmd, "")

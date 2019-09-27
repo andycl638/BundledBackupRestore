@@ -76,6 +76,7 @@ class Stats:
         print("\nTotal Time elapsed (Hr): %s" %hr)
         print("Total data transferred (GiB): " + str(gib))
         print("Aggregate Throughput (GiB/Hr): " + str(total_throughput))
+        print('\n')
 
     @staticmethod
     def overall_stats(total_elapsed_time, transfer_rate, total_throughput):
