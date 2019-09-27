@@ -137,7 +137,10 @@ class Bundler():
         bundled_file_data['volume_paths'] = volume_path_arr
         bundled_file_data['file_paths'] = file_path_arr
         volume_path_arr.append(dir_list[0])
-        file_path_arr.append(os.listdir(dir_list[0]))
+
+        for root, dirs, files in os.walk(dir_list[0]):
+            for file in files:
+                file_path_arr.append(file)
 
         stat.capture_stats(elapsed_proc_time, tar_size, 0, tar_path, 0, cmd, "")
 
@@ -249,7 +252,8 @@ class Bundler():
                 if bundle.endswith('.star'):
                     os.remove(os.path.join(self.dest_path, bundle))
             #os.remove(src)
-            message = "\nDeleted star: " + src
+            message = "\nDeleted bundles in: " + self.dest_path
+            print(message)
         except OSError as e:
             if e.errno != errno.ENOENT: # errno.ENOENT = no such file or directory
                 raise # re-raise exception if a different error occurred
