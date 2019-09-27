@@ -130,11 +130,14 @@ class Bundler():
 
         bundled_file_data = {}
         volume_path_arr = []
+        file_path_arr = []
         tar_size = Bundler.get_bundle_size(tar_path)
         bundled_file_data['name'] = tar_path
         bundled_file_data['size'] = tar_size
         bundled_file_data['volume_paths'] = volume_path_arr
+        bundled_file_data['file_paths'] = file_path_arr
         volume_path_arr.append(dir_list[0])
+        file_path_arr.append(os.listdir(dir_list[0]))
 
         stat.capture_stats(elapsed_proc_time, tar_size, 0, tar_path, 0, cmd, "")
 
@@ -229,7 +232,6 @@ class Bundler():
             if e.errno != errno.ENOENT: # errno.ENOENT = no such file or directory
                 raise # re-raise exception if a different error occurred
 
-    @classmethod
     def delete_star(self):
         '''
             Delete all archive files from scratch once restore is complete
@@ -241,6 +243,7 @@ class Bundler():
                 message     -- Message display whether files were deleted or not
         '''
         try:
+            print(self.dest_path)
             bundle_list = os.listdir(self.dest_path)
             for bundle in bundle_list:
                 if bundle.endswith('.star'):
