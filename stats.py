@@ -61,7 +61,21 @@ class Stats:
         print("\nTotal Time elapsed (sec): %s" %elapsed)
         print("Total data transferred (MiB): " + str(total_data_transferred_mib))
         print("Aggregate Throughput (MiB/sec): " + str(total_throughput))
+
+        Stats.display_gib_stats(total_data_transferred_mib, elapsed)
+
         return total_throughput
+
+    @staticmethod
+    def display_gib_stats(total_data_transferred_mib, elapsed_sec):
+        print('\nNormalize to GiB and Hours')
+        gib = total_data_transferred_mib/1024
+        hr = elapsed_sec/60/60
+        total_throughput = gib/hr
+
+        print("\nTotal Time elapsed (Hr): %s" %hr)
+        print("Total data transferred (GiB): " + str(gib))
+        print("Aggregate Throughput (GiB/Hr): " + str(total_throughput))
 
     @staticmethod
     def overall_stats(total_elapsed_time, transfer_rate, total_throughput):

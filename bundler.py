@@ -216,7 +216,7 @@ class Bundler():
             Delete all archive files from scratch once backup is complete
 
             Arguments:
-                src         -- Archive file Path
+                self         -- get destination path
 
             Returns:
                 message     -- Message display whether files were deleted or not
@@ -225,6 +225,28 @@ class Bundler():
             rmtree(self.dest_path)
             message = "\nDeleted bundle: " + self.dest_path
             print(message)
+        except OSError as e:
+            if e.errno != errno.ENOENT: # errno.ENOENT = no such file or directory
+                raise # re-raise exception if a different error occurred
+
+    @classmethod
+    def delete_star(self):
+        '''
+            Delete all archive files from scratch once restore is complete
+
+            Arguments:
+                src         -- Archive file Path
+
+            Returns:
+                message     -- Message display whether files were deleted or not
+        '''
+        try:
+            bundle_list = os.listdir(self.dest_path)
+            for bundle in bundle_list:
+                if bundle.endswith('.star'):
+                    os.remove(os.path.join(self.dest_path, bundle))
+            #os.remove(src)
+            message = "\nDeleted star: " + src
         except OSError as e:
             if e.errno != errno.ENOENT: # errno.ENOENT = no such file or directory
                 raise # re-raise exception if a different error occurred

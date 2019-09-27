@@ -52,7 +52,7 @@ def mainbackup(args):
     while not return_q.empty():
         aggregate = aggregate + return_q.get()
 
-    bundler.delete_bundle()
+    bundler.delete_star()
 
     end = time.time()
     total_elapsed_time = end-start
