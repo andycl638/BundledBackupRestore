@@ -53,9 +53,10 @@ def mainbackup(args):
     mib = 0
     data = []
     while not return_q.empty():
-        aggregate = aggregate + return_q.get()[0]
-        mib = mib + return_q.get()[1]
-        data.append(return_q.get()[2])
+        results = return_q.get()
+        aggregate = aggregate + results[0]
+        mib = mib + results[1]
+        data.append(results[2])
 
     bundler.delete_star()
 
