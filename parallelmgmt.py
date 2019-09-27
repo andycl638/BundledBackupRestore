@@ -3,7 +3,7 @@ import time, os
 from stats import Stats
 from metadatajson import MetadataJson
 
-metadatajson = MetadataJson()
+#metadatajson = MetadataJson()
 
 class ParallelMgmt():
 
@@ -76,8 +76,6 @@ class ParallelMgmt():
                 data['bundled_files'] = bundled_file_arr
                 data['backup_time'] = backup_time
 
-
-
                 total_throughput, mib = Stats.display_total_stats(total_data_transferred, elapsed)
                 dsmc.write_virtualmnt()
                 backup = dsmc.backup(backup_list)
@@ -86,9 +84,8 @@ class ParallelMgmt():
                 transfer_rate = 10000
                 transfer_rate_mib = float(transfer_rate)/1024
                 aggregate = (total_throughput + transfer_rate_mib)/2
-                print("\nCreating json metadata file")
-                metadatajson.write_to_file(data, bundler.dest_path)
-                results.append(float(aggregate), mib, data)
+
+                results = (float(aggregate), mib, data)
                 return_q.put(results)
             finally:
                 queue.task_done()

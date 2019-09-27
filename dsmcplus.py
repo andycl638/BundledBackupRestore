@@ -8,6 +8,7 @@ from parallelmgmt import ParallelMgmt
 from metadatajson import MetadataJson
 from stats import Stats
 
+metadatajson = MetadataJson()
 def dsmcplus():
     parser = argparse.ArgumentParser()
     parser.add_argument('mode', choices=['backup', 'restore'], help='backup to tsm server or restore to filer')
