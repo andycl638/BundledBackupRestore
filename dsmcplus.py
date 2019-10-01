@@ -57,7 +57,8 @@ def mainbackup(args):
         results = return_q.get()
         aggregate = aggregate + results[0]
         mib = mib + results[1]
-        bundled_file_arr.append(results[2])
+        test = results[2]
+        bundled_file_arr.append(test[0])
 
     bundler.delete_star()
     #print(data)
