@@ -73,16 +73,11 @@ class ParallelMgmt():
                     stat.display_stats_bundle()
                     total_data_transferred += stat.bundled_size
 
-                print(bundled_file_arr)
-                #data['bundled_files'] = bundled_file_arr
-                #data['backup_time'] = backup_time
-
                 total_throughput, mib = Stats.display_total_stats(total_data_transferred, elapsed)
                 dsmc.write_virtualmnt()
                 backup = dsmc.backup(backup_list)
 
-                #transfer_rate = dsmc.cmd(backup)
-                transfer_rate = 10000
+                transfer_rate = dsmc.cmd(backup)
                 transfer_rate_mib = float(transfer_rate)/1024
                 aggregate = (total_throughput + transfer_rate_mib)/2
 

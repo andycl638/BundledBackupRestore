@@ -61,7 +61,6 @@ def mainbackup(args):
             bundled_file_arr.append(result)
 
     bundler.delete_star()
-    #print(data)
 
     end = time.time()
     total_elapsed_time = end-start
