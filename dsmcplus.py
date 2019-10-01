@@ -8,6 +8,7 @@ from parallelmgmt import ParallelMgmt
 from metadatajson import MetadataJson
 from stats import Stats
 
+metadatajson = MetadataJson()
 def dsmcplus():
     parser = argparse.ArgumentParser()
     parser.add_argument('mode', choices=['backup', 'restore'], help='backup to tsm server or restore to filer')
@@ -42,62 +43,39 @@ def mainbackup(args):
     #update the destination path with new volume path
     bundler.dest_path = dest_path
 
-    if args.scratch:
-        print("filer to scratch only")
-        dir_list, total_size = bundler.get_all_dirs()
-
-        proc_obj, elapsed = ParallelMgmt.parallel_proc(bundler, dir_list, args.mode, int(args.parallelism))
-
-        bundler.parallel_bundler(proc_obj, total_size, dir_list[0], elapsed)
-        bundler.delete_bundle()
-        sys.exit()
-
-    if args.dsmc:
-        print("scratch to dsmc only")
-        dsmc_backup = DsmcBackup(dest_path, args.resourceutilization)
-        dsmc_backup.backup()
-        sys.exit()
-
     start = time.time()
-    dir_list, total_size = bundler.get_all_dirs()
 
-    proc_obj, elapsed = ParallelMgmt.parallel_proc(bundler, dir_list, args.mode, int(args.parallelism))
-
-    total_throughput = bundler.parallel_bundler(proc_obj, total_size, dir_list[0], elapsed)
-
+    controller = ParallelMgmt(int(args.parallelism), args.source, dest_path)
     dsmc = DsmcWrapper(dest_path, args.resourceutilization, dsm_opt, virtual_mnt_pt, '')
-    dsmc.write_virtualmnt()
-    backup = dsmc.backup()
-    transfer_rate = dsmc.cmd(backup)
+    return_q, elapsed = controller.start_controller(bundler, dsmc)
 
-    bundler.delete_bundle()
+    aggregate = 0.0
+    mib = 0
+    data = {}
+    bundled_file_arr = []
+    while not return_q.empty():
+        results = return_q.get()
+        aggregate = aggregate + results[0]
+        mib = mib + results[1]
+        for result in results[2]:
+            bundled_file_arr.append(result)
+
+    bundler.delete_star()
+
     end = time.time()
-
     total_elapsed_time = end-start
-    Stats.overall_stats(total_elapsed_time, transfer_rate, total_throughput)
+
+    data['bundled_files'] = bundled_file_arr
+    data['backup_time'] = elapsed
+
+    print("\nCreating json metadata file")
+    metadatajson.write_to_file(data, bundler.dest_path)
+
+    #Stats.overall_backup_stats(elapsed, aggregate)
+    Stats.display_gib_stats(mib, elapsed)
+    #Stats.normalize_gib(elapsed, aggregate)
 
 def mainrestore(args):
-    if args.dsmc:
-        print("restore dsmc to scratch")
-        dsmc_restore = DsmcRestore(args.source)
-        dsmc_restore.restore()
-        sys.exit()
-
-    if args.scratch:
-        print("restore scratch to filer")
-        #data = metadatajson.deserialize_json(json_file_path)
-        unbundler = Unbundler(args.source, args.destination)
-        restore_list = unbundler.get_all_volume()
-        #restore_list = get_restore_list(data)
-        if len(restore_list) == 0:
-            print("No files were found to restore")
-            sys.exit()
-
-        unbundle_list = unbundler.build_list(restore_list)
-        proc_obj = ParallelMgmt.parallel_proc(unbundler, unbundle_list, args.mode, int(args.parallelism))
-        unbundler.parallel_unbundle(proc_obj, args.parallelism)
-        sys.exit()
-
     start = time.time()
     unbundler = Unbundler(args.source, args.destination, args.optfile)
     source_path = unbundler.create_vol()
@@ -105,7 +83,7 @@ def mainrestore(args):
     #update the destination path with new volume path
     unbundler.src_path = source_path
 
-    dsmc = DsmcWrapper('', 0, '', '', unbundler.src_path)
+    dsmc = DsmcWrapper('', args.resourceutilization, '', '', unbundler.src_path)
 
     restore = dsmc.restore()
     transfer_rate = dsmc.cmd(restore)
@@ -127,7 +105,8 @@ def mainrestore(args):
     end = time.time()
 
     total_elapsed_time = end - start
-    Stats.overall_stats(total_elapsed_time, transfer_rate, total_throughput)
+    aggregate = Stats.overall_stats(total_elapsed_time, transfer_rate, total_throughput)
+    Stats.poc_proof(total_elapsed_time, aggregate)
 
 def check_input(args):
     if os.path.isdir(args.source):
