@@ -51,17 +51,22 @@ def mainbackup(args):
 
     aggregate = 0.0
     mib = 0
-    data = []
+    data = {}
+    bundled_file_arr = []
     while not return_q.empty():
         results = return_q.get()
         aggregate = aggregate + results[0]
         mib = mib + results[1]
-        data.append(results[2])
+        bundled_file_arr.append(results[2])
 
     bundler.delete_star()
+    #print(data)
 
     end = time.time()
     total_elapsed_time = end-start
+
+    data['bundled_files'] = bundled_file_arr
+    data['backup_time'] = elapsed
 
     print("\nCreating json metadata file")
     metadatajson.write_to_file(data, bundler.dest_path)
