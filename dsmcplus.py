@@ -116,8 +116,7 @@ def mainincr(args):
     bundler = Bundler(args.source, args.destination, args.optfile)
 
     dest_path, dsm_opt, virtual_mnt_pt = bundler.create_vol()
-    #print('dest: %s' % dest_path)
-#print('virt: %s' % virtual_mnt_pt)
+
     #update the destination path with new volume path
     bundler.dest_path = dest_path
 
@@ -132,6 +131,9 @@ def mainincr(args):
     #return_q, elapsed = controller.start_controller(bundler, dsmc)
     backup_time = data['backup_time']
     print(backup_time)
+
+    dir_list = bundler.get_all_dirs()
+    print(dir_list)
     aggregate = 0.0
     mib = 0
 
