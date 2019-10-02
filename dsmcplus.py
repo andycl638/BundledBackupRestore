@@ -11,7 +11,7 @@ from stats import Stats
 metadatajson = MetadataJson()
 def dsmcplus():
     parser = argparse.ArgumentParser()
-    parser.add_argument('mode', choices=['backup', 'restore'], help='backup to tsm server or restore to filer')
+    parser.add_argument('mode', choices=['backup', 'incr', 'restore'], help='backup to tsm server or restore to filer')
     parser.add_argument('source', help='source path to backup or restore')
     parser.add_argument('destination', help='destination path to backup or restore')
     parser.add_argument('optfile', help='option file path')
@@ -30,9 +30,10 @@ def dsmcplus():
     print("mode: " + args.mode)
     if args.mode == 'backup':
         mainbackup(args)
-
     elif args.mode == 'restore':
         mainrestore(args)
+    elif args.mode == 'incr':
+        mainincr(args)
 
 def mainbackup(args):
     #Init bundler object
@@ -47,6 +48,7 @@ def mainbackup(args):
 
     controller = ParallelMgmt(int(args.parallelism), args.source, dest_path)
     dsmc = DsmcWrapper(dest_path, args.resourceutilization, dsm_opt, virtual_mnt_pt, '')
+    backup_time = time.time()
     return_q, elapsed = controller.start_controller(bundler, dsmc)
 
     aggregate = 0.0
@@ -66,9 +68,10 @@ def mainbackup(args):
     total_elapsed_time = end-start
 
     data['bundled_files'] = bundled_file_arr
-    data['backup_time'] = elapsed
+    data['backup_time'] = backup_time
 
     print("\nCreating json metadata file")
+    print("backup time: %s" % time.ctime(backup_time))
     metadatajson.write_to_file(data, bundler.dest_path)
 
     #Stats.overall_backup_stats(elapsed, aggregate)
@@ -107,6 +110,39 @@ def mainrestore(args):
     total_elapsed_time = end - start
     aggregate = Stats.overall_stats(total_elapsed_time, transfer_rate, total_throughput)
     Stats.poc_proof(total_elapsed_time, aggregate)
+
+def mainincr(args):
+    #Init bundler object
+    bundler = Bundler(args.source, args.destination, args.optfile)
+
+    dest_path, dsm_opt, virtual_mnt_pt = bundler.create_vol()
+    #print('dest: %s' % dest_path)
+#print('virt: %s' % virtual_mnt_pt)
+    #update the destination path with new volume path
+    bundler.dest_path = dest_path
+
+    start = time.time()
+
+    metadata_file = metadatajson.get_metadata_file(dest_path)
+
+    data = metadatajson.deserialize_json(metadata_file)
+    #print(data)
+    #controller = ParallelMgmt(int(args.parallelism), args.source, dest_path)
+    #dsmc = DsmcWrapper(dest_path, args.resourceutilization, dsm_opt, virtual_mnt_pt, '')
+    #return_q, elapsed = controller.start_controller(bundler, dsmc)
+    backup_time = data['backup_time']
+    print(backup_time)
+    aggregate = 0.0
+    mib = 0
+
+    #bundler.delete_star()
+
+    end = time.time()
+    total_elapsed_time = end-start
+
+    #Stats.overall_backup_stats(elapsed, aggregate)
+    #Stats.display_gib_stats(mib, elapsed)
+    #Stats.normalize_gib(elapsed, aggregate)
 
 def check_input(args):
     if os.path.isdir(args.source):

@@ -1,4 +1,4 @@
-import json, os, time
+import json, os, time, glob
 
 class MetadataJson:
     '''
@@ -18,7 +18,6 @@ class MetadataJson:
     def deserialize_json(file_name):
         with open(file_name, "r") as read_file:
             data = json.load(read_file)
-
         return data
 
     def create_obj():
@@ -41,6 +40,16 @@ class MetadataJson:
         for file in os.listdir(dir_list[0]):
             if os.path.isfile(os.path.join(dir_list[0], file)):
                 file_path_arr.append(file)
+
+    @staticmethod
+    def get_metadata_file(dest_path):
+        metadata_path = ""
+        for file in os.listdir(dest_path):
+            if file.endswith('.json'):
+                metadata_path = os.path.join(dest_path, file)
+                break
+        return metadata_path
+
 
 """
 JSON structure
