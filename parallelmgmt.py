@@ -86,7 +86,7 @@ class ParallelMgmt():
             finally:
                 queue.task_done()
 
-    def producer_res(self, queue):
+    def producer_res(self, dsmc, queue):
         print("Producer")
         start = time.time()
         restore = dsmc.restore()
@@ -101,7 +101,7 @@ class ParallelMgmt():
         print("Time to gather all files: %s" %elapsed)
         return "producer done"
 
-    def consumer_res(self, queue, unbundler, dsmc, return_q):
+    def consumer_res(self, queue, unbundler, return_q):
         print("Consumer")
         backup_time = time.time()
         results = []
@@ -167,8 +167,8 @@ class ParallelMgmt():
         return_q = mp.Queue()
         with mp.Pool(3) as pool:
             data_q = mp.JoinableQueue()
-            c = pool.Process(target=ParallelMgmt.consumer_res, args=(self, data_q, unbundler, dsmc, return_q, ))
-            p = pool.Process(target=ParallelMgmt.producer_res, args=(self, data_q, ))
+            c = pool.Process(target=ParallelMgmt.consumer_res, args=(self, data_q, unbundler, return_q, ))
+            p = pool.Process(target=ParallelMgmt.producer_res, args=(self, data_q, dsmc, ))
             c.start()
             p.start()
 
