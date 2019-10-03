@@ -144,7 +144,11 @@ def mainincr(args):
                     print(time.ctime(os.path.getctime(file_path)))
 
     print(mod_files)
-    Bundler.incr_bundle_set(mod_files, dest_path)
+    message_cmd, elapsed_proc_time, tar_path = Bundler.incr_bundle_set(mod_files, dest_path)
+    backup = dsmc.backup(backup_list)
+
+    transfer_rate = dsmc.cmd(backup)
+    
     aggregate = 0.0
     mib = 0
 
