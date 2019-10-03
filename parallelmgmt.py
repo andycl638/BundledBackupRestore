@@ -77,7 +77,7 @@ class ParallelMgmt():
                 dsmc.write_virtualmnt()
                 backup = dsmc.backup(backup_list)
 
-                transfer_rate = dsmc.cmd(backup)
+                transfer_rate = dsmc.cmd(backup, None)
                 transfer_rate_mib = float(transfer_rate)/1024
                 aggregate = (total_throughput + transfer_rate_mib)/2
 
@@ -86,9 +86,10 @@ class ParallelMgmt():
             finally:
                 queue.task_done()
 
-    def producer_res(self, dsmc, queue):
-        print("Producer")
+    def producer_res(self, queue, dsmc):
+        print("Producer restore")
         start = time.time()
+
         restore = dsmc.restore()
         transfer_rate = dsmc.cmd(restore, queue)
 
