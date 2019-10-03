@@ -89,6 +89,10 @@ def mainrestore(args):
     dsmc = DsmcWrapper('', args.resourceutilization, '', '', unbundler.src_path)
     controller = ParallelMgmt(int(args.parallelism), args.destination, source_path)
     return_q, elapsed = controller.start_controller_res(unbundler, dsmc)
+
+    while not return_q.empty():
+        results = return_q.get()
+        print(results)
     #restore = dsmc.restore()
 #    transfer_rate = dsmc.cmd(restore)
 
@@ -101,8 +105,8 @@ def mainrestore(args):
         #sys.exit()
 
     #unbundle_list = unbundler.build_list(restore_list)
-    proc_obj, elapsed = ParallelMgmt.parallel_proc(unbundler, unbundle_list, args.mode, int(args.parallelism))
-    total_throughput = unbundler.parallel_unbundle(proc_obj, args.parallelism, elapsed)
+    #proc_obj, elapsed = ParallelMgmt.parallel_proc(unbundler, unbundle_list, args.mode, int(args.parallelism))
+    #total_throughput = unbundler.parallel_unbundle(proc_obj, args.parallelism, elapsed)
 
     unbundler.delete_bundle()
 

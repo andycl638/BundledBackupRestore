@@ -106,13 +106,22 @@ class ParallelMgmt():
         print("Consumer")
         backup_time = time.time()
         results = []
+        restore_list = []
         while True:
             list = queue.get()
             print(list)
 
+            if restore_list < self.procs:
+                restore_list.append(list)
+            else:
+                unbundle_list = unbundler.build_list(restore_list)
+                with mp.Pool(self.procs) as pool:
+                    proc_obj = pool.map(obj.unbundle_func, list)
+                return_q.put(list)
             if list is None:
                 #print("list is none")
                 break
+
             queue.task_done()
             '''try:
                 start = time.time()
