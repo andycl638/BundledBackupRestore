@@ -66,9 +66,9 @@ def mainbackup(args):
 
     end = time.time()
     total_elapsed_time = end-start
-
-    data['bundled_files'] = bundled_file_arr
-    data['backup_time'] = backup_time
+    data = metadatajson.create_obj(backup_time, bundled_file_arr)
+    #data['bundled_files'] = bundled_file_arr
+    #data['backup_time'] = backup_time
 
     print("\nCreating json metadata file")
     print("backup time: %s" % time.ctime(backup_time))
@@ -130,10 +130,21 @@ def mainincr(args):
     #dsmc = DsmcWrapper(dest_path, args.resourceutilization, dsm_opt, virtual_mnt_pt, '')
     #return_q, elapsed = controller.start_controller(bundler, dsmc)
     backup_time = data['backup_time']
-    print(backup_time)
+    print(time.ctime(backup_time))
 
-    dir_list = bundler.get_all_dirs()
-    print(dir_list)
+    mod_files = []
+    dir_list = bundler.get_dirs()
+    for dir in dir_list:
+        for file in os.listdir(dir):
+            file_path = os.path.join(dir,file)
+            if os.path.isfile(file_path):
+                if os.path.getctime(file_path) > backup_time:
+                    mod_files.append(file_path)
+                    print(file_path)
+                    print(time.ctime(os.path.getctime(file_path)))
+
+    print(mod_files)
+    Bundler.incr_bundle_set(mod_files, dest_path)
     aggregate = 0.0
     mib = 0
 

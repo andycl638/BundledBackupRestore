@@ -114,20 +114,7 @@ class Unbundler():
 
         cmd = "star -x -v -f " + src
 
-        '''cmd = "ls -l " + src'''
-        start = time.time()
-        p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, cwd=dest)
-
-        while p.poll() is None:
-            time.sleep(0.5)
-
-        if p.returncode != 0:
-            print(p.stdout.read())
-
-        end = time.time()
-        elapsed = end - start
-
-        out, err = p.communicate()
+        elapsed = externalcommand.ext_cmd(cmd, dest)
 
         return cmd, bundle_size, elapsed, dest
 
