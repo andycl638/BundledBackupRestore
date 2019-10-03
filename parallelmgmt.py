@@ -111,7 +111,7 @@ class ParallelMgmt():
             list = queue.get()
             print(list)
 
-            if restore_list < self.procs:
+            if len(restore_list) < self.procs:
                 restore_list.append(list)
             else:
                 unbundle_list = unbundler.build_list(restore_list)
