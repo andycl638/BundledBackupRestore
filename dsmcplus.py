@@ -87,19 +87,20 @@ def mainrestore(args):
     unbundler.src_path = source_path
 
     dsmc = DsmcWrapper('', args.resourceutilization, '', '', unbundler.src_path)
-
-    restore = dsmc.restore()
-    transfer_rate = dsmc.cmd(restore)
+    controller = ParallelMgmt(int(args.parallelism), args.destination, source_path)
+    return_q, elapsed = controller.start_controller(bundler, dsmc)
+    #restore = dsmc.restore()
+#    transfer_rate = dsmc.cmd(restore)
 
     #data = metadatajson.deserialize_json(json_file_path)
     #unbundler = Unbundler(unbundler.src_path, args.destination)
-    restore_list = unbundler.get_all_volume()
+    #restore_list = unbundler.get_all_volume()
     #restore_list = get_restore_list(data)
-    if len(restore_list) == 0:
-        print("No files were found to restore")
-        sys.exit()
+    #if len(restore_list) == 0:
+        #print("No files were found to restore")
+        #sys.exit()
 
-    unbundle_list = unbundler.build_list(restore_list)
+    #unbundle_list = unbundler.build_list(restore_list)
     proc_obj, elapsed = ParallelMgmt.parallel_proc(unbundler, unbundle_list, args.mode, int(args.parallelism))
     total_throughput = unbundler.parallel_unbundle(proc_obj, args.parallelism, elapsed)
 
@@ -108,8 +109,8 @@ def mainrestore(args):
     end = time.time()
 
     total_elapsed_time = end - start
-    aggregate = Stats.overall_stats(total_elapsed_time, transfer_rate, total_throughput)
-    Stats.poc_proof(total_elapsed_time, aggregate)
+    #aggregate = Stats.overall_stats(total_elapsed_time, transfer_rate, total_throughput)
+    #Stats.poc_proof(total_elapsed_time, aggregate)
 
 def mainincr(args):
     #Init bundler object

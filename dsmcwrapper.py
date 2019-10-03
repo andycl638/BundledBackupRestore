@@ -26,7 +26,7 @@ class DsmcWrapper():
         print(cmd)
         return cmd
 
-    def cmd(self, cmd):
+    def cmd(self, cmd, queue):
         transfer_rate_arr = []
 
         p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
@@ -40,6 +40,8 @@ class DsmcWrapper():
                 print (output.strip())
                 if "Aggregate data transfer rate:" in output:
                     transfer_rate_arr = re.findall('\d*\.?\d+', output)
+                elif "[Done]" in output:
+                    queue.put(output)
 
         print ("dsmc: finished")
 
