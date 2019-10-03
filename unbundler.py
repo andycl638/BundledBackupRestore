@@ -1,9 +1,12 @@
 import subprocess, sys, os, time, glob, errno
 from os.path import getsize
 from multiprocessing import Pool
-from metadatajson import MetadataJson
+
 from stats import Stats
 from shutil import rmtree
+
+from externalcommand import ExternalCommand
+from metadatajson import MetadataJson
 
 metadatajson = MetadataJson()
 
@@ -114,7 +117,7 @@ class Unbundler():
 
         cmd = "star -x -v -f " + src
 
-        elapsed = externalcommand.ext_cmd(cmd, dest)
+        elapsed = ExternalCommand.ext_cmd(cmd, dest)
 
         return cmd, bundle_size, elapsed, dest
 

@@ -152,7 +152,7 @@ def mainincr(args):
     aggregate = 0.0
     mib = 0
 
-    #bundler.delete_star()
+    bundler.delete_star()
 
     end = time.time()
     total_elapsed_time = end-start
