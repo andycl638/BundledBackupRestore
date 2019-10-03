@@ -88,7 +88,7 @@ def mainrestore(args):
 
     dsmc = DsmcWrapper('', args.resourceutilization, '', '', unbundler.src_path)
     controller = ParallelMgmt(int(args.parallelism), args.destination, source_path)
-    return_q, elapsed = controller.start_controller(unbundler, dsmc)
+    return_q, elapsed = controller.start_controller_res(unbundler, dsmc)
     #restore = dsmc.restore()
 #    transfer_rate = dsmc.cmd(restore)
 
