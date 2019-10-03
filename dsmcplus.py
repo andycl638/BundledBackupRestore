@@ -117,6 +117,7 @@ def mainincr(args):
 
     dest_path, dsm_opt, virtual_mnt_pt = bundler.create_vol()
 
+    dsmc = DsmcWrapper(dest_path, args.resourceutilization, dsm_opt, virtual_mnt_pt, '')
     #update the destination path with new volume path
     bundler.dest_path = dest_path
 
@@ -143,12 +144,11 @@ def mainincr(args):
                     print(file_path)
                     print(time.ctime(os.path.getctime(file_path)))
 
-    print(mod_files)
     message_cmd, elapsed_proc_time, tar_path = Bundler.incr_bundle_set(mod_files, dest_path)
-    backup = dsmc.backup(backup_list)
+    backup = dsmc.backup(tar_path)
 
     transfer_rate = dsmc.cmd(backup)
-    
+
     aggregate = 0.0
     mib = 0
 
