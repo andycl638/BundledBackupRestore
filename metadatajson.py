@@ -20,6 +20,7 @@ class MetadataJson:
             data = json.load(read_file)
         return data
 
+    @staticmethod
     def create_obj(backup_time, bundled_file_arr):
         data = {}
 
@@ -27,6 +28,7 @@ class MetadataJson:
         data['backup_time'] = backup_time
         return data
 
+    @staticmethod
     def create_file_obj(tar_size, tar_path, dir_list):
         bundled_file_data = {}
         volume_path_arr = []
