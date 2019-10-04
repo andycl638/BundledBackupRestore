@@ -257,7 +257,7 @@ if __name__ == '__main__':
     level5Num = 2
     lvl5FileNum = 10
     #generate_files_walk_dir("/vsnap/vpool1/vz8", 10)
-    for num in range(7000):
+    for num in range(70000):
         file = 'test' + str(num)
         path = '/vz8/test/' + file + '.txt'
         #path = '/Users/andy/Documents/' + file + '.txt'
