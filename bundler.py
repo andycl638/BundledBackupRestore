@@ -118,7 +118,7 @@ class Bundler():
             if os.path.isfile(os.path.join(dir_list[0], file)):
                 file_path_arr.append(file)'''
 
-        stat.capture_stats(elapsed_proc_time, tar_size, 0, tar_path, proc_name, cmd, "")
+        stat.capture_stats(elapsed_proc_time, tar_size, 0, tar_path, proc_name, cmd, "", end)
 
         return  bundled_file_data, stat, tar_path
 

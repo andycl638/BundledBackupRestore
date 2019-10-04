@@ -24,7 +24,7 @@ class Stats:
     def calculate_size_gb(self, bundled_size):
         self.bundled_size = bundled_size/1024/1024/1024
 
-    def capture_stats(self, elapsed_time, bundled_size, file_count, bundled_name, process_id, cmd, dest):
+    def capture_stats(self, elapsed_time, bundled_size, file_count, bundled_name, process_id, cmd, dest, timestamp):
         self.elapsed_time = elapsed_time
         self.bundled_size = bundled_size
         self.file_count = file_count
@@ -35,6 +35,7 @@ class Stats:
         self.throughput = throughput
         self.cmd = cmd
         self.dest = dest
+        self.timestamp = timestamp
 
     def display_stats_bundle(self):
         process = "\nBundling with process: " + self.process_id

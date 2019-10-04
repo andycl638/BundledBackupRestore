@@ -95,7 +95,7 @@ class Unbundler():
 
         end = time.time()
         elapsed = end - start
-        stat.capture_stats(elapsed_proc, bundle_size, 0, "", proc_name, cmd, dest)
+        stat.capture_stats(elapsed_proc, bundle_size, 0, "", proc_name, cmd, dest, end)
 
         return stat
 
