@@ -257,10 +257,13 @@ if __name__ == '__main__':
     level5Num = 2
     lvl5FileNum = 10
     #generate_files_walk_dir("/vsnap/vpool1/vz8", 10)
-    generate_big_random_bin_file("/vz8/1/testincr.txt", 1024)
-    generate_big_random_bin_file("/vz8/2/testincr2.txt", 1024)
-    generate_big_random_bin_file("/vz8/4/testincr4.txt", 1024)
-    generate_big_random_bin_file("/vz8/6/testincr6.txt", 1024)
+    for num in range(700):
+        file = 'test' + str(num)
+        path = '/vz8/test/' + file + '.txt'
+        generate_big_random_bin_file(path, 1024*1024*10)
+    #generate_big_random_bin_file("/vz8/2/testincr2.txt", 1024)
+    #generate_big_random_bin_file("/vz8/4/testincr4.txt", 1024)
+#    generate_big_random_bin_file("/vz8/6/testincr6.txt", 1024)
     #parallel_file_gen(level3Name, level3Num, lvl3FileNum, level4Name, level4Num, lvl4FileNum, level5Name, level5Num, lvl5FileNum, root)
     #generate_file_ldeedee_unique(/vz9/)
     #s = parallel_file_gen2("/vz8",  10)
