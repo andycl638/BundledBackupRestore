@@ -41,7 +41,9 @@ class DsmcWrapper():
                 if "Aggregate data transfer rate:" in output:
                     transfer_rate_arr = re.findall('\d*\.?\d+', output)
                 elif "[Done]" in output:
-                    queue.put(output)
+                    dir = output.split()[2]
+                    print(dir)
+                    queue.put(dir)
 
         print ("dsmc: finished")
 

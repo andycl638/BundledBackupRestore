@@ -116,7 +116,7 @@ class ParallelMgmt():
             else:
                 unbundle_list = unbundler.build_list(restore_list)
                 with mp.Pool(self.procs) as pool:
-                    proc_obj = pool.map(unbundler.unbundle_func, list)
+                    proc_obj = pool.map(unbundler.unbundle_func, unbundle_list)
                 return_q.put(unbundle_list)
             if list is None:
                 #print("list is none")
