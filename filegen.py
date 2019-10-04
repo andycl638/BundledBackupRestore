@@ -257,10 +257,11 @@ if __name__ == '__main__':
     level5Num = 2
     lvl5FileNum = 10
     #generate_files_walk_dir("/vsnap/vpool1/vz8", 10)
-    for num in range(700):
+    for num in range(7000):
         file = 'test' + str(num)
         path = '/vz8/test/' + file + '.txt'
-        generate_big_random_bin_file(path, 1024*1024*10)
+        #path = '/Users/andy/Documents/' + file + '.txt'
+        generate_big_random_bin_file(path, 1024*100)
     #generate_big_random_bin_file("/vz8/2/testincr2.txt", 1024)
     #generate_big_random_bin_file("/vz8/4/testincr4.txt", 1024)
 #    generate_big_random_bin_file("/vz8/6/testincr6.txt", 1024)
