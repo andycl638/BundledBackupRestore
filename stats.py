@@ -39,24 +39,24 @@ class Stats:
 
     def display_stats_bundle(self):
         process = "\nBundling with process: " + self.process_id
-        time = "\nTimestamp: " + time.ctime()
+        timestamp = "\nTimestamp: " + self.timestamp
         result_str = "\nResults:"
         size_str = "\nSize of tar director in GiB: " + str(self.bundled_size/1024/1024/1024)
         elapsed_str = "\nTime elapsed per process: %s" %self.elapsed_time
         throughput_str = "\nThroughput (MiB/sec): " + str(self.throughput)
-        display_message = process + time + result_str + self.cmd + size_str + elapsed_str + throughput_str
+        display_message = process + timestamp + result_str + self.cmd + size_str + elapsed_str + throughput_str
         print(display_message)
 
     def display_stats_unbundle(self):
         process = "\nBundling with process: " + self.process_id
-        time = "\nTimestamp: " + time.ctime()
+        timestamp = "\nTimestamp: " + self.timestamp
         result_str = "\nResults:"
         cmd_str = "\nUnbundle cmd: %s" %self.cmd
         dest_str = "\nDestination Path: %s" %self.dest
         bundle_size_str = "\nSize of bundle: " + str(self.bundled_size/1024/1024/1024)
         elapsed_str = "\nTime elapsed per process: %s" %self.elapsed_time
         throughput_str = "\nThroughput (MiB/sec): " + str(self.throughput)
-        display_message = process + time + result_str + cmd_str + dest_str + bundle_size_str + throughput_str  + elapsed_str
+        display_message = process + timestamp + result_str + cmd_str + dest_str + bundle_size_str + throughput_str  + elapsed_str
         print(display_message)
 
     @staticmethod
