@@ -75,6 +75,7 @@ def mainbackup(args):
     metadatajson.write_to_file(data, bundler.dest_path)
 
     #Stats.overall_backup_stats(elapsed, aggregate)
+    print("---- Aggregate Stats ----")
     Stats.display_gib_stats(mib, elapsed)
     #Stats.normalize_gib(elapsed, aggregate)
 
