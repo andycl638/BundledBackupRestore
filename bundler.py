@@ -91,6 +91,7 @@ class Bundler():
         '''
         stat = Stats()
         start = time.time()
+        proc_name = multiprocessing.current_process().name
         #backup_list = []
         #bundle_size = 0
         cmd, elapsed_proc_time, tar_path = Bundler.bundle_file_set(dir_list[0], dir_list[1])
@@ -117,7 +118,7 @@ class Bundler():
             if os.path.isfile(os.path.join(dir_list[0], file)):
                 file_path_arr.append(file)'''
 
-        stat.capture_stats(elapsed_proc_time, tar_size, 0, tar_path, 0, cmd, "")
+        stat.capture_stats(elapsed_proc_time, tar_size, 0, tar_path, proc_name, cmd, "")
 
         return  bundled_file_data, stat, tar_path
 

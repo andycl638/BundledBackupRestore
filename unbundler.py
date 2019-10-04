@@ -1,4 +1,4 @@
-import subprocess, sys, os, time, glob, errno
+import subprocess, sys, os, time, glob, errno, multiprocessing
 from os.path import getsize
 from multiprocessing import Pool
 
@@ -88,13 +88,14 @@ class Unbundler():
         '''
         stat = Stats()
         start = time.time()
+        proc_name = multiprocessing.current_process().name
 
         cmd, bundle_size, elapsed_proc, dest = Unbundler.unbundle(unbundle_list[0], unbundle_list[1])
         #delete_message = Unbundler.delete_star(unbundle_list[0])
 
         end = time.time()
         elapsed = end - start
-        stat.capture_stats(elapsed_proc, bundle_size, 0, "", 0, cmd, dest)
+        stat.capture_stats(elapsed_proc, bundle_size, 0, "", proc_name, cmd, dest)
 
         return stat
 

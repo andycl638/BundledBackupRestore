@@ -93,9 +93,9 @@ def mainrestore(args):
     mib = 0
     while not return_q.empty():
         results = return_q.get()
-        print (results)
         mib = mib + results
 
+    print("---- Aggregate Stats ----")
     Stats.display_gib_stats(mib, elapsed)
     #restore = dsmc.restore()
 #    transfer_rate = dsmc.cmd(restore)

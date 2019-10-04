@@ -108,9 +108,9 @@ class ParallelMgmt():
         backup_time = time.time()
         results = []
         restore_list = []
+
         while True:
             list = queue.get()
-            print(list)
 
             try:
                 if list is None:
@@ -156,10 +156,6 @@ class ParallelMgmt():
 
                     total_throughput, mib = Stats.display_total_stats(total_data_transferred, elapsed)
 
-                    #transfer_rate_mib = float(transfer_rate)/1024
-                    #aggregate = (total_throughput + transfer_rate_mib)/2
-
-                    #results = (float(aggregate), mib)
                     results = mib
                     return_q.put(results)
 
