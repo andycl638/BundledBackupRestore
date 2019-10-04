@@ -93,8 +93,7 @@ def mainrestore(args):
     mib = 0
     while not return_q.empty():
         results = return_q.get()
-        aggregate = aggregate + results[0]
-        mib = mib + results[1]
+        mib = mib + results[0]
 
     Stats.display_gib_stats(mib, elapsed)
     #restore = dsmc.restore()
