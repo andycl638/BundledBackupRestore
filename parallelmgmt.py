@@ -112,35 +112,26 @@ class ParallelMgmt():
             print(list)
 
             try:
-                if len(restore_list) < self.procs:
-                    restore_list.append(list)
-                else:
-                    #unbundle_list = unbundler.build_list(restore_list)
-                    unbundle_list = []
-                    temp = []
-                    for src in restore_list:
-                        temp.append(src)
-                        temp.append(unbundler.dest_path)
-                        unbundle_list.append(temp)
-                        temp = []
-
-                    with mp.Pool(self.procs) as pool:
-                        proc_obj = pool.map(unbundler.unbundle_func, unbundle_list)
-                    return_q.put(unbundle_list)
                 if list is None:
                     #print("list is none")
-                    unbundle_list = []
-                    temp = []
-                    for src in restore_list:
-                        temp.append(src)
-                        temp.append(unbundler.dest_path)
-                        unbundle_list.append(temp)
-                        temp = []
+                    unbundle_list = unbundler.build_list(restore_list)
 
                     with mp.Pool(self.procs) as pool:
                         proc_obj = pool.map(unbundler.unbundle_func, unbundle_list)
-                    return_q.put(unbundle_list)
+
+                    return_q.put(proc_obj)
+                    queue.task_done()
+                    restore_list = []
                     break
+                elif len(restore_list) < self.procs:
+                    restore_list.append(list)
+                else:
+                    unbundle_list = unbundler.build_list(restore_list)
+
+                    with mp.Pool(self.procs) as pool:
+                        proc_obj = pool.map(unbundler.unbundle_func, unbundle_list)
+                    return_q.put(proc_obj)
+                    restore_list = []
             finally:
                 queue.task_done()
             '''try:
