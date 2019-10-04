@@ -43,7 +43,8 @@ class DsmcWrapper():
                 elif "[Done]" in output:
                     dir = output.split()[2]
                     print(dir)
-                    queue.put(dir)
+                    if '.star' in dir:
+                        queue.put(dir)
 
         print ("dsmc: finished")
 
