@@ -75,7 +75,7 @@ def mainbackup(args):
     metadatajson.write_to_file(data, bundler.dest_path)
 
     #Stats.overall_backup_stats(elapsed, aggregate)
-    print("---- Aggregate Stats ----")
+    print("\n---- Aggregate Stats ----")
     Stats.display_gib_stats(mib, elapsed)
     #Stats.normalize_gib(elapsed, aggregate)
 
@@ -96,7 +96,7 @@ def mainrestore(args):
         results = return_q.get()
         mib = mib + results
 
-    print("---- Aggregate Stats ----")
+    print("\n---- Aggregate Stats ----")
     Stats.display_gib_stats(mib, elapsed)
     #restore = dsmc.restore()
 #    transfer_rate = dsmc.cmd(restore)

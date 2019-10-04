@@ -137,7 +137,7 @@ class Bundler():
                 tar_path            -- The archived file path
         '''
 
-        print("bundle the file set into tar")
+        #print("bundle the file set into tar")
 
         static_tar_name = "vzStar"
         unique_name = static_tar_name + str(time.time()) + ".star"

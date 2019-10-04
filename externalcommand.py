@@ -4,7 +4,7 @@ class ExternalCommand():
 
     @staticmethod
     def ext_cmd(cmd, dest):
-        print(cmd)
+        #print(cmd)
         start = time.time()
 
         if dest is None:
