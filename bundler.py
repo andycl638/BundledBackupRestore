@@ -1,5 +1,5 @@
 import os, sys, time, errno
-import json, subprocess
+import json, subprocess, multiprocessing
 from shutil import copy, rmtree
 from multiprocessing import Pool
 
