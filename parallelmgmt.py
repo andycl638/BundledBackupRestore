@@ -111,18 +111,38 @@ class ParallelMgmt():
             list = queue.get()
             print(list)
 
-            if len(restore_list) < self.procs:
-                restore_list.append(list)
-            else:
-                unbundle_list = unbundler.build_list(restore_list)
-                with mp.Pool(self.procs) as pool:
-                    proc_obj = pool.map(unbundler.unbundle_func, unbundle_list)
-                return_q.put(unbundle_list)
-            if list is None:
-                #print("list is none")
-                break
+            try:
+                if len(restore_list) < self.procs:
+                    restore_list.append(list)
+                else:
+                    #unbundle_list = unbundler.build_list(restore_list)
+                    unbundle_list = []
+                    temp = []
+                    for src in restore_list:
+                        temp.append(src)
+                        temp.append(unbundler.dest_path)
+                        unbundle_list.append(temp)
+                        temp = []
 
-            queue.task_done()
+                    with mp.Pool(self.procs) as pool:
+                        proc_obj = pool.map(unbundler.unbundle_func, unbundle_list)
+                    return_q.put(unbundle_list)
+                if list is None:
+                    #print("list is none")
+                    unbundle_list = []
+                    temp = []
+                    for src in restore_list:
+                        temp.append(src)
+                        temp.append(unbundler.dest_path)
+                        unbundle_list.append(temp)
+                        temp = []
+
+                    with mp.Pool(self.procs) as pool:
+                        proc_obj = pool.map(unbundler.unbundle_func, unbundle_list)
+                    return_q.put(unbundle_list)
+                    break
+            finally:
+                queue.task_done()
             '''try:
                 start = time.time()
                 with mp.Pool(self.procs) as pool:

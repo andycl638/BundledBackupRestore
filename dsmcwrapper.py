@@ -45,6 +45,9 @@ class DsmcWrapper():
                     print(dir)
                     if '.star' in dir:
                         queue.put(dir)
+                elif "Restore processing finished." in output:
+                    print('sending poison pill')
+                    queue.put(None)
 
         print ("dsmc: finished")
 
