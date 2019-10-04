@@ -39,7 +39,7 @@ class Stats:
 
     def display_stats_bundle(self):
         process = "\nBundling with process: " + self.process_id
-        timestamp = "\nTimestamp: " + self.timestamp
+        timestamp = "\nTimestamp: " + time.ctime(self.timestamp)
         result_str = "\nResults:"
         size_str = "\nSize of tar director in GiB: " + str(self.bundled_size/1024/1024/1024)
         elapsed_str = "\nTime elapsed per process: %s" %self.elapsed_time
@@ -49,7 +49,7 @@ class Stats:
 
     def display_stats_unbundle(self):
         process = "\nBundling with process: " + self.process_id
-        timestamp = "\nTimestamp: " + self.timestamp
+        timestamp = "\nTimestamp: " + time.ctime(self.timestamp)
         result_str = "\nResults:"
         cmd_str = "\nUnbundle cmd: %s" %self.cmd
         dest_str = "\nDestination Path: %s" %self.dest
