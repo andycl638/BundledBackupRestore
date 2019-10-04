@@ -135,7 +135,7 @@ class ParallelMgmt():
                     results = mib
                     return_q.put(results)
 
-                    queue.task_done()
+                    #queue.task_done()
                     restore_list = []
                     break
                 elif len(restore_list) < self.procs:
@@ -166,6 +166,9 @@ class ParallelMgmt():
                     restore_list = []
             finally:
                 queue.task_done()
+
+            if list is None:
+                break;
             '''try:
                 start = time.time()
                 with mp.Pool(self.procs) as pool:
