@@ -131,7 +131,7 @@ class ParallelMgmt():
                     transfer_rate_mib = float(transfer_rate)/1024
                     aggregate = (total_throughput + transfer_rate_mib)/2
 
-                    results = (float(aggregate), mib, bundled_file_arr)
+                    results = (float(aggregate), mib)
                     return_q.put(results)
 
                     queue.task_done()
@@ -143,7 +143,7 @@ class ParallelMgmt():
                     total_data_transferred = 0
                     unbundle_list = unbundler.build_list(restore_list)
                     start = time.time()
-                    
+
                     with mp.Pool(self.procs) as pool:
                         proc_obj = pool.map(unbundler.unbundle_func, unbundle_list)
                     end = time.time()
@@ -158,7 +158,7 @@ class ParallelMgmt():
                     transfer_rate_mib = float(transfer_rate)/1024
                     aggregate = (total_throughput + transfer_rate_mib)/2
 
-                    results = (float(aggregate), mib, bundled_file_arr)
+                    results = (float(aggregate), mib)
                     return_q.put(results)
 
                     restore_list = []
