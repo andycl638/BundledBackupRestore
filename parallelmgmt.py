@@ -128,10 +128,11 @@ class ParallelMgmt():
 
                     total_throughput, mib = Stats.display_total_stats(total_data_transferred, elapsed)
 
-                    transfer_rate_mib = float(transfer_rate)/1024
-                    aggregate = (total_throughput + transfer_rate_mib)/2
+                    #transfer_rate_mib = float(transfer_rate)/1024
+                    #aggregate = (total_throughput + transfer_rate_mib)/2
 
-                    results = (float(aggregate), mib)
+                    #results = (float(aggregate), mib)
+                    results = mib
                     return_q.put(results)
 
                     queue.task_done()
@@ -155,10 +156,11 @@ class ParallelMgmt():
 
                     total_throughput, mib = Stats.display_total_stats(total_data_transferred, elapsed)
 
-                    transfer_rate_mib = float(transfer_rate)/1024
-                    aggregate = (total_throughput + transfer_rate_mib)/2
+                    #transfer_rate_mib = float(transfer_rate)/1024
+                    #aggregate = (total_throughput + transfer_rate_mib)/2
 
-                    results = (float(aggregate), mib)
+                    #results = (float(aggregate), mib)
+                    results = mib
                     return_q.put(results)
 
                     restore_list = []
