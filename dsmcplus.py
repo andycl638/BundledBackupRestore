@@ -93,6 +93,7 @@ def mainrestore(args):
     mib = 0
     while not return_q.empty():
         results = return_q.get()
+        print (results[0])
         mib = mib + results[0]
 
     Stats.display_gib_stats(mib, elapsed)
