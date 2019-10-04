@@ -94,6 +94,7 @@ class ParallelMgmt():
         transfer_rate = dsmc.cmd(restore, queue)
 
         #poisonpill
+        print('sending poison pill')
         queue.put(None)
 
         #print("No more dirs")
@@ -114,23 +115,52 @@ class ParallelMgmt():
             try:
                 if list is None:
                     #print("list is none")
+                    total_data_transferred = 0
                     unbundle_list = unbundler.build_list(restore_list)
-
+                    start = time.time()
                     with mp.Pool(self.procs) as pool:
                         proc_obj = pool.map(unbundler.unbundle_func, unbundle_list)
+                    end = time.time()
+                    elapsed = end-start
+                    for stat in proc_obj:
+                        stat.display_stats_unbundle()
+                        total_data_transferred += stat.bundled_size
 
-                    return_q.put(proc_obj)
+                    total_throughput, mib = Stats.display_total_stats(total_data_transferred, elapsed)
+
+                    transfer_rate_mib = float(transfer_rate)/1024
+                    aggregate = (total_throughput + transfer_rate_mib)/2
+
+                    results = (float(aggregate), mib, bundled_file_arr)
+                    return_q.put(results)
+
                     queue.task_done()
                     restore_list = []
                     break
                 elif len(restore_list) < self.procs:
                     restore_list.append(list)
                 else:
+                    total_data_transferred = 0
                     unbundle_list = unbundler.build_list(restore_list)
-
+                    start = time.time()
+                    
                     with mp.Pool(self.procs) as pool:
                         proc_obj = pool.map(unbundler.unbundle_func, unbundle_list)
-                    return_q.put(proc_obj)
+                    end = time.time()
+                    elapsed = end-start
+
+                    for stat in proc_obj:
+                        stat.display_stats_unbundle()
+                        total_data_transferred += stat.bundled_size
+
+                    total_throughput, mib = Stats.display_total_stats(total_data_transferred, elapsed)
+
+                    transfer_rate_mib = float(transfer_rate)/1024
+                    aggregate = (total_throughput + transfer_rate_mib)/2
+
+                    results = (float(aggregate), mib, bundled_file_arr)
+                    return_q.put(results)
+
                     restore_list = []
             finally:
                 queue.task_done()
