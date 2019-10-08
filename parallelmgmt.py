@@ -69,7 +69,7 @@ class ParallelMgmt():
 
                 for bundled_file_data, stat, tar_path in proc_obj:
                     backup_list = backup_list + str(tar_path) + ' '
-                    bundled_file_arr.append(bundled_file_data)
+                    #bundled_file_arr.append(bundled_file_data)
                     stat.display_stats_bundle()
                     total_data_transferred += stat.bundled_size
 

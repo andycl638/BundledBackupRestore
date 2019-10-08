@@ -106,7 +106,8 @@ class Bundler():
         #file_path_arr = []
         tar_size = Bundler.get_bundle_size(tar_path)
 
-        bundled_file_data  = MetadataJson.create_file_obj(tar_path, tar_size, dir_list[0])
+        #bundled_file_data  = MetadataJson.create_file_obj(tar_path, tar_size, dir_list[0])
+        bundled_file_data = {}
         '''
         bundled_file_data['name'] = tar_path
         bundled_file_data['size'] = tar_size
