@@ -1,9 +1,12 @@
-import subprocess, sys, os, time, glob, errno
+import subprocess, sys, os, time, glob, errno, multiprocessing
 from os.path import getsize
 from multiprocessing import Pool
-from metadatajson import MetadataJson
+
 from stats import Stats
 from shutil import rmtree
+
+from externalcommand import ExternalCommand
+from metadatajson import MetadataJson
 
 metadatajson = MetadataJson()
 
@@ -85,13 +88,14 @@ class Unbundler():
         '''
         stat = Stats()
         start = time.time()
+        proc_name = multiprocessing.current_process().name
 
         cmd, bundle_size, elapsed_proc, dest = Unbundler.unbundle(unbundle_list[0], unbundle_list[1])
         #delete_message = Unbundler.delete_star(unbundle_list[0])
 
         end = time.time()
         elapsed = end - start
-        stat.capture_stats(elapsed_proc, bundle_size, 0, "", 0, cmd, dest)
+        stat.capture_stats(elapsed_proc, bundle_size, 0, "", proc_name, cmd, dest, end)
 
         return stat
 
@@ -114,20 +118,7 @@ class Unbundler():
 
         cmd = "star -x -v -f " + src
 
-        '''cmd = "ls -l " + src'''
-        start = time.time()
-        p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, cwd=dest)
-
-        while p.poll() is None:
-            time.sleep(0.5)
-
-        if p.returncode != 0:
-            print(p.stdout.read())
-
-        end = time.time()
-        elapsed = end - start
-
-        out, err = p.communicate()
+        elapsed = ExternalCommand.ext_cmd(cmd, dest)
 
         return cmd, bundle_size, elapsed, dest
 

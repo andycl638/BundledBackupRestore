@@ -20,13 +20,16 @@ class MetadataJson:
             data = json.load(read_file)
         return data
 
-    def create_obj():
+    @staticmethod
+    def create_obj(backup_time, bundled_file_arr):
         data = {}
-        bundled_file_arr = []
+
         data['bundled_files'] = bundled_file_arr
         data['backup_time'] = backup_time
+        return data
 
-    def create_file_obj(tar_size):
+    @staticmethod
+    def create_file_obj(tar_size, tar_path, dir_list):
         bundled_file_data = {}
         volume_path_arr = []
         file_path_arr = []
@@ -40,6 +43,8 @@ class MetadataJson:
         for file in os.listdir(dir_list[0]):
             if os.path.isfile(os.path.join(dir_list[0], file)):
                 file_path_arr.append(file)
+
+        return bundled_file_data
 
     @staticmethod
     def get_metadata_file(dest_path):

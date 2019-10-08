@@ -1,3 +1,4 @@
+import time
 
 class Stats:
     '''
@@ -23,7 +24,7 @@ class Stats:
     def calculate_size_gb(self, bundled_size):
         self.bundled_size = bundled_size/1024/1024/1024
 
-    def capture_stats(self, elapsed_time, bundled_size, file_count, bundled_name, process_id, cmd, dest):
+    def capture_stats(self, elapsed_time, bundled_size, file_count, bundled_name, process_id, cmd, dest, timestamp):
         self.elapsed_time = elapsed_time
         self.bundled_size = bundled_size
         self.file_count = file_count
@@ -34,23 +35,28 @@ class Stats:
         self.throughput = throughput
         self.cmd = cmd
         self.dest = dest
+        self.timestamp = timestamp
 
     def display_stats_bundle(self):
+        process = "\nBundling with process: " + self.process_id
+        timestamp = "\nTimestamp: " + time.ctime(self.timestamp)
         result_str = "\nResults:"
         size_str = "\nSize of tar director in GiB: " + str(self.bundled_size/1024/1024/1024)
         elapsed_str = "\nTime elapsed per process: %s" %self.elapsed_time
         throughput_str = "\nThroughput (MiB/sec): " + str(self.throughput)
-        display_message = result_str + self.cmd + size_str + elapsed_str + throughput_str
+        display_message = process + timestamp + result_str + self.cmd + size_str + elapsed_str + throughput_str
         print(display_message)
 
     def display_stats_unbundle(self):
+        process = "\nBundling with process: " + self.process_id
+        timestamp = "\nTimestamp: " + time.ctime(self.timestamp)
         result_str = "\nResults:"
         cmd_str = "\nUnbundle cmd: %s" %self.cmd
         dest_str = "\nDestination Path: %s" %self.dest
         bundle_size_str = "\nSize of bundle: " + str(self.bundled_size/1024/1024/1024)
         elapsed_str = "\nTime elapsed per process: %s" %self.elapsed_time
         throughput_str = "\nThroughput (MiB/sec): " + str(self.throughput)
-        display_message = result_str + cmd_str + dest_str + bundle_size_str + throughput_str  + elapsed_str
+        display_message = process + timestamp + result_str + cmd_str + dest_str + bundle_size_str + throughput_str  + elapsed_str
         print(display_message)
 
     @staticmethod
