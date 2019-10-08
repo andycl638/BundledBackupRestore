@@ -193,7 +193,6 @@ def get_all_dirs(dir):
     all_dirs = []
 
     for root, dirs, files in os.walk(dir):
-        print(root)
         all_dirs.append(root)
 
     return all_dirs
@@ -204,15 +203,15 @@ def generate_file_ldeedee_unique2(root):
     for num in range(1, 3125000 +1):
         fileName = "testfile" + str(num) + ".txt"
         filePath = os.path.join(root, fileName)
-        print(filePath)
+
         cmd = "/home/acheong/vsnapperf/ldeedee if=/dev/randhigh of=\"" + filePath + "\" bs=32G count=1"
 
-        '''p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         while p.poll() is None:
             time.sleep(0.5)
 
         if p.returncode != 0:
-            print(p.stdout.read())'''
+            print(p.stdout.read())
     end = time.time()
 
     elapsed = end - start
