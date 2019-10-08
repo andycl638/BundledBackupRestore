@@ -189,7 +189,7 @@ def generate_files_walk_dir(root, fileNum):
 
 def get_all_dirs(dir):
     print("\nGet all folders")
-    print("path: %s" %root)
+    print("path: %s" %dir)
     all_dirs = []
 
     for root, dirs, files in os.walk(dir):
