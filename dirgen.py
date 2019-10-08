@@ -56,11 +56,11 @@ def generate_dir_list(foldernum):
 if __name__ == '__main__':
     root = "/vz9"
     level3Name = "L3-"
-    level3Num = 2
+    level3Num = 10
     level4Name = "L4-"
-    level4Num = 4
+    level4Num = 10
     level5Name = "L5-"
-    level5Num = 2
+    level5Num = 8
     generate_dir(level3Name, level3Num, level4Name, level4Num, level5Name, level5Num, root)
 """
     root = "/vsnap/vpool1/vz7"
