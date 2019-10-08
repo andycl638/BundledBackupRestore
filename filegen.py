@@ -204,14 +204,14 @@ def generate_file_ldeedee_unique2(root):
         fileName = "testfile" + str(num) + ".txt"
         filePath = os.path.join(root, fileName)
 
-        cmd = "/home/acheong/vsnapperf/ldeedee if=/dev/randhigh of=\"" + filePath + "\" bs=32G count=1"
-        print(cmd)
-        '''p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        cmd = "/home/acheong/vsnapperf/ldeedee if=/dev/randhigh of=\"" + filePath + "\" bs=32 count=1"
+    
+        p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         while p.poll() is None:
             time.sleep(0.5)
 
         if p.returncode != 0:
-            print(p.stdout.read())'''
+            print(p.stdout.read())
     end = time.time()
 
     elapsed = end - start
