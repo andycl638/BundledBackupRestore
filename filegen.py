@@ -187,13 +187,13 @@ def generate_files_walk_dir(root, fileNum):
     all_dirs = get_all_dirs(root)
     #parallel_file_gen3(all_dirs)
 
-def get_all_dirs(root):
+def get_all_dirs(dir):
     print("\nGet all folders")
     print("path: %s" %root)
     all_dirs = []
 
-    for root, dirs, files in os.walk(root):
-        print(dir_path)
+    for root, dirs, files in os.walk(dir):
+        print(root)
         all_dirs.append(root)
 
     return all_dirs
