@@ -185,7 +185,7 @@ def generate_file_ldeedee_unique(root, fileNum):
 
 def generate_files_walk_dir(root, fileNum):
     all_dirs = get_all_dirs(root)
-    #parallel_file_gen3(all_dirs)
+    parallel_file_gen3(all_dirs)
 
 def get_all_dirs(dir):
     print("\nGet all folders")
@@ -201,17 +201,18 @@ def get_all_dirs(dir):
 def generate_file_ldeedee_unique2(root):
     start = time.time()
     time.sleep(1)
-    for num in range(1, 10 +1):
+    for num in range(1, 3125000 +1):
         fileName = "testfile" + str(num) + ".txt"
         filePath = os.path.join(root, fileName)
+        print(filePath)
         cmd = "/home/acheong/vsnapperf/ldeedee if=/dev/randhigh of=\"" + filePath + "\" bs=32G count=1"
-        print(cmd)
-        p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+
+        '''p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         while p.poll() is None:
             time.sleep(0.5)
 
         if p.returncode != 0:
-            print(p.stdout.read())
+            print(p.stdout.read())'''
     end = time.time()
 
     elapsed = end - start
