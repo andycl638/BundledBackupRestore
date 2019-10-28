@@ -109,7 +109,7 @@ if __name__ == '__main__':
     path = '/Users/andy/Documents/tester'
 
     if platform == "linux" or platform == "linux2":
-        path = "/vz8"
+        path = "/vsnap/vpool1/vz9"
 
 
     file_stat, scan_time = scan_scandir_wrapper(path)
