@@ -219,3 +219,229 @@ class Unbundler():
                 raise
             pass
         return path
+
+'''
+
+time star -x -f /scratch/v1_1_2_20190603_161730.star > /scratch/rest1.txt &
+time star -x -f /scratch/v1_3_4_20190603_161730.star > /scratch/rest2.txt &
+time star -x -f /scratch/v1_4_6_20190603_161730.star > /scratch/rest3.txt &
+time star -x -f /scratch/v1_7_8_20190603_161730.star > /scratch/rest4.txt &
+
+
+
+Bundle TEST 1
+bundle
+time star -c -f /scale01/scratch/stars/test2.star fs=32m bs=64K /vz7/test/ > /scale01/scratch/results/bundle1.txt
+
+Unbundle TEST 1
+mkdir /vz7/unbundle1
+
+cd /vz7/unbundle1 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle1.txt
+
+cd /vz7 && rm -rf /vz7/unbundle*
+
+Unbundle TEST 2
+mkdir /vz7/unbundle1 /vz7/unbundle2
+
+cd /vz7/unbundle1 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle1.txt &
+cd /vz7/unbundle2 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle2.txt
+
+rm -rf /vz7/unbundle*
+
+Unbundle TEST 3
+mkdir /vz7/unbundle1 /vz7/unbundle2 /vz7/unbundle3
+
+cd /vz7/unbundle1 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle1.txt &
+cd /vz7/unbundle2 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle2.txt &
+cd /vz7/unbundle3 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle3.txt
+
+rm -rf /vz7/unbundle*
+
+Unbundle TEST 5
+mkdir /vz7/unbundle1 /vz7/unbundle2 /vz7/unbundle3 /vz7/unbundle4 /vz7/unbundle5
+
+cd /vz7/unbundle1 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle1.txt &
+cd /vz7/unbundle2 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle2.txt &
+cd /vz7/unbundle3 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle3.txt &
+cd /vz7/unbundle4 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle4.txt &
+cd /vz7/unbundle5 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle5.txt
+
+
+rm -rf /vz7/unbundle*
+
+Unbundle TEST 8
+mkdir /vz7/unbundle1 /vz7/unbundle2 /vz7/unbundle3 /vz7/unbundle4 /vz7/unbundle5 /vz7/unbundle6 /vz7/unbundle7 /vz7/unbundle8
+
+cd /vz7/unbundle1 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle1.txt &
+cd /vz7/unbundle2 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle2.txt &
+cd /vz7/unbundle3 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle3.txt &
+cd /vz7/unbundle4 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle4.txt &
+cd /vz7/unbundle5 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle5.txt &
+cd /vz7/unbundle6 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle6.txt &
+cd /vz7/unbundle7 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle7.txt &
+cd /vz7/unbundle8 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle8.txt
+
+cd /vz7
+rm -rf /vz7/unbundle*
+
+Unbundle TEST 10
+mkdir /vz7/unbundle1 /vz7/unbundle2 /vz7/unbundle3 /vz7/unbundle4 /vz7/unbundle5 /vz7/unbundle6 /vz7/unbundle7 /vz7/unbundle8 /vz7/unbundle9 /vz7/unbundle10
+
+cd /vz7/unbundle1 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle1.txt &
+cd /vz7/unbundle2 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle2.txt &
+cd /vz7/unbundle3 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle3.txt &
+cd /vz7/unbundle4 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle4.txt &
+cd /vz7/unbundle5 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle5.txt &
+cd /vz7/unbundle6 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle6.txt &
+cd /vz7/unbundle7 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle7.txt &
+cd /vz7/unbundle8 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle8.txt &
+cd /vz7/unbundle9 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle9.txt &
+cd /vz7/unbundle10 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle10.txt
+
+cd /vz7
+rm -rf /vz7/unbundle*
+
+Unbundle TEST 13
+mkdir /vz7/unbundle1 /vz7/unbundle2 /vz7/unbundle3 /vz7/unbundle4 /vz7/unbundle5 /vz7/unbundle6 /vz7/unbundle7 /vz7/unbundle8 /vz7/unbundle9 /vz7/unbundle10 /vz7/unbundle11 /vz7/unbundle12 /vz7/unbundle13
+
+cd /vz7/unbundle1 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle1.txt &
+cd /vz7/unbundle2 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle2.txt &
+cd /vz7/unbundle3 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle3.txt &
+cd /vz7/unbundle4 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle4.txt &
+cd /vz7/unbundle5 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle5.txt &
+cd /vz7/unbundle6 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle6.txt &
+cd /vz7/unbundle7 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle7.txt &
+cd /vz7/unbundle8 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle8.txt &
+cd /vz7/unbundle9 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle9.txt &
+cd /vz7/unbundle10 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle10.txt &
+cd /vz7/unbundle11 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle11.txt &
+cd /vz7/unbundle12 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle12.txt &
+cd /vz7/unbundle13 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle13.txt
+
+cd /vz7
+rm -rf /vz7/unbundle1 &
+rm -rf /vz7/unbundle2 &
+rm -rf /vz7/unbundle3 &
+rm -rf /vz7/unbundle4 &
+rm -rf /vz7/unbundle5 &
+rm -rf /vz7/unbundle6 &
+rm -rf /vz7/unbundle7 &
+rm -rf /vz7/unbundle8 &
+rm -rf /vz7/unbundle9 &
+rm -rf /vz7/unbundle10 &
+rm -rf /vz7/unbundle11 &
+rm -rf /vz7/unbundle12 &
+rm -rf /vz7/unbundle13 &
+rm -rf /vz7/unbundle14 &
+rm -rf /vz7/unbundle15 &
+rm -rf /vz7/unbundle16 &
+rm -rf /vz7/unbundle17 &
+rm -rf /vz7/unbundle18 &
+rm -rf /vz7/unbundle19 &
+rm -rf /vz7/unbundle20
+
+cd vz7
+rm -rf unbundle1 &
+rm -rf unbundle2 &
+rm -rf unbundle3 &
+rm -rf unbundle4 &
+rm -rf unbundle5 &
+rm -rf unbundle6 &
+rm -rf unbundle7 &
+rm -rf unbundle8 &
+rm -rf unbundle9 &
+rm -rf unbundle10 &
+rm -rf unbundle11 &
+rm -rf unbundle12 &
+rm -rf unbundle13 &
+rm -rf unbundle14 &
+rm -rf unbundle15 &
+rm -rf unbundle16 &
+rm -rf unbundle17 &
+rm -rf unbundle18 &
+rm -rf unbundle19 &
+rm -rf unbundle20
+
+
+Unbundle TEST 16
+mkdir /vz7/unbundle1 /vz7/unbundle2 /vz7/unbundle3 /vz7/unbundle4 /vz7/unbundle5 /vz7/unbundle6 /vz7/unbundle7 /vz7/unbundle8 /vz7/unbundle9 /vz7/unbundle10 /vz7/unbundle11 /vz7/unbundle12 /vz7/unbundle13 /vz7/unbundle14 /vz7/unbundle15 /vz7/unbundle16
+
+cd /vz7/unbundle1 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle1.txt &
+cd /vz7/unbundle2 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle2.txt &
+cd /vz7/unbundle3 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle3.txt &
+cd /vz7/unbundle4 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle4.txt &
+cd /vz7/unbundle5 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle5.txt &
+cd /vz7/unbundle6 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle6.txt &
+cd /vz7/unbundle7 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle7.txt &
+cd /vz7/unbundle8 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle8.txt &
+cd /vz7/unbundle9 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle9.txt &
+cd /vz7/unbundle10 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle10.txt &
+cd /vz7/unbundle11 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle11.txt &
+cd /vz7/unbundle12 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle12.txt &
+cd /vz7/unbundle13 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle13.txt &
+cd /vz7/unbundle14 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle14.txt &
+cd /vz7/unbundle15 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle15.txt &
+cd /vz7/unbundle16 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle16.txt
+
+cd /vz7
+rm -rf /vz7/unbundle*
+
+
+Unbundle TEST 20
+mkdir /vz7/unbundle1 /vz7/unbundle2 /vz7/unbundle3 /vz7/unbundle4 /vz7/unbundle5 /vz7/unbundle6 /vz7/unbundle7 /vz7/unbundle8 /vz7/unbundle9 /vz7/unbundle10 /vz7/unbundle11 /vz7/unbundle12 /vz7/unbundle13 /vz7/unbundle14 /vz7/unbundle15 /vz7/unbundle16 /vz7/unbundle17 /vz7/unbundle18 /vz7/unbundle19 /vz7/unbundle20
+
+cd /vz7/unbundle1 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle1.txt &
+cd /vz7/unbundle2 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle2.txt &
+cd /vz7/unbundle3 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle3.txt &
+cd /vz7/unbundle4 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle4.txt &
+cd /vz7/unbundle5 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle5.txt &
+cd /vz7/unbundle6 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle6.txt &
+cd /vz7/unbundle7 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle7.txt &
+cd /vz7/unbundle8 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle8.txt &
+cd /vz7/unbundle9 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle9.txt &
+cd /vz7/unbundle10 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle10.txt &
+cd /vz7/unbundle11 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle11.txt &
+cd /vz7/unbundle12 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle12.txt &
+cd /vz7/unbundle13 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle13.txt &
+cd /vz7/unbundle14 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle14.txt &
+cd /vz7/unbundle15 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle15.txt &
+cd /vz7/unbundle16 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle16.txt &
+cd /vz7/unbundle17 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle17.txt &
+cd /vz7/unbundle18 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle18.txt &
+cd /vz7/unbundle19 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle19.txt &
+cd /vz7/unbundle20 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle20.txt
+
+cd /vz7
+
+
+Unbundle TEST 20
+mkdir /vz7/unbundle1 /vz7/unbundle2 /vz7/unbundle3 /vz7/unbundle4 /vz7/unbundle5 /vz7/unbundle6 /vz7/unbundle7 /vz7/unbundle8 /vz7/unbundle9 /vz7/unbundle10 /vz7/unbundle11 /vz7/unbundle12 /vz7/unbundle13 /vz7/unbundle14 /vz7/unbundle15 /vz7/unbundle16 /vz7/unbundle17 /vz7/unbundle18 /vz7/unbundle19 /vz7/unbundle20 /vz7/unbundle21 /vz7/unbundle22 /vz7/unbundle23 /vz7/unbundle24 /vz7/unbundle25
+
+cd /vz7/unbundle1 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle1.txt &
+cd /vz7/unbundle2 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle2.txt &
+cd /vz7/unbundle3 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle3.txt &
+cd /vz7/unbundle4 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle4.txt &
+cd /vz7/unbundle5 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle5.txt &
+cd /vz7/unbundle6 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle6.txt &
+cd /vz7/unbundle7 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle7.txt &
+cd /vz7/unbundle8 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle8.txt &
+cd /vz7/unbundle9 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle9.txt &
+cd /vz7/unbundle10 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle10.txt &
+cd /vz7/unbundle11 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle11.txt &
+cd /vz7/unbundle12 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle12.txt &
+cd /vz7/unbundle13 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle13.txt &
+cd /vz7/unbundle14 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle14.txt &
+cd /vz7/unbundle15 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle15.txt &
+cd /vz7/unbundle16 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle16.txt &
+cd /vz7/unbundle17 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle17.txt &
+cd /vz7/unbundle18 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle18.txt &
+cd /vz7/unbundle19 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle19.txt &
+cd /vz7/unbundle20 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle20.txt &
+cd /vz7/unbundle21 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle21.txt &
+cd /vz7/unbundle22 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle22.txt &
+cd /vz7/unbundle23 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle23.txt &
+cd /vz7/unbundle24 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle24.txt &
+cd /vz7/unbundle25 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle25.txt
+
+cd /vz7
+'''

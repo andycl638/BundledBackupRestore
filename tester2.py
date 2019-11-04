@@ -178,7 +178,32 @@ rm -rf unbundle21 &
 rm -rf unbundle22 &
 rm -rf unbundle23 &
 rm -rf unbundle24 &
-rm -rf unbundle25
+rm -rf unbundle25 &
+rm -rf unbundle26 &
+rm -rf unbundle27 &
+rm -rf unbundle28 &
+rm -rf unbundle29 &
+rm -rf unbundle30 &
+rm -rf unbundle31 &
+rm -rf unbundle32 &
+rm -rf unbundle33 &
+rm -rf unbundle34 &
+rm -rf unbundle35 &
+rm -rf unbundle36 &
+rm -rf unbundle37 &
+rm -rf unbundle38 &
+rm -rf unbundle39 &
+rm -rf unbundle40 &
+rm -rf unbundle41 &
+rm -rf unbundle42 &
+rm -rf unbundle43 &
+rm -rf unbundle44 &
+rm -rf unbundle45 &
+rm -rf unbundle46 &
+rm -rf unbundle47 &
+rm -rf unbundle48 &
+rm -rf unbundle49 &
+rm -rf unbundle50 &
 
 
 Unbundle TEST 16
@@ -264,7 +289,10 @@ cd /vz8/unbundle25 && time star -x -v -f /scale01/scratch/stars/test.star > /sca
 cd /vz8
 
 Unbundle TEST 40
-mkdir /vz8/unbundle1 /vz8/unbundle2 /vz8/unbundle3 /vz8/unbundle4 /vz8/unbundle5 /vz8/unbundle6 /vz8/unbundle7 /vz8/unbundle8 /vz8/unbundle9 /vz8/unbundle10 /vz8/unbundle11 /vz8/unbundle12 /vz8/unbundle13 /vz8/unbundle14 /vz8/unbundle15 /vz8/unbundle16 /vz8/unbundle17 /vz8/unbundle18 /vz8/unbundle19 /vz8/unbundle20 /vz8/unbundle21 /vz8/unbundle22 /vz8/unbundle23 /vz8/unbundle24 /vz8/unbundle25 /vz8/unbundle26 /vz8/unbundle27 /vz8/unbundle28 /vz8/unbundle29 /vz8/unbundle30 /vz8/unbundle31 /vz8/unbundle32 /vz8/unbundle33 /vz8/unbundle34 /vz8/unbundle35 /vz8/unbundle36 /vz8/unbundle37 /vz8/unbundle38 /vz8/unbundle39 /vz8/unbundle40
+mkdir /vz8/unbundle1 /vz8/unbundle2 /vz8/unbundle3 /vz8/unbundle4 /vz8/unbundle5 /vz8/unbundle6 /vz8/unbundle7 /vz8/unbundle8 /vz8/unbundle9 /vz8/unbundle10
+mkdir /vz8/unbundle11 /vz8/unbundle12 /vz8/unbundle13 /vz8/unbundle14 /vz8/unbundle15 /vz8/unbundle16 /vz8/unbundle17 /vz8/unbundle18 /vz8/unbundle19
+mkdir /vz8/unbundle20 /vz8/unbundle21 /vz8/unbundle22 /vz8/unbundle23 /vz8/unbundle24 /vz8/unbundle25 /vz8/unbundle26 /vz8/unbundle27 /vz8/unbundle28 /vz8/unbundle29
+mkdir /vz8/unbundle30 /vz8/unbundle31 /vz8/unbundle32 /vz8/unbundle33 /vz8/unbundle34 /vz8/unbundle35 /vz8/unbundle36 /vz8/unbundle37 /vz8/unbundle38 /vz8/unbundle39 /vz8/unbundle40
 
 cd /vz8/unbundle1 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle1.txt &
 cd /vz8/unbundle2 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle2.txt &
@@ -308,4 +336,91 @@ cd /vz8/unbundle39 && time star -x -v -f /scale01/scratch/stars/test.star > /sca
 cd /vz8/unbundle40 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle40.txt
 
 cd /vz8
+
+Unbundle TEST 50
+mkdir /vz8/unbundle1 /vz8/unbundle2 /vz8/unbundle3 /vz8/unbundle4 /vz8/unbundle5 /vz8/unbundle6 /vz8/unbundle7 /vz8/unbundle8 /vz8/unbundle9 /vz8/unbundle10 /vz8/unbundle11 /vz8/unbundle12 /vz8/unbundle13 /vz8/unbundle14 /vz8/unbundle15 /vz8/unbundle16 /vz8/unbundle17 /vz8/unbundle18 /vz8/unbundle19 /vz8/unbundle20 /vz8/unbundle21 /vz8/unbundle22 /vz8/unbundle23 /vz8/unbundle24 /vz8/unbundle25 /vz8/unbundle26 /vz8/unbundle27 /vz8/unbundle28 /vz8/unbundle29 /vz8/unbundle30 /vz8/unbundle31 /vz8/unbundle32 /vz8/unbundle33 /vz8/unbundle34 /vz8/unbundle35 /vz8/unbundle36 /vz8/unbundle37 /vz8/unbundle38 /vz8/unbundle39 /vz8/unbundle40 /vz8/unbundle41 /vz8/unbundle42 /vz8/unbundle43 /vz8/unbundle44 /vz8/unbundle45 /vz8/unbundle46 /vz8/unbundle47 /vz8/unbundle48 /vz8/unbundle49 /vz8/unbundle50
+
+cd /vz8/unbundle1 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle1.txt &
+cd /vz8/unbundle2 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle2.txt &
+cd /vz8/unbundle3 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle3.txt &
+cd /vz8/unbundle4 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle4.txt &
+cd /vz8/unbundle5 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle5.txt &
+cd /vz8/unbundle6 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle6.txt &
+cd /vz8/unbundle7 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle7.txt &
+cd /vz8/unbundle8 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle8.txt &
+cd /vz8/unbundle9 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle9.txt &
+cd /vz8/unbundle10 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle10.txt &
+cd /vz8/unbundle11 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle11.txt &
+cd /vz8/unbundle12 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle12.txt &
+cd /vz8/unbundle13 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle13.txt &
+cd /vz8/unbundle14 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle14.txt &
+cd /vz8/unbundle15 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle15.txt &
+cd /vz8/unbundle16 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle16.txt &
+cd /vz8/unbundle17 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle17.txt &
+cd /vz8/unbundle18 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle18.txt &
+cd /vz8/unbundle19 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle19.txt &
+cd /vz8/unbundle20 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle20.txt &
+cd /vz8/unbundle21 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle21.txt &
+cd /vz8/unbundle22 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle22.txt &
+cd /vz8/unbundle23 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle23.txt &
+cd /vz8/unbundle24 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle24.txt &
+cd /vz8/unbundle25 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle25.txt &
+cd /vz8/unbundle26 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle26.txt &
+cd /vz8/unbundle27 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle27.txt &
+cd /vz8/unbundle28 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle28.txt &
+cd /vz8/unbundle29 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle29.txt &
+cd /vz8/unbundle30 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle30.txt &
+cd /vz8/unbundle31 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle31.txt &
+cd /vz8/unbundle32 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle32.txt &
+cd /vz8/unbundle33 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle33.txt &
+cd /vz8/unbundle34 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle34.txt &
+cd /vz8/unbundle35 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle35.txt &
+cd /vz8/unbundle36 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle36.txt &
+cd /vz8/unbundle37 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle37.txt &
+cd /vz8/unbundle38 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle38.txt &
+cd /vz8/unbundle39 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle39.txt &
+cd /vz8/unbundle40 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle40.txt &
+cd /vz8/unbundle41 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle41.txt &
+cd /vz8/unbundle42 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle42.txt &
+cd /vz8/unbundle43 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle43.txt &
+cd /vz8/unbundle44 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle44.txt &
+cd /vz8/unbundle45 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle45.txt &
+cd /vz8/unbundle46 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle46.txt &
+cd /vz8/unbundle47 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle47.txt &
+cd /vz8/unbundle48 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle48.txt &
+cd /vz8/unbundle49 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle49.txt &
+cd /vz8/unbundle50 && time star -x -v -f /scale01/scratch/stars/test.star > /scale01/scratch/results/unbundle50.txt
+
+cd /vz8
+
+
+
+
+time rsync -a --delete blanktest/ unbundle1/
+
+time rsync -a --delete blanktest/ unbundle1/ &
+time rsync -a --delete blanktest/ unbundle2/ &
+time rsync -a --delete blanktest/ unbundle3/ &
+time rsync -a --delete blanktest/ unbundle4/ &
+time rsync -a --delete blanktest/ unbundle5/ &
+time rsync -a --delete blanktest/ unbundle6/ &
+time rsync -a --delete blanktest/ unbundle7/ &
+time rsync -a --delete blanktest/ unbundle8/ &
+time rsync -a --delete blanktest/ unbundle9/ &
+time rsync -a --delete blanktest/ unbundle10/ &
+time rsync -a --delete blanktest/ unbundle11/ &
+time rsync -a --delete blanktest/ unbundle12/ &
+time rsync -a --delete blanktest/ unbundle13/ &
+time rsync -a --delete blanktest/ unbundle14/ &
+time rsync -a --delete blanktest/ unbundle15/ &
+time rsync -a --delete blanktest/ unbundle16/ &
+time rsync -a --delete blanktest/ unbundle17/ &
+time rsync -a --delete blanktest/ unbundle18/ &
+time rsync -a --delete blanktest/ unbundle19/ &
+time rsync -a --delete blanktest/ unbundle20/ &
+time rsync -a --delete blanktest/ unbundle21/ &
+time rsync -a --delete blanktest/ unbundle22/ &
+time rsync -a --delete blanktest/ unbundle23/ &
+time rsync -a --delete blanktest/ unbundle24/ &
+time rsync -a --delete blanktest/ unbundle25/
 '''
