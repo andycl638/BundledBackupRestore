@@ -238,11 +238,11 @@ def parallel_file_gen3(args):
     print("Time elapsed for all process: %s" %elapsed)
 
 def test_small(root):
-    for num in range(1, 50000 +1):
-        fileName = "testfile" + str(num) + ".txt"
-        filePath = os.path.join(root, fileName)
+     for num in range(70000):
+        file = 'test' + str(num)
+        path = '/vz7/test/' + file + '.txt'
         #path = '/Users/andy/Documents/' + file + '.txt'
-        generate_big_random_bin_file(filePath, 1024*32)
+        generate_big_random_bin_file(path, 1024*100)
 
 if __name__ == '__main__':
     #if=/dev/randhigh of=/vsnap/vpool1/vz6/testfile1.txt bs=16k count=2
