@@ -163,7 +163,7 @@ def generate_file_ldeedee_unique(root, fileNum):
     for num in range(1, fileNum +1):
         fileName = "testfile" + str(num) + ".txt"
         filePath = os.path.join(root, fileName)
-        cmd = "/home/acheong/vsnapperf/ldeedee if=/dev/randhigh of=\"" + filePath + "\" bs=1G count=1"
+        cmd = "/home/acheong/vsnapperf/ldeedee if=/dev/randhigh of=\"" + filePath + "\" bs=32k count=1"
         print(cmd)
         p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         while p.poll() is None:
@@ -187,31 +187,24 @@ def generate_files_walk_dir(root, fileNum):
     all_dirs = get_all_dirs(root)
     parallel_file_gen3(all_dirs)
 
-def get_all_dirs(root):
+def get_all_dirs(dir):
     print("\nGet all folders")
-    print("path: %s" %root)
-    start = time.time()
+    print("path: %s" %dir)
     all_dirs = []
 
-    for root, dirs, files in os.walk(root):
-        for dir in dirs:
-            dir_path=os.path.join(root, dir)
-            print(dir_path)
-            all_dirs.append(dir_path)
+    for root, dirs, files in os.walk(dir):
+        all_dirs.append(root)
 
-    end = time.time()
-    elapsed = end - start
-    print("Time to gather all files: %s" %elapsed)
-    print("Got all dirs and size")
     return all_dirs
 
 def generate_file_ldeedee_unique2(root):
     start = time.time()
     time.sleep(1)
-    for num in range(1, 10 +1):
+    for num in range(1, 50000 +1):
         fileName = "testfile" + str(num) + ".txt"
         filePath = os.path.join(root, fileName)
-        cmd = "/home/acheong/vsnapperf/ldeedee if=/dev/randhigh of=\"" + filePath + "\" bs=1G count=1"
+
+        cmd = "/home/acheong/vsnapperf/ldeedee if=/dev/randhigh of=\"" + filePath + "\" bs=32k count=1"
         print(cmd)
         p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         while p.poll() is None:
@@ -223,12 +216,12 @@ def generate_file_ldeedee_unique2(root):
 
     elapsed = end - start
 
-    timeStr = "Time elapsed generate_...: %s" %elapsed
+    '''timeStr = "Time elapsed generate_...: %s" %elapsed
     filesNumStr = "\nNumber of files generate per process: 10"
     fileSizeStr = "\nSize of each file: 1GB"
     totalSize = "\nTotal files per folder: 10GB\n\n"
-    message = timeStr + filesNumStr + fileSizeStr + totalSize
-
+    message = timeStr + filesNumStr + fileSizeStr + totalSize'''
+    message = 'done'
     return message
 
 def parallel_file_gen3(args):
@@ -236,13 +229,20 @@ def parallel_file_gen3(args):
     start = time.time()
 
     with Pool(8) as p:
-        test = p.map(generate_file_ldeedee_unique2, args)
+        test = p.map(test_small, args)
 
     for message in test:
         print(message)
     end = time.time()
     elapsed = end - start
     print("Time elapsed for all process: %s" %elapsed)
+
+def test_small(root):
+     for num in range(70000):
+        file = 'test' + str(num)
+        path = '/vz7/test/' + file + '.txt'
+        #path = '/Users/andy/Documents/' + file + '.txt'
+        generate_big_random_bin_file(path, 1024*100)
 
 if __name__ == '__main__':
     #if=/dev/randhigh of=/vsnap/vpool1/vz6/testfile1.txt bs=16k count=2
@@ -256,12 +256,8 @@ if __name__ == '__main__':
     level5Name = "Level5-"
     level5Num = 2
     lvl5FileNum = 10
-    #generate_files_walk_dir("/vsnap/vpool1/vz8", 10)
-    for num in range(70000):
-        file = 'test' + str(num)
-        path = '/vz7/test/' + file + '.txt'
-        #path = '/Users/andy/Documents/' + file + '.txt'
-        generate_big_random_bin_file(path, 1024*100)
+    generate_files_walk_dir("/vsnap/vpool1/vz9", 10)
+
     #generate_big_random_bin_file("/vz8/2/testincr2.txt", 1024)
     #generate_big_random_bin_file("/vz8/4/testincr4.txt", 1024)
 #    generate_big_random_bin_file("/vz8/6/testincr6.txt", 1024)
