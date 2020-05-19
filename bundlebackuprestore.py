@@ -3,25 +3,17 @@ import argparse, os, sys, errno, time
 
 from bundler import Bundler
 from unbundler import Unbundler
-from dsmcwrapper import DsmcWrapper
 from parallelmgmt import ParallelMgmt
 from metadatajson import MetadataJson
 from stats import Stats
 
 metadatajson = MetadataJson()
-def dsmcplus():
+def bundlebackuprestore():
     parser = argparse.ArgumentParser()
     parser.add_argument('mode', choices=['backup', 'incr', 'restore'], help='backup to tsm server or restore to filer')
     parser.add_argument('source', help='source path to backup or restore')
     parser.add_argument('destination', help='destination path to backup or restore')
-    parser.add_argument('optfile', help='option file path')
     parser.add_argument('-p', '--parallelism', type=int, default=20, help='number of processor used to backup or restore')
-    parser.add_argument('-r', '--resourceutilization', type=int, default = 10, help='dsmc backup sessions controlled by resource utilization ')
-    parser.add_argument('-b', '--bundlersize', type=int, help='Average size in Gb of each bundler being backup to dsmc')
-
-    '''TESTING PARAMETERS'''
-    parser.add_argument('-s', '--scratch', action='store_true', help='run backup or restore to scratch space only')
-    parser.add_argument('-d', '--dsmc', action='store_true', help='run backup or restore to dsmc only')
 
     args = parser.parse_args()
 
@@ -32,24 +24,24 @@ def dsmcplus():
         mainbackup(args)
     elif args.mode == 'restore':
         mainrestore(args)
-    elif args.mode == 'incr':
-        mainincr(args)
+    #elif args.mode == 'incr':
+        #mainincr(args)
 
 def mainbackup(args):
     #Init bundler object
-    bundler = Bundler(args.source, args.destination, args.optfile)
+    bundler = Bundler(args.source, args.destination)
 
-    dest_path, dsm_opt, virtual_mnt_pt = bundler.create_vol()
+    #dest_path, dsm_opt, virtual_mnt_pt = bundler.create_vol()
 
     #update the destination path with new volume path
-    bundler.dest_path = dest_path
+    #bundler.dest_path = dest_path
 
     start = time.time()
 
-    controller = ParallelMgmt(int(args.parallelism), args.source, dest_path)
-    dsmc = DsmcWrapper(dest_path, args.resourceutilization, dsm_opt, virtual_mnt_pt, '')
+    controller = ParallelMgmt(int(args.parallelism), args.source, args.destination)
+
     backup_time = time.time()
-    return_q, elapsed = controller.start_controller(bundler, dsmc)
+    return_q, elapsed = controller.start_controller(bundler)
 
     aggregate = 0.0
     mib = 0
@@ -71,37 +63,26 @@ def mainbackup(args):
 
 def mainrestore(args):
     start = time.time()
-    unbundler = Unbundler(args.source, args.destination, args.optfile)
-    source_path = unbundler.create_vol()
+    unbundler = Unbundler(args.source, args.destination)
 
-    #update the destination path with new volume path
-    unbundler.src_path = source_path
+    restore_list = unbundler.get_all_volume()
+    #restore_list = get_restore_list(data)
+    if len(restore_list) == 0:
+        print("No files were found to restore")
+        sys.exit()
 
-    dsmc = DsmcWrapper('', int(args.resourceutilization), '', '', unbundler.src_path)
-    controller = ParallelMgmt(int(args.parallelism), args.destination, source_path)
-    return_q, elapsed = controller.start_controller_res(unbundler, dsmc)
-    aggregate = 0.0
-    mib = 0
-    while not return_q.empty():
-        results = return_q.get()
-        mib = mib + results
+    unbundle_list = unbundler.build_list(restore_list)
+    proc_obj = ParallelMgmt.parallel_proc(unbundler, unbundle_list, args.mode, int(args.parallelism))
+    unbundler.parallel_unbundle(proc_obj, args.parallelism)
 
-    print("\n---- Aggregate Stats ----")
-    Stats.display_gib_stats(mib, elapsed)
-
-    unbundler.delete_bundle()
-
-    end = time.time()
-
-    total_elapsed_time = end - start
-
+'''
 def mainincr(args):
     #Init bundler object
-    bundler = Bundler(args.source, args.destination, args.optfile)
+    bundler = Bundler(args.source, args.destination)
 
     dest_path, dsm_opt, virtual_mnt_pt = bundler.create_vol()
 
-    dsmc = DsmcWrapper(dest_path, args.resourceutilization, dsm_opt, virtual_mnt_pt, '')
+   
     #update the destination path with new volume path
     bundler.dest_path = dest_path
 
@@ -126,9 +107,6 @@ def mainincr(args):
                     print(time.ctime(os.path.getctime(file_path)))
 
     message_cmd, elapsed_proc_time, tar_path = Bundler.incr_bundle_set(mod_files, dest_path)
-    backup = dsmc.backup(tar_path)
-
-    transfer_rate = dsmc.cmd(backup)
 
     aggregate = 0.0
     mib = 0
@@ -137,7 +115,7 @@ def mainincr(args):
 
     end = time.time()
     total_elapsed_time = end-start
-
+'''
 def check_input(args):
     print("\nInput Variables\n")
     if os.path.isdir(args.source):
@@ -150,13 +128,8 @@ def check_input(args):
     else:
         print("Destination path is not valid: %s" %args.destination)
         sys.exit()
-    if os.path.exists(args.optfile):
-        print("Option file path: %s" %args.optfile)
-    else:
-        print("Option file path is not valid: %s" %args.optfile)
-        sys.exit()
     print("Parallelism: %s" %args.parallelism)
-    print("Resource Utilization: %s" %args.resourceutilization)
+  
     print("\n")
 
 
@@ -167,14 +140,14 @@ def set_parallelism(args):
     return int(args.parallelism)
 
 if __name__ == '__main__':
-    dsmcplus()
+    bundlebackuprestore()
 
-    #python3 dsmcplus.py backup /Users/andy/Documents/tester/ /Users/andy/Documents/tester/ /Users/andy/Documents/tester/optfile.json -p 16 -r 10 -s
-    #python3 dsmcplus.py backup /vz9/vz8 /scale01/scratch/ /scale01/scratch/optfile.json -p 16 -r 10
-    #python3 dsmcplus.py restore /scale01/scratch/ / /scale01/scratch/optfile.json -p 16
+    #python3 bundlebackuprestore.py backup /Users/andy/Documents/tester/ /Users/andy/Documents/tester/ -p 16 -r 10 -s
+    #python3 bundlebackuprestore.py backup /vz9/vz8 /scale01/scratch/  -p 16 -r 10
+    #python3 bundlebackuprestore.py restore /scale01/scratch/ / -p 16
 
-    #python3 dsmcplus.py restore /scale01/scratch/ /vz9 -p 8
-    #python3 dsmcplus.py backup /vz8 /scale01/scratch/ -p 8
+    #python3 bundlebackuprestore.py restore /scale01/scratch/ /vz9 -p 8
+    #python3 bundlebackuprestore.py backup /vz8 /scale01/scratch/ -p 8
 
-    #python3 dsmcplus.py restore /scale01/scratch/ / /scale01/scratch/optfile.json -p 16
-    #python3 dsmcplus.py backup /vz8 /scale01/scratch/ /scale01/scratch/optfile.json -p 8 -r 10
+    #python3 bundlebackuprestore.py restore /scale01/scratch/ / -p 16
+    #python3 bundlebackuprestore.py backup /vz8 /scale01/scratch/ -p 8 -r 10

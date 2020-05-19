@@ -12,18 +12,23 @@ class ParallelMgmt():
         self.src_path = src_path
         self.dest_path = dest_path
 
+    # producing a list to backup.
     def producer(self, queue):
         print("\nProducer")
         start = time.time()
         dir_list = []
         set_list = []
 
+        #Scan source path for all dirs
         for root, dirs, files in os.walk(self.src_path):
+            #Create a  set list with source path and destination path
             set_list.append(root)
             set_list.append(self.dest_path)
 
+            # Add set to array list
             dir_list.append(set_list)
             set_list = []
+            #When array list meets process limit, add it to queue to consume list
             if len(dir_list) == self.procs:
                 queue.put(dir_list)
                 dir_list = []
@@ -43,22 +48,25 @@ class ParallelMgmt():
         print("\nTime to gather all files: %s" %elapsed)
         return "producer done"
 
-    def consumer(self, queue, bundler, dsmc, return_q):
+
+    def consumer(self, queue, bundler, return_q):
         print("\nConsumer")
         backup_time = time.time()
         results = []
         while True:
-            list = queue.get()
-            print(list)
+            #waiting to get a list from the queue
+            backup_list = queue.get()
+            print(backup_list)
 
-            if list is None:
+            if backup_list is None:
                 #print("list is none")
                 break
 
             try:
                 start = time.time()
+                #Start bundling the backup to destination path
                 with mp.Pool(self.procs) as pool:
-                    proc_obj = pool.map(bundler.bundle_func, list)
+                    proc_obj = pool.map(bundler.bundle_func, backup_list)
 
                 end = time.time()
                 elapsed = end - start
@@ -74,25 +82,19 @@ class ParallelMgmt():
                     total_data_transferred += stat.bundled_size
 
                 total_throughput, mib = Stats.display_total_stats(total_data_transferred, elapsed)
-                dsmc.write_virtualmnt()
-                backup = dsmc.backup(backup_list)
-
-                transfer_rate = dsmc.cmd(backup, None)
-                transfer_rate_mib = float(transfer_rate)/1024
-                aggregate = (total_throughput + transfer_rate_mib)/2
+                
+                aggregate = (total_throughput)/2
 
                 results = (float(aggregate), mib, bundled_file_arr)
                 return_q.put(results)
             finally:
                 queue.task_done()
 
-    def producer_res(self, queue, dsmc):
+    def producer_res(self, queue):
         print("\nProducer restore")
         start = time.time()
 
-        restore = dsmc.restore()
-        transfer_rate = dsmc.cmd(restore, queue)
-
+       
         #poisonpill
         print('\nNo more data to restore. Sending poison pill')
         queue.put(None)
@@ -164,14 +166,14 @@ class ParallelMgmt():
                 queue.task_done()
 
             if list is None:
-                break;
+                break
 
-    def start_controller(self, bundler, dsmc):
+    def start_controller(self, bundler):
         start = time.time()
         return_q = mp.Queue()
         with mp.Pool(3) as pool:
             data_q = mp.JoinableQueue()
-            c = pool.Process(target=ParallelMgmt.consumer, args=(self, data_q, bundler, dsmc, return_q, ))
+            c = pool.Process(target=ParallelMgmt.consumer, args=(self, data_q, bundler, return_q, ))
             p = pool.Process(target=ParallelMgmt.producer, args=(self, data_q, ))
             c.start()
             p.start()
@@ -183,13 +185,13 @@ class ParallelMgmt():
         elapsed = end-start
         return return_q, elapsed
 
-    def start_controller_res(self, unbundler, dsmc):
+    def start_controller_res(self, unbundler):
         start = time.time()
         return_q = mp.Queue()
         with mp.Pool(3) as pool:
             data_q = mp.JoinableQueue()
             c = pool.Process(target=ParallelMgmt.consumer_res, args=(self, data_q, unbundler, return_q, ))
-            p = pool.Process(target=ParallelMgmt.producer_res, args=(self, data_q, dsmc, ))
+            p = pool.Process(target=ParallelMgmt.producer_res, args=(self, data_q, ))
             c.start()
             p.start()
 

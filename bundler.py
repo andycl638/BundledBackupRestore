@@ -19,23 +19,21 @@ class Bundler():
         Star: linux unique standard tape archiver
     '''
 
-    def __init__(self, src_path, dest_path, optfile):
+    def __init__(self, src_path, dest_path):
         '''
             Initialize Bundler object
 
             Instance Variable:
                 src_path    -- The filer path containing volumes/files that need to be backed up
                 dest_path   -- The scratch path where the bundled files will be sent to
-                optfile     -- option file used to group filespace management
         '''
         self.src_path = src_path
         self.dest_path = dest_path
-        self.optfile = optfile
-
+    
     def scan_dir(src_path, dest_path, dir_list):
         '''
             Prepares a list of directories that will be bundled with os.scandir
-            Recursively call itself until it gets all direcotries
+            Recursively call itself until it gets all directories
 
             Arguments:
                 src_path           -- path to scan
@@ -200,22 +198,6 @@ class Bundler():
         '''
         bundle_size = os.path.getsize(src)
         return bundle_size
-
-    def create_vol(self):
-        optfiledata = MetadataJson.deserialize_json(self.optfile)
-        group = optfiledata['group']
-        filer = optfiledata['filer']
-        volume = optfiledata['volume']
-        path = os.path.join(self.dest_path, group, filer, volume)
-        virtual_mnt_pt = os.path.join(self.dest_path, group)
-        print(path)
-        try:
-            os.makedirs(path)
-        except OSError as exc:
-            if exc.errno != errno.EEXIST:
-                raise
-            pass
-        return path, optfiledata['dsmoptfile'], virtual_mnt_pt
 
     def delete_bundle(self):
         '''

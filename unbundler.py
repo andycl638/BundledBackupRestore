@@ -18,7 +18,7 @@ class Unbundler():
         Star: linux unique standard tape archiver
     '''
 
-    def __init__(self, src_path, dest_path, optfile):
+    def __init__(self, src_path, dest_path):
         '''
             Initialize Unbundler object
 
@@ -30,7 +30,6 @@ class Unbundler():
 
         self.src_path = src_path
         self.dest_path = dest_path
-        self.optfile = optfile
 
     def build_list(self, src_list):
         '''
@@ -202,16 +201,3 @@ class Unbundler():
         except OSError as e:
             if e.errno != errno.ENOENT:
                 raise
-
-    def create_vol(self):
-        optfiledata = MetadataJson.deserialize_json(self.optfile)
-        group = optfiledata['group']
-        path = os.path.join(self.src_path, group)
-        print("\nCreating group directory: " + path)
-        try:
-            os.makedirs(path)
-        except OSError as exc:
-            if exc.errno != errno.EEXIST:
-                raise
-            pass
-        return path
