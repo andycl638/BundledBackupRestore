@@ -15,8 +15,8 @@ def dsmcplus():
     parser.add_argument('source', help='source path to backup or restore')
     parser.add_argument('destination', help='destination path to backup or restore')
     parser.add_argument('optfile', help='option file path')
-    parser.add_argument('-p', '--parallelism', type=int, default=4, help='number of processor used to backup or restore')
-    parser.add_argument('-r', '--resourceutilization', type=int, help='dsmc backup sessions controlled by resource utilization ')
+    parser.add_argument('-p', '--parallelism', type=int, default=20, help='number of processor used to backup or restore')
+    parser.add_argument('-r', '--resourceutilization', type=int, default = 10, help='dsmc backup sessions controlled by resource utilization ')
     parser.add_argument('-b', '--bundlersize', type=int, help='Average size in Gb of each bundler being backup to dsmc')
 
     '''TESTING PARAMETERS'''
@@ -27,7 +27,7 @@ def dsmcplus():
 
     check_input(args)
 
-    print("mode: " + args.mode)
+    print("Mode: " + args.mode)
     if args.mode == 'backup':
         mainbackup(args)
     elif args.mode == 'restore':
@@ -59,25 +59,15 @@ def mainbackup(args):
         results = return_q.get()
         aggregate = aggregate + results[0]
         mib = mib + results[1]
-        #for result in results[2]:
-            #bundled_file_arr.append(result)
 
     bundler.delete_star()
 
     end = time.time()
     total_elapsed_time = end-start
     data = metadatajson.create_obj(backup_time, bundled_file_arr)
-    #data['bundled_files'] = bundled_file_arr
-    #data['backup_time'] = backup_time
 
-    #print("\nCreating json metadata file")
-    #print("backup time: %s" % time.ctime(backup_time))
-    #metadatajson.write_to_file(data, bundler.dest_path)
-
-    #Stats.overall_backup_stats(elapsed, aggregate)
     print("\n---- Aggregate Stats ----")
     Stats.display_gib_stats(mib, elapsed)
-    #Stats.normalize_gib(elapsed, aggregate)
 
 def mainrestore(args):
     start = time.time()
@@ -87,7 +77,7 @@ def mainrestore(args):
     #update the destination path with new volume path
     unbundler.src_path = source_path
 
-    dsmc = DsmcWrapper('', args.resourceutilization, '', '', unbundler.src_path)
+    dsmc = DsmcWrapper('', int(args.resourceutilization), '', '', unbundler.src_path)
     controller = ParallelMgmt(int(args.parallelism), args.destination, source_path)
     return_q, elapsed = controller.start_controller_res(unbundler, dsmc)
     aggregate = 0.0
@@ -98,28 +88,12 @@ def mainrestore(args):
 
     print("\n---- Aggregate Stats ----")
     Stats.display_gib_stats(mib, elapsed)
-    #restore = dsmc.restore()
-#    transfer_rate = dsmc.cmd(restore)
-
-    #data = metadatajson.deserialize_json(json_file_path)
-    #unbundler = Unbundler(unbundler.src_path, args.destination)
-    #restore_list = unbundler.get_all_volume()
-    #restore_list = get_restore_list(data)
-    #if len(restore_list) == 0:
-        #print("No files were found to restore")
-        #sys.exit()
-
-    #unbundle_list = unbundler.build_list(restore_list)
-    #proc_obj, elapsed = ParallelMgmt.parallel_proc(unbundler, unbundle_list, args.mode, int(args.parallelism))
-    #total_throughput = unbundler.parallel_unbundle(proc_obj, args.parallelism, elapsed)
 
     unbundler.delete_bundle()
 
     end = time.time()
 
     total_elapsed_time = end - start
-    #aggregate = Stats.overall_stats(total_elapsed_time, transfer_rate, total_throughput)
-    #Stats.poc_proof(total_elapsed_time, aggregate)
 
 def mainincr(args):
     #Init bundler object
@@ -136,10 +110,7 @@ def mainincr(args):
     metadata_file = metadatajson.get_metadata_file(dest_path)
 
     data = metadatajson.deserialize_json(metadata_file)
-    #print(data)
-    #controller = ParallelMgmt(int(args.parallelism), args.source, dest_path)
-    #dsmc = DsmcWrapper(dest_path, args.resourceutilization, dsm_opt, virtual_mnt_pt, '')
-    #return_q, elapsed = controller.start_controller(bundler, dsmc)
+
     backup_time = data['backup_time']
     print(time.ctime(backup_time))
 
@@ -167,11 +138,8 @@ def mainincr(args):
     end = time.time()
     total_elapsed_time = end-start
 
-    #Stats.overall_backup_stats(elapsed, aggregate)
-    #Stats.display_gib_stats(mib, elapsed)
-    #Stats.normalize_gib(elapsed, aggregate)
-
 def check_input(args):
+    print("\nInput Variables\n")
     if os.path.isdir(args.source):
         print("Source Path: %s" %args.source)
     else:
@@ -187,6 +155,16 @@ def check_input(args):
     else:
         print("Option file path is not valid: %s" %args.optfile)
         sys.exit()
+    print("Parallelism: %s" %args.parallelism)
+    print("Resource Utilization: %s" %args.resourceutilization)
+    print("\n")
+
+
+def set_parallelism(args):
+    if args.parallelism == 0 or args.parallelism == None:
+        print("using default value: 20")
+        return 20
+    return int(args.parallelism)
 
 if __name__ == '__main__':
     dsmcplus()

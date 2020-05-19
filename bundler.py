@@ -32,6 +32,26 @@ class Bundler():
         self.dest_path = dest_path
         self.optfile = optfile
 
+    def scan_dir(src_path, dest_path, dir_list):
+        '''
+            Prepares a list of directories that will be bundled with os.scandir
+            Recursively call itself until it gets all direcotries
+
+            Arguments:
+                src_path           -- path to scan
+                dest_path          -- destination path added to tuple
+                dir_list           -- tuple with source dir and destination
+
+        '''
+        set_list = []
+        for entry in os.scandir(src_path):
+            if entry.is_dir(follow_symlinks=False):
+                set_list.append(entry.path)
+                set_list.append(dest_path)
+                dir_list.append(set_list)
+                set_list = []
+                yield from scan_scandir2(entry.path, dest_path, dir_list)
+
     def get_dirs_tuple(self):
         '''
             Prepares a list of directories that will be bundled
@@ -39,17 +59,19 @@ class Bundler():
             Returns
                 dir_list    -- tuple with source dir and destination
         '''
-        print("\nget a list of all the dirs that needs to be backed up")
         print("path: %s" %self.src_path)
         start = time.time()
         dir_list = []
         set_list = []
 
-        for root, dirs, files in os.walk(self.src_path):
-            set_list.append(root)
-            set_list.append(self.dest_path)
-            dir_list.append(set_list)
-            set_list = []
+        #addind the root path to the tuple
+        set_list.append(self.src_path)
+        set_list.append(self.dest_path)
+        dir_list.append(set_list)
+
+        #scan the given src_path for all directories
+        for entry in scan_dir(self.src_path, self.dest_path, dir_list):
+            print(entry)
 
         end = time.time()
         elapsed = end - start
@@ -92,32 +114,15 @@ class Bundler():
         stat = Stats()
         start = time.time()
         proc_name = multiprocessing.current_process().name
-        #backup_list = []
-        #bundle_size = 0
+
         cmd, elapsed_proc_time, tar_path = Bundler.bundle_file_set(dir_list[0], dir_list[1])
 
         end = time.time()
         elapsed = end - start
 
-        #backup_list.append(tar_path)
-
-        #bundled_file_data = {}
-        #volume_path_arr = []
-        #file_path_arr = []
         tar_size = Bundler.get_bundle_size(tar_path)
 
-        #bundled_file_data  = MetadataJson.create_file_obj(tar_path, tar_size, dir_list[0])
         bundled_file_data = {}
-        '''
-        bundled_file_data['name'] = tar_path
-        bundled_file_data['size'] = tar_size
-        bundled_file_data['volume_paths'] = volume_path_arr
-        bundled_file_data['file_paths'] = file_path_arr
-        volume_path_arr.append(dir_list[0])
-
-        for file in os.listdir(dir_list[0]):
-            if os.path.isfile(os.path.join(dir_list[0], file)):
-                file_path_arr.append(file)'''
 
         stat.capture_stats(elapsed_proc_time, tar_size, 0, tar_path, proc_name, cmd, "", end)
 
@@ -137,9 +142,6 @@ class Bundler():
                 elapsed_proc_time   -- The elapsed time of the subprocess cmd
                 tar_path            -- The archived file path
         '''
-
-        #print("bundle the file set into tar")
-
         static_tar_name = "vzStar"
         unique_name = static_tar_name + str(time.time()) + ".star"
 
@@ -249,13 +251,38 @@ class Bundler():
             for bundle in bundle_list:
                 if bundle.endswith('.star'):
                     os.remove(os.path.join(self.dest_path, bundle))
-            #os.remove(src)
+
             message = "\nDeleted bundles in: " + self.dest_path
             print(message)
         except OSError as e:
             if e.errno != errno.ENOENT: # errno.ENOENT = no such file or directory
                 raise # re-raise exception if a different error occurred
 '''
+
+    def get_dirs_tuple(self):
+
+            Prepares a list of directories that will be bundled
+
+            Returns
+                dir_list    -- tuple with source dir and destination
+
+        print("\nget a list of all the dirs that needs to be backed up")
+        print("path: %s" %self.src_path)
+        start = time.time()
+        dir_list = []
+        set_list = []
+
+        for root, dirs, files in os.walk(self.src_path):
+            set_list.append(root)
+            set_list.append(self.dest_path)
+            dir_list.append(set_list)
+            set_list = []
+
+        end = time.time()
+        elapsed = end - start
+        print("Time to gather all files: %s" %elapsed)
+        return dir_list
+
     @classmethod
     def parallel_bundler(self, proc_obj, total_size, path, elapsed):
 

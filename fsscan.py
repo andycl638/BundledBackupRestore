@@ -104,14 +104,9 @@ def scan_pathlib(path):
     for file in dir.iterdir():
         print(file)
 
-if __name__ == '__main__':
-
-    path = '/Users/andy/Documents/tester'
-
-    if platform == "linux" or platform == "linux2":
-        path = "/vz9"
 
 
+def test_perf(path):
     file_stat, scan_time = scan_scandir_wrapper(path)
     write_file_time = write_to_file(path, file_stat)
 
@@ -147,6 +142,78 @@ if __name__ == '__main__':
     print(scan_time)
     print("write_file_time")
     print(write_file_time)
+
+def scan_dir(src_path, dest_path, dir_list):
+
+    set_list = []
+    for entry in os.scandir(src_path):
+        if entry.is_dir(follow_symlinks=False):
+            set_list.append(entry.path)
+            set_list.append(dest_path)
+            dir_list.append(set_list)
+            set_list = []
+            yield from scan_dir(entry.path, dest_path, dir_list)
+
+def get_dirs_tuple(src_path, dest_path):
+    print("path: %s" %src_path)
+    start = time.time()
+    dir_list = []
+    set_list = []
+
+    #addind the root path to the tuple
+    set_list.append(src_path)
+    set_list.append(dest_path)
+    dir_list.append(set_list)
+
+    #scan the given src_path for all directories
+    for entry in scan_dir(src_path, dest_path, dir_list):
+        print(entry)
+
+    end = time.time()
+    elapsed = end - start
+    print("Time to gather all files: %s" %elapsed)
+
+    return dir_list
+
+
+def test1(src_path):
+    dir_list = []
+    set_list = []
+
+    for root, dirs, files in os.walk(src_path):
+        set_list.append(root)
+        set_list.append("dest_path")
+        dir_list.append(set_list)
+        set_list = []
+
+    return dir_list
+
+if __name__ == '__main__':
+
+    path = '/Users/andy/Documents/tester'
+
+    if platform == "linux" or platform == "linux2":
+        path = "/vsnap/vpool1/vz7"
+
+    start2 = time.time()
+
+    print(get_dirs_tuple(path, "dest_path"))
+    end2 = time.time()
+    elapsed2 = end2-start2
+    print("\n\nSecond: scandir\n")
+    print(elapsed2)
+    print("\n\n")
+
+    start1 = time.time()
+    test1(path)
+    end1 = time.time()
+    elapsed1 = end1-start1
+    print("\n\nFirst: os.walk\n")
+    print(elapsed1)
+    print("\n\n")
+
+
+
 
 
     #find u -type f -print0 | xargs -0 stat --format "%n INODE: %i SIZE: %s MTIME: %Y"

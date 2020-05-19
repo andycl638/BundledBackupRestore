@@ -13,7 +13,7 @@ class ParallelMgmt():
         self.dest_path = dest_path
 
     def producer(self, queue):
-        print("Producer")
+        print("\nProducer")
         start = time.time()
         dir_list = []
         set_list = []
@@ -40,11 +40,11 @@ class ParallelMgmt():
         #print("No more dirs")
         end = time.time()
         elapsed = end - start
-        print("Time to gather all files: %s" %elapsed)
+        print("\nTime to gather all files: %s" %elapsed)
         return "producer done"
 
     def consumer(self, queue, bundler, dsmc, return_q):
-        print("Consumer")
+        print("\nConsumer")
         backup_time = time.time()
         results = []
         while True:
@@ -87,24 +87,24 @@ class ParallelMgmt():
                 queue.task_done()
 
     def producer_res(self, queue, dsmc):
-        print("Producer restore")
+        print("\nProducer restore")
         start = time.time()
 
         restore = dsmc.restore()
         transfer_rate = dsmc.cmd(restore, queue)
 
         #poisonpill
-        print('sending poison pill')
+        print('\nNo more data to restore. Sending poison pill')
         queue.put(None)
 
         #print("No more dirs")
         end = time.time()
         elapsed = end - start
-        print("Time to gather all files: %s" %elapsed)
+        print("\nTime to gather all files: %s" %elapsed)
         return "producer done"
 
     def consumer_res(self, queue, unbundler, return_q):
-        print("Consumer")
+        print("\nConsumer")
         backup_time = time.time()
         results = []
         restore_list = []
@@ -165,37 +165,6 @@ class ParallelMgmt():
 
             if list is None:
                 break;
-            '''try:
-                start = time.time()
-                with mp.Pool(self.procs) as pool:
-                    proc_obj = pool.map(obj.unbundle_func, list)
-
-                end = time.time()
-                elapsed = end - start
-                backup_list = ''
-                data = {}
-                bundled_file_arr = []
-                total_data_transferred = 0
-
-                for bundled_file_data, stat, tar_path in proc_obj:
-                    backup_list = backup_list + str(tar_path) + ' '
-                    bundled_file_arr.append(bundled_file_data)
-                    stat.display_stats_bundle()
-                    total_data_transferred += stat.bundled_size
-
-                total_throughput, mib = Stats.display_total_stats(total_data_transferred, elapsed)
-                dsmc.write_virtualmnt()
-                backup = dsmc.backup(backup_list)
-
-                transfer_rate = dsmc.cmd(backup)
-                transfer_rate_mib = float(transfer_rate)/1024
-                aggregate = (total_throughput + transfer_rate_mib)/2
-
-                results = (float(aggregate), mib, bundled_file_arr)
-                return_q.put(results)
-            finally:
-                queue.task_done()'''
-
 
     def start_controller(self, bundler, dsmc):
         start = time.time()
