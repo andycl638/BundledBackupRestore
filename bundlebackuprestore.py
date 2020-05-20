@@ -10,9 +10,9 @@ from stats import Stats
 metadatajson = MetadataJson()
 def bundlebackuprestore():
     parser = argparse.ArgumentParser()
-    parser.add_argument('mode', choices=['backup', 'incr', 'restore'], help='backup to tsm server or restore to filer')
-    parser.add_argument('source', help='source path to backup or restore')
-    parser.add_argument('destination', help='destination path to backup or restore')
+    parser.add_argument('mode', choices=['backup', 'incr', 'restore'], help='backup or restore data')
+    parser.add_argument('source', help='source path of data to backup or restore')
+    parser.add_argument('destination', help='destination path of data to backup or restore')
     parser.add_argument('-p', '--parallelism', type=int, default=20, help='number of processor used to backup or restore')
 
     args = parser.parse_args()
@@ -31,11 +31,6 @@ def mainbackup(args):
     #Init bundler object
     bundler = Bundler(args.source, args.destination)
 
-    #dest_path, dsm_opt, virtual_mnt_pt = bundler.create_vol()
-
-    #update the destination path with new volume path
-    #bundler.dest_path = dest_path
-
     start = time.time()
 
     controller = ParallelMgmt(int(args.parallelism), args.source, args.destination)
@@ -45,7 +40,7 @@ def mainbackup(args):
 
     aggregate = 0.0
     mib = 0
-    data = {}
+    #data = {}
     bundled_file_arr = []
     while not return_q.empty():
         results = return_q.get()
@@ -58,8 +53,9 @@ def mainbackup(args):
     total_elapsed_time = end-start
     data = metadatajson.create_obj(backup_time, bundled_file_arr)
 
-    print("\n---- Aggregate Stats ----")
-    Stats.display_gib_stats(mib, elapsed)
+    print(total_elapsed_time)
+
+ 
 
 def mainrestore(args):
     start = time.time()
@@ -73,7 +69,11 @@ def mainrestore(args):
 
     unbundle_list = unbundler.build_list(restore_list)
     proc_obj = ParallelMgmt.parallel_proc(unbundler, unbundle_list, args.mode, int(args.parallelism))
-    unbundler.parallel_unbundle(proc_obj, args.parallelism)
+
+    end = time.time()
+    total_elapsed_time = end-start
+
+    unbundler.parallel_unbundle(proc_obj, total_elapsed_time)
 
 '''
 def mainincr(args):

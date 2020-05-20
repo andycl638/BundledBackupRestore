@@ -51,7 +51,7 @@ class ParallelMgmt():
 
     def consumer(self, queue, bundler, return_q):
         print("\nConsumer")
-        backup_time = time.time()
+        
         results = []
         while True:
             #waiting to get a list from the queue
@@ -71,7 +71,7 @@ class ParallelMgmt():
                 end = time.time()
                 elapsed = end - start
                 backup_list = ''
-                data = {}
+               
                 bundled_file_arr = []
                 total_data_transferred = 0
 
@@ -90,6 +90,7 @@ class ParallelMgmt():
             finally:
                 queue.task_done()
 
+    #not used
     def producer_res(self, queue):
         print("\nProducer restore")
         start = time.time()
@@ -105,9 +106,10 @@ class ParallelMgmt():
         print("\nTime to gather all files: %s" %elapsed)
         return "producer done"
 
+    #not used
     def consumer_res(self, queue, unbundler, return_q):
         print("\nConsumer")
-        backup_time = time.time()
+        
         results = []
         restore_list = []
 
@@ -185,23 +187,7 @@ class ParallelMgmt():
         elapsed = end-start
         return return_q, elapsed
 
-    def start_controller_res(self, unbundler):
-        start = time.time()
-        return_q = mp.Queue()
-        with mp.Pool(3) as pool:
-            data_q = mp.JoinableQueue()
-            c = pool.Process(target=ParallelMgmt.consumer_res, args=(self, data_q, unbundler, return_q, ))
-            p = pool.Process(target=ParallelMgmt.producer_res, args=(self, data_q, ))
-            c.start()
-            p.start()
-
-            p.join()
-            c.join()
-        end = time.time()
-
-        elapsed = end-start
-        return return_q, elapsed
-
+    
     @staticmethod
     def parallel_proc(obj, list, mode, procs):
         '''
