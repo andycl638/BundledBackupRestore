@@ -47,7 +47,6 @@ def consumer(queue):
             with mp.Pool(8) as pool:
                 proc_obj = pool.map(bundle_func, list)
             print(proc_obj)
-            print("run dsmc")
         finally:
             print("enter finally")
             queue.task_done()
