@@ -19,65 +19,18 @@ class Bundler():
         Star: linux unique standard tape archiver
     '''
 
-    def __init__(self, src_path, dest_path, optfile):
+    def __init__(self, src_path, dest_path):
         '''
             Initialize Bundler object
 
             Instance Variable:
                 src_path    -- The filer path containing volumes/files that need to be backed up
                 dest_path   -- The scratch path where the bundled files will be sent to
-                optfile     -- option file used to group filespace management
         '''
         self.src_path = src_path
         self.dest_path = dest_path
-        self.optfile = optfile
-
-    def scan_dir(src_path, dest_path, dir_list):
-        '''
-            Prepares a list of directories that will be bundled with os.scandir
-            Recursively call itself until it gets all direcotries
-
-            Arguments:
-                src_path           -- path to scan
-                dest_path          -- destination path added to tuple
-                dir_list           -- tuple with source dir and destination
-
-        '''
-        set_list = []
-        for entry in os.scandir(src_path):
-            if entry.is_dir(follow_symlinks=False):
-                set_list.append(entry.path)
-                set_list.append(dest_path)
-                dir_list.append(set_list)
-                set_list = []
-                yield from scan_scandir2(entry.path, dest_path, dir_list)
-
-    def get_dirs_tuple(self):
-        '''
-            Prepares a list of directories that will be bundled
-
-            Returns
-                dir_list    -- tuple with source dir and destination
-        '''
-        print("path: %s" %self.src_path)
-        start = time.time()
-        dir_list = []
-        set_list = []
-
-        #addind the root path to the tuple
-        set_list.append(self.src_path)
-        set_list.append(self.dest_path)
-        dir_list.append(set_list)
-
-        #scan the given src_path for all directories
-        for entry in scan_dir(self.src_path, self.dest_path, dir_list):
-            print(entry)
-
-        end = time.time()
-        elapsed = end - start
-        print("Time to gather all files: %s" %elapsed)
-        return dir_list
-
+    
+   
     def get_dirs(self):
         '''
             Prepares a list of directories to search for changed files
@@ -95,7 +48,7 @@ class Bundler():
 
         end = time.time()
         elapsed = end - start
-        #print("Time to gather all files: %s" %elapsed)
+        print("Time to gather all files: %s" %elapsed)
         return dir_list
 
     def bundle_func(self, dir_list):
@@ -200,22 +153,6 @@ class Bundler():
         '''
         bundle_size = os.path.getsize(src)
         return bundle_size
-
-    def create_vol(self):
-        optfiledata = MetadataJson.deserialize_json(self.optfile)
-        group = optfiledata['group']
-        filer = optfiledata['filer']
-        volume = optfiledata['volume']
-        path = os.path.join(self.dest_path, group, filer, volume)
-        virtual_mnt_pt = os.path.join(self.dest_path, group)
-        print(path)
-        try:
-            os.makedirs(path)
-        except OSError as exc:
-            if exc.errno != errno.EEXIST:
-                raise
-            pass
-        return path, optfiledata['dsmoptfile'], virtual_mnt_pt
 
     def delete_bundle(self):
         '''
@@ -331,5 +268,52 @@ class Bundler():
 
         print(set_list)
         return set_list
+
+    def scan_dir(src_path, dest_path, dir_list):
+ 
+            Prepares a list of directories that will be bundled with os.scandir
+            Recursively call itself until it gets all directories
+
+            Arguments:
+                src_path           -- path to scan
+                dest_path          -- destination path added to tuple
+                dir_list           -- tuple with source dir and destination
+
+
+        set_list = []
+        for entry in os.scandir(src_path):
+            if entry.is_dir(follow_symlinks=False):
+                set_list.append(entry.path)
+                set_list.append(dest_path)
+                dir_list.append(set_list)
+                set_list = []
+                yield from scan_scandir2(entry.path, dest_path, dir_list)
+
+    def get_dirs_tuple(self):
+        
+            Prepares a list of directories that will be bundled
+
+            Returns
+                dir_list    -- tuple with source dir and destination
+        
+        print("path: %s" %self.src_path)
+        start = time.time()
+        dir_list = []
+        set_list = []
+
+        #addind the root path to the tuple
+        set_list.append(self.src_path)
+        set_list.append(self.dest_path)
+        dir_list.append(set_list)
+
+        #scan the given src_path for all directories
+        for entry in scan_dir(self.src_path, self.dest_path, dir_list):
+            print(entry)
+
+        end = time.time()
+        elapsed = end - start
+        print("Time to gather all files: %s" %elapsed)
+        return dir_list
+
 
 '''

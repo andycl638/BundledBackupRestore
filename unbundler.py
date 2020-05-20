@@ -18,7 +18,7 @@ class Unbundler():
         Star: linux unique standard tape archiver
     '''
 
-    def __init__(self, src_path, dest_path, optfile):
+    def __init__(self, src_path, dest_path):
         '''
             Initialize Unbundler object
 
@@ -30,7 +30,6 @@ class Unbundler():
 
         self.src_path = src_path
         self.dest_path = dest_path
-        self.optfile = optfile
 
     def build_list(self, src_list):
         '''
@@ -55,7 +54,7 @@ class Unbundler():
 
         return unbundle_list
 
-    def parallel_unbundle(self, obj, procs, elapsed):
+    def parallel_unbundle(self, proc_obj, elapsed):
         '''
             Conducts the unbundle function in parallel
             Displays agregate results of the bundle process
@@ -66,7 +65,7 @@ class Unbundler():
         '''
         total_data_transferred = 0
 
-        for stat in obj:
+        for stat in proc_obj:
             stat.display_stats_unbundle()
             total_data_transferred += stat.bundled_size
 
@@ -87,13 +86,13 @@ class Unbundler():
                 stat                -- Stat object of the process
         '''
         stat = Stats()
-        start = time.time()
+
         proc_name = multiprocessing.current_process().name
 
         cmd, bundle_size, elapsed_proc, dest = Unbundler.unbundle(unbundle_list[0], unbundle_list[1])
 
         end = time.time()
-        elapsed = end - start
+  
         stat.capture_stats(elapsed_proc, bundle_size, 0, "", proc_name, cmd, dest, end)
 
         return stat
@@ -199,19 +198,7 @@ class Unbundler():
         try:
             rmtree(self.src_path)
             message = "\nDeleted bundle: " + self.src_path
+            print(message)
         except OSError as e:
             if e.errno != errno.ENOENT:
                 raise
-
-    def create_vol(self):
-        optfiledata = MetadataJson.deserialize_json(self.optfile)
-        group = optfiledata['group']
-        path = os.path.join(self.src_path, group)
-        print("\nCreating group directory: " + path)
-        try:
-            os.makedirs(path)
-        except OSError as exc:
-            if exc.errno != errno.EEXIST:
-                raise
-            pass
-        return path
